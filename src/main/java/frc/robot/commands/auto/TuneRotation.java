@@ -51,9 +51,8 @@ public class TuneRotation extends SequentialCommandGroup {
         System.out.println(path.toString());
         SmartDashboard.putStringArray("module states", states);
         addCommands(
-            new InstantCommand(() -> {driveTrain.resetOdometry(path.getStartingDifferentialPose());}),
-            driveTrain.followPathCommand(path,
-            false)
+            new InstantCommand(() -> {driveTrain.resetOdometry(path.getStartingDifferentialPose(), new Rotation2d(0));}),
+            driveTrain.followPathCommand(path)
         );
     }
 }

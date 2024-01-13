@@ -26,13 +26,12 @@ import frc.robot.util.Constants;
 public class TuneTranslation extends SequentialCommandGroup {
     public TuneTranslation(DriveTrain driveTrain) {
         ArrayList<PathPoint> pathPoints = new ArrayList<PathPoint>();
-
         pathPoints.add(new PathPoint(driveTrain.getPose().getTranslation(), new RotationTarget(0.0, driveTrain.getPose().getRotation())));
         pathPoints.add(new PathPoint(driveTrain.getPose().getTranslation().plus(new Translation2d(1, 0)), new RotationTarget(0.0, driveTrain.getPose().getRotation())));
         PathPlannerPath path = PathPlannerPath.fromPathPoints(pathPoints, Constants.Auto.constraints, new GoalEndState(0.0, new Rotation2d(0)));
         
         addCommands(
-            driveTrain.followPathCommand(path, false)
+            driveTrain.followPathCommand(path)
         );
     }
 }

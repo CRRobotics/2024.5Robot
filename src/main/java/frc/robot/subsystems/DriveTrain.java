@@ -178,9 +178,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
      *
      * @param pose The pose to which to set the odometry.
      */
-    public void resetOdometry(Pose2d pose) {
+    public void resetOdometry(Pose2d pose, Rotation2d rotation) {
         poseEstimator.resetPosition(
-                Rotation2d.fromDegrees(gyro.getAngle()),
+                rotation,
                 new SwerveModulePosition[] {
                     frontLeft.getPosition(),
                     frontRight.getPosition(),
@@ -378,7 +378,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         return driveCommand;
     } */
 
-    public Command followPathCommand(PathPlannerPath path, boolean mirrorPath) {
+    public Command followPathCommand(PathPlannerPath path) {
         PIDController thetaController = new PIDController(
             SmartDashboard.getNumber("drivetrain/thetaP", 0),
             SmartDashboard.getNumber("drivetrain/thetaI", 0),
