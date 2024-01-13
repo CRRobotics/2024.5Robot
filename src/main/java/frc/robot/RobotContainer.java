@@ -19,6 +19,7 @@ import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.LED;
 import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
 
@@ -28,9 +29,11 @@ public class RobotContainer {
   private final XboxController driver;
   public static SendableChooser<String> autoMode;
   public static SendableChooser<String> inputMode;
+  public static LED led;
 
 
   public RobotContainer() {
+
     driveTrain = new DriveTrain();
     driveStates = DriveStates.normal;
     driver = new XboxController(Constants.Controller.driveControllerPort);
@@ -39,6 +42,7 @@ public class RobotContainer {
     addAutoModes();
     inputMode = new SendableChooser<>();
     addInputModes();
+    led = new LED(60);
 
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
   }
@@ -90,7 +94,15 @@ public class RobotContainer {
     }
     return auto;
   }
+  public static SendableChooser<String> colorTable = new SendableChooser<>();
 
+    static{
+        colorTable.addOption("red", "red");
+        colorTable.addOption("blue", "blue");
+        colorTable.setDefaultOption("orange", "orange");
+        SmartDashboard.putData(colorTable);
+    
+    }
   public Command getDriveCommand() {
     Command driveCommand;
     switch (inputMode.getSelected()) {
