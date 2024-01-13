@@ -4,11 +4,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.util.Constants;
 import frc.robot.subsystems.DriveTrain;
 
-public class DDRDrive extends CommandBase implements Constants.Drive {
+public class DDRDrive extends Command implements Constants.Drive {
     DriveTrain driveTrain;
     GenericHID controller = new GenericHID(0);
 

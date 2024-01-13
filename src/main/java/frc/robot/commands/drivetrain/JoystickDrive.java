@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.util.Constants;
 import frc.robot.subsystems.DriveTrain;
@@ -18,7 +18,7 @@ import frc.robot.subsystems.DriveTrain;
 /**
  * Runs the drivetrain
  */
-public class JoystickDrive extends CommandBase implements Constants.Drive {
+public class JoystickDrive extends Command implements Constants.Drive {
     DriveTrain driveTrain;
     double currentRotation;
     double currentTranslationDir;
@@ -134,7 +134,8 @@ public class JoystickDrive extends CommandBase implements Constants.Drive {
 
         SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(
             fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(DriverStation.getAlliance() == Alliance.Blue?driveTrain.getGyroAngle() + Math.PI: driveTrain.getGyroAngle() + Math.PI))
+                // ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(DriverStation.getAlliance() == Alliance.Blue?driveTrain.getGyroAngle() + Math.PI: driveTrain.getGyroAngle() + Math.PI))
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(driveTrain.getGyroAngle() + Math.PI))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         driveTrain.setModuleStates(swerveModuleStates);
     }
