@@ -1,7 +1,8 @@
 package frc.robot.util;
 
-import com.pathplanner.lib.PathConstraints;
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.pathplanner.lib.path.PathConstraints;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
