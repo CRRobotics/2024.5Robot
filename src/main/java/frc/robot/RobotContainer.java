@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.auto.TuneRotation;
 import frc.robot.commands.auto.TuneTranslation;
+import frc.robot.commands.auto.FollowAuto;
 // import frc.robot.commands.auto.TuneRotation;
 // import frc.robot.commands.auto.TuneTranslation;
 import frc.robot.commands.drivetrain.DDRDrive;
@@ -74,20 +76,19 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // Command auto;
-    // switch (autoMode.getSelected()) {
-    //   default:
-    //     auto = new TuneTranslation(driveTrain);
-    //     break;
-    //   case "Tune Translation":
-    //     auto = new TuneTranslation(driveTrain);
-    //     break;
-    //   case "Tune Rotation":
-    //     auto = new TuneRotation(driveTrain);
-    //     break;
-    // }
-    // return auto;
-    return new TuneTranslation(driveTrain);
+    Command auto;
+    switch (autoMode.getSelected()) {
+      default:
+        auto = new FollowAuto(driveTrain, autoMode.getSelected());
+        break;
+      case "Tune Translation":
+        auto = new TuneTranslation(driveTrain);
+        break;
+      case "Tune Rotation":
+        auto = new TuneRotation(driveTrain);
+        break;
+    }
+    return auto;
   }
 
   public Command getDriveCommand() {

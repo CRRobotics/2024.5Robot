@@ -378,7 +378,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         return driveCommand;
     } */
 
-    public Command followPathCommand(PathPlannerPath traj, boolean mirrorPath) {
+    public Command followPathCommand(PathPlannerPath path, boolean mirrorPath) {
         PIDController thetaController = new PIDController(
             SmartDashboard.getNumber("drivetrain/thetaP", 0),
             SmartDashboard.getNumber("drivetrain/thetaI", 0),
@@ -390,7 +390,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         SmartDashboard.putNumber("theta velocity tolerance", thetaController.getVelocityTolerance());
         // field.getObject("traj").setTrajectory(traj);
         return new FollowPathHolonomic(
-                traj, 
+                path, 
                 this::getPose, // Pose supplier
                 this::getChassisSpeeds, // SwerveDriveKinematics
                 this::driveRobotRelative,

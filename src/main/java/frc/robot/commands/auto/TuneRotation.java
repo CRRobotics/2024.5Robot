@@ -37,7 +37,7 @@ public class TuneRotation extends SequentialCommandGroup {
 
         ArrayList<PathPoint> pathPoints = new ArrayList<PathPoint>();
         pathPoints.add(new PathPoint(driveTrain.getPose().getTranslation()));
-        pathPoints.add(new PathPoint(targetTranslation, new RotationTarget(driveTrain.getHeading(), targetHeading)));
+        pathPoints.add(new PathPoint(targetTranslation, new RotationTarget(driveTrain.getHeading(), targetHolonomicRotation)));
 
         PathPlannerPath path = PathPlannerPath.fromPathPoints(pathPoints, Constants.Auto.constraints, new GoalEndState(0.0, targetHolonomicRotation));
 
