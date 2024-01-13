@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,23 +51,10 @@ public class RobotContainer {
   }
 
   private static void addAutoModes() {
-    autoMode.setDefaultOption("1PieceBalance", "1PieceBalance");
-    autoMode.addOption("OnePieceBlue", "OnePiece");
-    autoMode.addOption("OnePieceBalance", "OnePieceBalance");
-    autoMode.addOption("OnePieceOnePickupBalance", "OnePieceOnePickupBalance");
-    autoMode.addOption("TwoPiece", "TwoPiece");
-    autoMode.addOption("TwoPieceBalance", "TwoPieceBalance");
-    autoMode.addOption("ZeroPieceBlue", "ZeroPiece");
-    autoMode.addOption("ZeroPieceBalance", "ZeroPieceBalance");
-    autoMode.addOption("PlaceTop", "PlaceTop");
-    autoMode.addOption("PlaceMid", "PlaceMid");
-    autoMode.addOption("PlaceLow", "PlaceLow");
-    autoMode.addOption("ZeroPieceRed", "ZeroPiece2");
-    autoMode.addOption("OnePieceRed", "OnePiece2");
     autoMode.addOption("Tune Translation", "Tune Translation");
     autoMode.addOption("Tune Rotation", "Tune Rotation");
-    autoMode.addOption("OnePieceEngageNoBalanceBlue", "OnePieceEngageNoBalanceBlue");
-    autoMode.addOption("OnePieceEngageNoBalanceRed", "OnePieceEngageNoBalanceRed");
+    autoMode.addOption("NewPath", "NewPath");
+    autoMode.addOption("Short", "Short");
     SmartDashboard.putData("Auto Mode", autoMode);
   }
 
@@ -88,6 +77,7 @@ public class RobotContainer {
         auto = new TuneRotation(driveTrain);
         break;
     }
+    driveTrain.resetOdometry(new Pose2d(), new Rotation2d(0));
     return auto;
   }
 

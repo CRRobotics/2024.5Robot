@@ -1,0 +1,49 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00000001900937e0, pid=32477, tid=259
+#
+# JRE version: OpenJDK Runtime Environment Zulu17.42+19-CA (17.0.7+7) (build 17.0.7+7-LTS)
+# Java VM: OpenJDK 64-Bit Server VM Zulu17.42+19-CA (17.0.7+7-LTS, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, bsd-aarch64)
+# Problematic frame:
+# C  [libobjc.A.dylib+0x77e0]  objc_retain+0x10
+#
+# No core dump will be written. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://www.azul.com/support/
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=localhost:65363 -Djava.library.path=/Users/benjaminbeer/Documents/School/codered/2024Robot/build/jni/release -XX:+ShowCodeDetailsInExceptionMessages frc.robot.Main
+
+Host: "MacBookPro17,1" arm64, 8 cores, 16G, Darwin 23.0.0, macOS 14.0 (23A339)
+Time: Sat Jan 13 15:17:16 2024 EST elapsed time: 80.616956 seconds (0d 0h 1m 20s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000000014181dc00):  JavaThread "main" [_thread_in_native, id=259, stack(0x000000016cf58000,0x000000016d754000)]
+
+Stack: [0x000000016cf58000,0x000000016d754000],  sp=0x000000016d74f950,  free space=8158k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libobjc.A.dylib+0x77e0]  objc_retain+0x10
+C  [libhalsim_gui.dylib+0xa4784]  wpi::gui::PlatformRenderFrame()+0x264
+C  [libhalsim_gui.dylib+0x937e0]  wpi::gui::Main()+0x170
+C  [libhalsim_gui.dylib+0x1bb78]  HALSIM_InitExtension::$_2::__invoke(void*)+0xc
+j  edu.wpi.first.hal.HAL.runMain()V+0
+j  edu.wpi.first.wpilibj.RobotBase.startRobot(Ljava/util/function/Supplier;)V+86
+j  frc.robot.Main.main([Ljava/lang/String;)V+5
+v  ~StubRoutines::call_stub
+V  [libjvm.dylib+0x474178]  JavaCalls::call_helper(JavaValue*, methodHandle const&, JavaCallArguments*, JavaThread*)+0x394
+V  [libjvm.dylib+0x4d9320]  jni_invoke_static(JNIEnv_*, JavaValue*, _jobject*, JNICallType, _jmethodID*, JNI_ArgumentPusher*, JavaThread*)+0x12c
+V  [libjvm.dylib+0x4dc94c]  jni_CallStaticVoidMethod+0x130
+C  [libjli.dylib+0x5158]  JavaMain+0x9d4
+C  [libjli.dylib+0x7964]  __JVMInit_block_invoke+0x50
+C  [Foundation+0x3e970]  __NSBLOCKOPERATION_IS_CALLING_OUT_TO_A_BLOCK__+0x18
+C  [Foundation+0x3e830]  -[NSBlockOperation main]+0x68
+C  [Foundation+0x3e7c0]  __NSOPERATION_IS_INVOKING_MAIN__+0x10
+C  [Foundation+0x3db68]  -[NSOperation start]+0x288
+C  [Foundation+0x78fe8]  __NSThreadPerformPerform+0x108
