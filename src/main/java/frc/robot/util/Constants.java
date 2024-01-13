@@ -5,7 +5,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
@@ -14,7 +16,6 @@ public interface Constants {
     interface Auto {
         double maxSpeed = 3; // meters per second
         double maxAcceleration = 4; // meters per second squared
-        PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration);
         double maxAngularSpeed = Math.PI; // radians per second
         double maxAngularAcceleration = Math.PI; // radians per second squared
         double thetaP = 1; // pids for auto
@@ -26,6 +27,7 @@ public interface Constants {
         double balanceI = 0;
         double balanceD = 0;
         double balanceTolerance = 5;
+        PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAcceleration);
     }
 
     interface Controller {
@@ -57,7 +59,9 @@ public interface Constants {
                 new Translation2d(-wheelBase / 2, trackWidth / 2),
                 new Translation2d(-wheelBase / 2, -trackWidth / 2));//Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
         double maxSpeed = 4; // meters per second
+        double maxAcceleration = 4;
         double maxAngularSpeed = 2 * Math.PI; // radians per second;
+        double maxAngularAcceleration = Math.PI; // radians per second squared
         boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
 
         double driveDeadBand = 0.025;
@@ -65,6 +69,9 @@ public interface Constants {
         double magnitudeSlewRate = 2.4; //rads per second
         double kDirectionSlewRate = 1.8; // percent per second (1 = 100%)
         double rotationSlewRate = 2.0; // percent per second (1 = 100%)
+        double radius = 0.4318; //Radius in meters
+
+        PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAcceleration);
     }
 
     interface SwerveModule {
