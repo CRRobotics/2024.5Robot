@@ -4,11 +4,12 @@
 
 package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPoint;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import com.pathplanner.lib.commands.FollowPathHolonomic;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
@@ -16,6 +17,7 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -280,6 +282,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         return gyro.getRate() * (Constants.Drive.gyroReversed ? -1.0 : 1.0);
     }
 
+    /*
     public Command closestScoringCommand() {
         double xTarget = DriverStation.getAlliance().equals(Alliance.Red) ? 14.73 : 1.82;
         double[] scoringPositions = {
@@ -303,14 +306,15 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         Translation2d translationDifference = targetPose.getTranslation().minus(robotPosition); // difference between target and current
         // calculates wheel angle needed to target from x and y components
         Rotation2d translationRotation = new Rotation2d(translationDifference.getX(), translationDifference.getY());
-        Command driveCommand = followTrajectoryCommand(PathPlanner.generatePath(
+        Command driveCommand = followPathCommand(PathPlanner.generatePath(
             new PathConstraints(0.5, 0.5),
             new PathPoint(robotPosition, translationRotation, getPose().getRotation()), // starting pose
             new PathPoint(targetPose.getTranslation(), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Red ? 0 : 180))), // ending pose
             false);
         return driveCommand;
-    }
+    } */
 
+    /*
     public Command driveToPieceCommand() {
         // double[] pieceData;
         // if (NetworkTableWrapper.getArray("Detector", "Cone")[0] == 1) {
@@ -330,7 +334,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         // Rotation2d translationRotation = new Rotation2d(targetX, targetY);
         // SmartDashboard.putNumber("target X", targetX);
         // SmartDashboard.putNumber("target Y", targetY);
-        // Command driveCommand = followTrajectoryCommand(PathPlanner.generatePath(
+        // Command driveCommand = followPathCommand(PathPlanner.generatePath(
         //     new PathConstraints(0.5, 0.5),
         //     new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation()),
         //     new PathPoint(new Translation2d(targetX, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
@@ -366,15 +370,15 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         Translation2d translationDifference = targetPose.getTranslation().minus(robotPosition); // difference between target and current
         // calculates wheel angle needed to target from x and y components
         Rotation2d translationRotation = new Rotation2d(translationDifference.getX(), translationDifference.getY());
-        Command driveCommand = followTrajectoryCommand(PathPlanner.generatePath(
+        Command driveCommand = followPathCommand(PathPlanner.generatePath(
             new PathConstraints(0.5, 0.5),
             new PathPoint(robotPosition, translationRotation, getPose().getRotation()), // starting pose
             new PathPoint(targetPose.getTranslation(), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Red ? 0 : 180))), // ending pose
             false);
         return driveCommand;
-    }
+    } */
 
-    public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean mirrorPath) {
+    public Command followPathCommand(PathPlannerPath traj, boolean mirrorPath) {
         PIDController thetaController = new PIDController(
             SmartDashboard.getNumber("drivetrain/thetaP", 0),
             SmartDashboard.getNumber("drivetrain/thetaI", 0),
@@ -384,27 +388,44 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         thetaController.setTolerance(0.025);
         SmartDashboard.putNumber("theta position tolerance", thetaController.getPositionTolerance());
         SmartDashboard.putNumber("theta velocity tolerance", thetaController.getVelocityTolerance());
-        field.getObject("traj").setTrajectory(traj);
-        return new SequentialCommandGroup(
-                     new PPSwerveControllerCommand(
-                        traj, 
-                        this::getPose, // Pose supplier
-                        driveKinematics, // SwerveDriveKinematics
-                        new PIDController(
-                            SmartDashboard.getNumber("drivetrain/xP", 0),
-                            SmartDashboard.getNumber("drivetrain/xI", 0),
-                            SmartDashboard.getNumber("drivetrain/xD", 0)
-                        ), // X PID controller
-                        new PIDController(
-                            SmartDashboard.getNumber("drivetrain/xP", 0),
-                            SmartDashboard.getNumber("drivetrain/xI", 0),
-                            SmartDashboard.getNumber("drivetrain/xD", 0)
-                        ), // Y PID controller, probably the same as X controller
-                        thetaController,
-                        this::setModuleStates, // Module states consumer
-                        mirrorPath, // mirrors path based on alliance
-                        this // Requires this drive subsystem
-                     )
+        // field.getObject("traj").setTrajectory(traj);
+        return new FollowPathHolonomic(
+                traj, 
+                this::getPose, // Pose supplier
+                this::getChassisSpeeds, // SwerveDriveKinematics
+                this::driveRobotRelative,
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                    new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
+                    new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
+                Constants.Drive.maxSpeed, // Max module speed, in m/s
+                Constants.Drive.radius, // Drive base radius in meters. Distance from robot center to furthest module.,
+                    new ReplanningConfig()), // Default path replanning config. See the API for the options here
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this // Reference to this subsystem to set requirements
         );
+    }
+
+    public ChassisSpeeds getChassisSpeeds(){
+        return driveKinematics.toChassisSpeeds(frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
+    }
+
+    public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
+        ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+        SwerveModuleState[] targetStates = driveKinematics.toSwerveModuleStates(targetSpeeds);
+        this.setModuleStates(targetStates);
+      }
+
+    private Command FollowPathWithEvents(FollowPathHolonomic followPathHolonomic) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'FollowPathWithEvents'");
     }
 }

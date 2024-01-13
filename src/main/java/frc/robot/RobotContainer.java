@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.auto.TuneTranslation;
 // import frc.robot.commands.auto.TuneRotation;
 // import frc.robot.commands.auto.TuneTranslation;
 import frc.robot.commands.drivetrain.DDRDrive;
@@ -86,7 +87,7 @@ public class RobotContainer {
     //     break;
     // }
     // return auto;
-    return null;
+    return new TuneTranslation(driveTrain);
   }
 
   public Command getDriveCommand() {
