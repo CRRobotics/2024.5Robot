@@ -4,16 +4,14 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.auto.TuneRotation;
-import frc.robot.commands.auto.TuneTranslation;
-import frc.robot.commands.auto.FollowAuto;
-// import frc.robot.commands.auto.TuneRotation;
-// import frc.robot.commands.auto.TuneTranslation;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
@@ -26,8 +24,8 @@ public class RobotContainer {
   private final DriveTrain driveTrain;
   public static DriveStates driveStates;
   private final XboxController driver;
-  public static SendableChooser<String> autoMode;
   public static SendableChooser<String> inputMode;
+  private final SendableChooser<Command> autoChooser;
 
 
   public RobotContainer() {
@@ -35,8 +33,8 @@ public class RobotContainer {
     driveStates = DriveStates.normal;
     driver = new XboxController(Constants.Controller.driveControllerPort);
     configureBindings();
-    autoMode = new SendableChooser<>();
-    addAutoModes();
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
     inputMode = new SendableChooser<>();
     addInputModes();
 
@@ -48,27 +46,6 @@ public class RobotContainer {
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
   }
 
-  private static void addAutoModes() {
-    autoMode.setDefaultOption("1PieceBalance", "1PieceBalance");
-    autoMode.addOption("OnePieceBlue", "OnePiece");
-    autoMode.addOption("OnePieceBalance", "OnePieceBalance");
-    autoMode.addOption("OnePieceOnePickupBalance", "OnePieceOnePickupBalance");
-    autoMode.addOption("TwoPiece", "TwoPiece");
-    autoMode.addOption("TwoPieceBalance", "TwoPieceBalance");
-    autoMode.addOption("ZeroPieceBlue", "ZeroPiece");
-    autoMode.addOption("ZeroPieceBalance", "ZeroPieceBalance");
-    autoMode.addOption("PlaceTop", "PlaceTop");
-    autoMode.addOption("PlaceMid", "PlaceMid");
-    autoMode.addOption("PlaceLow", "PlaceLow");
-    autoMode.addOption("ZeroPieceRed", "ZeroPiece2");
-    autoMode.addOption("OnePieceRed", "OnePiece2");
-    autoMode.addOption("Tune Translation", "Tune Translation");
-    autoMode.addOption("Tune Rotation", "Tune Rotation");
-    autoMode.addOption("OnePieceEngageNoBalanceBlue", "OnePieceEngageNoBalanceBlue");
-    autoMode.addOption("OnePieceEngageNoBalanceRed", "OnePieceEngageNoBalanceRed");
-    SmartDashboard.putData("Auto Mode", autoMode);
-  }
-
   private static void addInputModes() {
     inputMode.setDefaultOption("controller", "controller");
     inputMode.addOption("ddr", "ddr");
@@ -76,19 +53,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    Command auto;
-    switch (autoMode.getSelected()) {
-      default:
-        auto = new FollowAuto(driveTrain, autoMode.getSelected());
-        break;
-      case "Tune Translation":
-        auto = new TuneTranslation(driveTrain);
-        break;
-      case "Tune Rotation":
-        auto = new TuneRotation(driveTrain);
-        break;
-    }
-    return auto;
+    return autoChooser.getSelected();
   }
 
   public Command getDriveCommand() {
