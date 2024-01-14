@@ -7,7 +7,7 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
+//import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+//import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 import frc.robot.util.NetworkTableWrapper;
@@ -196,9 +196,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
      *
      * @param pose The pose to which to set the odometry.
      */
-    public void resetOdometry(Pose2d pose) {
+    public void resetOdometry(Pose2d pose, Rotation2d rotation) {
         poseEstimator.resetPosition(
-                Rotation2d.fromDegrees(gyro.getAngle()),
+                rotation,
                 new SwerveModulePosition[] {
                     frontLeft.getPosition(),
                     frontRight.getPosition(),
@@ -396,7 +396,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         return driveCommand;
     } */
 
-    public Command followPathCommand(PathPlannerPath path, boolean mirrorPath) {
+    public Command followPathCommand(PathPlannerPath path) {
         PIDController thetaController = new PIDController(
             SmartDashboard.getNumber("drivetrain/thetaP", 0),
             SmartDashboard.getNumber("drivetrain/thetaI", 0),
