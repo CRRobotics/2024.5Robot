@@ -10,6 +10,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 //import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -106,11 +107,29 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
                     new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
                     4.5, // Max module speed, in m/s
                     0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-                    new ReplanningConfig(true, true, 0.5, 0.2) // Default path replanning config. See the API for the options here
+                    new ReplanningConfig(true, false, 0.5, 0.2) // Default path replanning config. See the API for the options here
             ),
             this::flipPath,
             this // Reference to this subsystem to set requirements
         );
+
+        // Logging callback for current robot pose
+        PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
+            // Do whatever you want with the pose here
+            field.setRobotPose(pose);
+        });
+
+        // Logging callback for target robot pose
+        PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
+            // Do whatever you want with the pose here
+            field.getObject("target pose").setPose(pose);
+        });
+
+        // Logging callback for the active path, this is sent as a list of poses
+        PathPlannerLogging.setLogActivePathCallback((poses) -> {
+            // Do whatever you want with the poses here
+            field.getObject("path").setPoses(poses);
+        });
     }
 
     @Override
@@ -199,6 +218,23 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     public void resetOdometry(Pose2d pose, Rotation2d rotation) {
         poseEstimator.resetPosition(
                 rotation,
+                new SwerveModulePosition[] {
+                    frontLeft.getPosition(),
+                    frontRight.getPosition(),
+                    backLeft.getPosition(),
+                    backRight.getPosition()
+                },
+                pose);
+    }
+
+     /**
+     * Resets the odometry to the specified pose.
+     *
+     * @param pose The pose to which to set the odometry.
+     */
+    public void resetOdometry(Pose2d pose) {
+        poseEstimator.resetPosition(
+                new Rotation2d(),
                 new SwerveModulePosition[] {
                     frontLeft.getPosition(),
                     frontRight.getPosition(),
@@ -417,7 +453,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
                     new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
                 Constants.Drive.maxSpeed, // Max module speed, in m/s
                 Constants.Drive.radius, // Drive base radius in meters. Distance from robot center to furthest module.,
-                    new ReplanningConfig(true, true, 0.5, 0.2)), // Default path replanning config. See the API for the options here
+                    new ReplanningConfig(true, false, 0.5, 0.2)), // Default path replanning config. See the API for the options here
                 this::flipPath,
                 this // Reference to this subsystem to set requirements
         );

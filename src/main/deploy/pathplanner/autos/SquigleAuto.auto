@@ -14,13 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": []
+            "pathName": "NewPath"
           }
         }
       ]
