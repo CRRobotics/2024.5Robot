@@ -89,7 +89,10 @@ public class RobotContainer {
     static{
         colorTable.addOption("red", "red");
         colorTable.addOption("blue", "blue");
+        colorTable.addOption("rainbow", "rainbow");
+
         colorTable.setDefaultOption("orange", "orange");
+        
         SmartDashboard.putData(colorTable);
     
     }

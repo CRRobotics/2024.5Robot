@@ -14,6 +14,12 @@ public class LED extends SubsystemBase {
     private AddressableLED led;
     private AddressableLEDBuffer ledBuffer;
 
+    int r;
+    int g;
+    int b;
+    int state;
+    // state is a variable to determine whether red green and blue should be increasing or decreasing.
+
     public LED(int length){
         led = new AddressableLED(0);
         ledBuffer = new AddressableLEDBuffer(length);
@@ -21,7 +27,10 @@ public class LED extends SubsystemBase {
         led.setData(ledBuffer);
         
         led.start();
-        
+        r = 0;
+        g = 0;
+        b = 0;
+        state = 0;
     }
     public boolean ColorWrapRGB(int r, int g, int b)
     {
@@ -41,6 +50,64 @@ public class LED extends SubsystemBase {
             ledBuffer.setLED(i, color);
     }
 
+    public void rainbow()
+    {
+        if(state == 0)
+        {
+            r = 255;
+            state = 1;
+        }
+        else if(state == 1 && g != 255)
+        {
+            g++;
+        }
+        else if(state == 1 && g== 255)
+        {
+            state = 2;
+        }
+        else if (state == 2 && r > 0)
+        {
+            r--;
+        }
+        else if (state == 2 && r == 0)
+        {
+            state = 3;
+        }
+        else if(state == 3 && b < 255)
+        {
+            b++;
+        }
+         else if(state == 3 && b == 255)
+        {
+            state = 4;
+        }
+         else if(state == 4 && g > 0)
+        {
+            g--;
+        }
+         else if(state == 4 && g == 0)
+        {
+            state = 5;
+        }
+         else if(state == 5 && r < 255)
+        {
+            r++;
+        }
+        else if(state == 5 && r == 255)
+        {
+            state = 6;
+        }
+        else if(state == 6 && b > 0)
+        {
+            b--;
+        }
+        else 
+        state = 0;
+        ColorWrapRGB(r, g, b);
+        led.setData(ledBuffer);
+
+    }
+
   
     @Override
     public void periodic() {
@@ -50,6 +117,9 @@ public class LED extends SubsystemBase {
             break;
             case "orange":
             ColorWrapRGB(255, 165, 0);
+            break;
+            case "rainbow":
+            rainbow();
             break;
             default:
             ColorWrapRGB(0, 0, 0);
