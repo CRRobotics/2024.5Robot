@@ -3,13 +3,16 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
 //import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
@@ -93,6 +96,40 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     public DriveTrain() {
         // resetOdometry(new Pose2d(1.6, 4.4, Rotation2d.fromRadians(2.8)));
         zeroHeading();
+
+        AutoBuilder.configureHolonomic(
+            this::getPose, // Pose supplier
+            this::resetOdometry, // SwerveDriveKinematics
+            this::getChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            this::driveRobotRelative,
+            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+                    4.5, // Max module speed, in m/s
+                    0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+                    new ReplanningConfig(true, false, 0.5, 0.2) // Default path replanning config. See the API for the options here
+            ),
+            this::flipPath,
+            this // Reference to this subsystem to set requirements
+        );
+
+        // Logging callback for current robot pose
+        PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
+            // Do whatever you want with the pose here
+            field.setRobotPose(pose);
+        });
+
+        // Logging callback for target robot pose
+        PathPlannerLogging.setLogTargetPoseCallback((pose) -> {
+            // Do whatever you want with the pose here
+            field.getObject("target pose").setPose(pose);
+        });
+
+        // Logging callback for the active path, this is sent as a list of poses
+        PathPlannerLogging.setLogActivePathCallback((poses) -> {
+            // Do whatever you want with the poses here
+            field.getObject("path").setPoses(poses);
+        });
     }
 
     @Override
@@ -181,6 +218,23 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     public void resetOdometry(Pose2d pose, Rotation2d rotation) {
         poseEstimator.resetPosition(
                 rotation,
+                new SwerveModulePosition[] {
+                    frontLeft.getPosition(),
+                    frontRight.getPosition(),
+                    backLeft.getPosition(),
+                    backRight.getPosition()
+                },
+                pose);
+    }
+
+     /**
+     * Resets the odometry to the specified pose.
+     *
+     * @param pose The pose to which to set the odometry.
+     */
+    public void resetOdometry(Pose2d pose) {
+        poseEstimator.resetPosition(
+                new Rotation2d(),
                 new SwerveModulePosition[] {
                     frontLeft.getPosition(),
                     frontRight.getPosition(),
@@ -399,17 +453,8 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
                     new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
                 Constants.Drive.maxSpeed, // Max module speed, in m/s
                 Constants.Drive.radius, // Drive base radius in meters. Distance from robot center to furthest module.,
-                    new ReplanningConfig()), // Default path replanning config. See the API for the options here
-                () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-                },
+                    new ReplanningConfig(true, false, 0.5, 0.2)), // Default path replanning config. See the API for the options here
+                this::flipPath,
                 this // Reference to this subsystem to set requirements
         );
     }
@@ -423,6 +468,14 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         SwerveModuleState[] targetStates = driveKinematics.toSwerveModuleStates(targetSpeeds);
         this.setModuleStates(targetStates);
       }
+
+    public boolean flipPath(){
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+    }
 
     private Command FollowPathWithEvents(FollowPathHolonomic followPathHolonomic) {
         // TODO Auto-generated method stub

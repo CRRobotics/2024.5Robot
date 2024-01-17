@@ -2,6 +2,7 @@ package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -138,6 +139,11 @@ public class JoystickDrive extends Command implements Constants.Drive {
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(driveTrain.getGyroAngle() + Math.PI))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         driveTrain.setModuleStates(swerveModuleStates);
+
+        if (controller.getAButtonPressed()){
+            Command driveToPoint = new DriveToPoint(driveTrain, new Pose2d(10,4, new Rotation2d()));
+            driveToPoint.schedule();
+        }
     }
 
     @Override

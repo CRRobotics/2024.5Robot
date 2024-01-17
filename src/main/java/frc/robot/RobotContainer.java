@@ -4,18 +4,14 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.auto.TuneRotation;
-import frc.robot.commands.auto.TuneTranslation;
-import frc.robot.commands.auto.FollowAuto;
-// import frc.robot.commands.auto.TuneRotation;
-// import frc.robot.commands.auto.TuneTranslation;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
@@ -29,9 +25,9 @@ public class RobotContainer {
   private final DriveTrain driveTrain;
   public static DriveStates driveStates;
   private final XboxController driver;
-  public static SendableChooser<String> autoMode;
   public static SendableChooser<String> inputMode;
   public static LED led;
+  private final SendableChooser<Command> autoChooser;
 
 
   public RobotContainer() {
@@ -40,8 +36,8 @@ public class RobotContainer {
     driveStates = DriveStates.normal;
     driver = new XboxController(Constants.Controller.driveControllerPort);
     configureBindings();
-    autoMode = new SendableChooser<>();
-    addAutoModes();
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
     inputMode = new SendableChooser<>();
     addInputModes();
     led = new LED(60);
@@ -54,14 +50,6 @@ public class RobotContainer {
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
   }
 
-  private static void addAutoModes() {
-    autoMode.addOption("Tune Translation", "Tune Translation");
-    autoMode.addOption("Tune Rotation", "Tune Rotation");
-    autoMode.addOption("NewPath", "NewPath");
-    autoMode.addOption("Short", "Short");
-    SmartDashboard.putData("Auto Mode", autoMode);
-  }
-
   private static void addInputModes() {
     inputMode.setDefaultOption("controller", "controller");
     inputMode.addOption("ddr", "ddr");
@@ -69,20 +57,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    Command auto;
-    switch (autoMode.getSelected()) {
-      default:
-        auto = new FollowAuto(driveTrain, autoMode.getSelected());
-        break;
-      case "Tune Translation":
-        auto = new TuneTranslation(driveTrain);
-        break;
-      case "Tune Rotation":
-        auto = new TuneRotation(driveTrain);
-        break;
-    }
-    driveTrain.resetOdometry(new Pose2d(), new Rotation2d(0));
-    return auto;
+    return autoChooser.getSelected();
   }
   public static SendableChooser<String> colorTable = new SendableChooser<>();
 
