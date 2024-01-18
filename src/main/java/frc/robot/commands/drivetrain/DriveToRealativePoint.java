@@ -36,9 +36,8 @@ public class DriveToRealativePoint extends Command{
         0.25, 1.0,
             Units.degreesToRadians(90), Units.degreesToRadians(180));
         List<Translation2d> list = PathPlannerPath.bezierFromPoses(driveTrain.getPose(),
-            // driveTrain.getPose().transformBy(new Transform2d(new Translation2d(1,0), new Rotation2d(0)))); <-- for robot relative translations ()
-            new Pose2d(driveTrain.getPose().getX() + 1, driveTrain.getPose().getY(), driveTrain.getPose().getRotation()));
-        PathPlannerPath path = new PathPlannerPath(list, constraints, new GoalEndState(0,new Rotation2d(0)));
+        driveTrain.getPose().plus(new Transform2d(1, 0, new Rotation2d())));
+        PathPlannerPath path = new PathPlannerPath(list, constraints, new GoalEndState(0,new Rotation2d(Math.PI)));
         path.preventFlipping =true;
         Command follow  = AutoBuilder.followPath(path);
         follow.schedule();
