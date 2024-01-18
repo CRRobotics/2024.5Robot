@@ -65,6 +65,7 @@ public class RobotContainer {
     return autoChooser.getSelected();
   }
   public static SendableChooser<String> colorTable = new SendableChooser<>();
+  public static SendableChooser<Integer> tickSpeedChooser = new SendableChooser<>();
 
     static{
         colorTable.addOption("red", "red");
@@ -72,7 +73,11 @@ public class RobotContainer {
         colorTable.addOption("rainbow", "rainbow");
 
         colorTable.setDefaultOption("orange", "orange");
-        
+        tickSpeedChooser.setDefaultOption("one", 2);
+        tickSpeedChooser.addOption("one", 1);
+        tickSpeedChooser.addOption("five", 5);
+        tickSpeedChooser.addOption("ten", 10);
+
         SmartDashboard.putData(colorTable);
     
     }

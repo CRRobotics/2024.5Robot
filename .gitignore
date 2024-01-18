@@ -163,3 +163,4 @@ bin/
 *.bin
 *.lock
 *.class
+*.class

@@ -18,6 +18,7 @@ public class LED extends SubsystemBase {
     int g;
     int b;
     int h;
+    int tickSpeed;
     int state;
     // state is a variable to determine whether red green and blue should be increasing or decreasing.
 
@@ -51,7 +52,9 @@ public class LED extends SubsystemBase {
         for(int i=0;i<ledBuffer.getLength(); i++)
             ledBuffer.setLED(i, color);
     }
-
+    /**
+     * // DEPRECATED!!!
+     * 
     public void rainbow()
     {
         if(state == 0)
@@ -109,15 +112,23 @@ public class LED extends SubsystemBase {
         led.setData(ledBuffer);
 
     }
+    */
 
     public void betterRainbow()
     {
-        if(h == 180)
+        if(h == 360)
         {
             h = 0;
         }
-        ColorWrapHSV(h, 100, 50);
+        ColorWrapHSV(h, 1, 1);
         h++;
+    }
+    public void tick()
+    {
+        for(int i = 0; i < RobotContainer.tickSpeedChooser.getSelected(); i++)
+        {
+            betterRainbow();
+        }
     }
 
 //funny
@@ -132,7 +143,7 @@ public class LED extends SubsystemBase {
             ColorWrapRGB(255, 165, 0);
             break;
             case "rainbow":
-            rainbow();
+            tick();
             break;
             default:
             ColorWrapRGB(0, 0, 0);
