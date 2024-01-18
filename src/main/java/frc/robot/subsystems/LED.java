@@ -17,6 +17,7 @@ public class LED extends SubsystemBase {
     int r;
     int g;
     int b;
+    int h;
     int state;
     // state is a variable to determine whether red green and blue should be increasing or decreasing.
 
@@ -31,6 +32,7 @@ public class LED extends SubsystemBase {
         g = 0;
         b = 0;
         state = 0;
+        h = 0;
     }
     public boolean ColorWrapRGB(int r, int g, int b)
     {
@@ -108,7 +110,18 @@ public class LED extends SubsystemBase {
 
     }
 
-  
+    public void betterRainbow()
+    {
+        if(h == 180)
+        {
+            h = 0;
+        }
+        ColorWrapHSV(h, 100, 50);
+        h++;
+    }
+
+
+    
     @Override
     public void periodic() {
         switch (RobotContainer.colorTable.getSelected()) {
