@@ -3,49 +3,44 @@ package frc.robot.commands.drivetrain;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
-import frc.robot.subsystems.DriveTrain;
 
+import java.util.List;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+
+import frc.robot.subsystems.DriveTrain;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class DriveToRealativePoint extends SequentialCommandGroup {
+public class DriveToRealativePoint extends Command{
     DriveTrain driveTrain;
 
 
     public DriveToRealativePoint(DriveTrain driveTrain) {
         this.driveTrain = driveTrain;
+    }
 
-        // Create a list of bezier points from poses. Each pose represents one waypoint.
-        // The rotation component of the pose should be the direction of travel. Do not use holonomic rotation.
-        List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-              new Pose2d(1.0, 1.0, Rotation2d.fromDegrees(0)),
-              new Pose2d(3.0, 1.0, Rotation2d.fromDegrees(0)),
-              new Pose2d(5.0, 3.0, Rotation2d.fromDegrees(90))
-        );
 
-        // Create the path using the bezier points created above
-        PathPlannerPath path = new PathPlannerPath(
-              bezierPoints,
-              new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI), // The constraints for this path. If using a differential drivetrain, the angular constraints have no effect.
-              new GoalEndState(0.0, Rotation2d.fromDegrees(-90)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-        );
-
-        // Prevent the path from being flipped if the coordinates are already correct
-        path.preventFlipping =true;
-
+    @Override
+    public void initialize() {
         PathConstraints constraints = new PathConstraints(
-        3.0, 4.0,
-            Units.degreesToRadians(540), Units.degreesToRadians(720));
-        
-        Command pathfindingCommand = AutoBuilder.pathfindToPose(
-            target,
-            constraints,
-            0.0, // Goal end velocity in meters/sec
-            0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
-        );
-        addCommands(
-            pathfindingCommand);
+        0.25, 1.0,
+            Units.degreesToRadians(90), Units.degreesToRadians(180));
+        List<Translation2d> list = PathPlannerPath.bezierFromPoses(driveTrain.getPose(),
+            // driveTrain.getPose().transformBy(new Transform2d(new Translation2d(1,0), new Rotation2d(0))));
+            new Pose2d(driveTrain.getPose().getX() + 1, driveTrain.getPose().getY(), driveTrain.getPose().getRotation()));
+        PathPlannerPath path = new PathPlannerPath(list, constraints, new GoalEndState(0,new Rotation2d(0)));
+        path.preventFlipping =true;
+        Command follow  = AutoBuilder.followPath(path);
+        follow.schedule();
     }
 }

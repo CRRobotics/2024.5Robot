@@ -7,14 +7,18 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
+import frc.robot.commands.drivetrain.DriveToRealativePoint;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LED;
@@ -48,6 +52,7 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(driver, 6).whileTrue(new DriveSlow());
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToRealativePoint(driveTrain));
   }
 
   private static void addInputModes() {
@@ -85,5 +90,9 @@ public class RobotContainer {
         break;
     }
     return driveCommand;
+  }
+
+  public void resetOdometry() {
+    driveTrain.resetOdometry(new Pose2d());
   }
 }

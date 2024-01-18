@@ -139,11 +139,6 @@ public class JoystickDrive extends Command implements Constants.Drive {
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(driveTrain.getGyroAngle() + Math.PI))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         driveTrain.setModuleStates(swerveModuleStates);
-
-        if (controller.getAButtonPressed()){
-            Command driveToPoint = new DriveToPoint(driveTrain, new Pose2d(10,4, new Rotation2d()));
-            driveToPoint.schedule();
-        }
     }
 
     @Override
