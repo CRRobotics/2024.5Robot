@@ -120,7 +120,7 @@ public class LED extends SubsystemBase {
         {
             h = 0;
         }
-        ColorWrapHSV(h, 1, 1);
+        ColorWrapHSV(h, 255, 255);
         h++;
     }
     public void tick()

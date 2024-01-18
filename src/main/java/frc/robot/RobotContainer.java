@@ -79,6 +79,7 @@ public class RobotContainer {
         tickSpeedChooser.addOption("ten", 10);
 
         SmartDashboard.putData(colorTable);
+        SmartDashboard.putData(tickSpeedChooser);
     
     }
   public Command getDriveCommand() {
