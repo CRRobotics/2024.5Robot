@@ -58,6 +58,10 @@ public class RobotContainer {
       new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d())),
       new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d()))
     ));
+    new JoystickButton(driver, XboxController.Button.kB.value).onTrue(new SequentialCommandGroup(
+      new DriveToRelative(driveTrain, new Pose2d(4, 5, new Rotation2d())),
+      new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d()))
+    ));
 
   }
 
