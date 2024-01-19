@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
@@ -52,7 +53,12 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(driver, 6).whileTrue(new DriveSlow());
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToRealativePoint(driveTrain));
+    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToRealativePoint(driveTrain));
+    new JoystickButton(driver, XboxController.Button.kA.value).onTrue(new SequentialCommandGroup(
+      new DriveToRealativePoint(driveTrain),
+      new DriveToRealativePoint(driveTrain)
+    ));
+
   }
 
   private static void addInputModes() {
@@ -100,5 +106,6 @@ public class RobotContainer {
 
   public void resetOdometry() {
     driveTrain.resetOdometry(new Pose2d());
+    driveTrain.zeroHeading();
   }
 }

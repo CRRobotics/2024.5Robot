@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class DriveToRealativePoint extends Command{
     DriveTrain driveTrain;
+    boolean finished;
 
 
     public DriveToRealativePoint(DriveTrain driveTrain) {
@@ -32,14 +33,24 @@ public class DriveToRealativePoint extends Command{
 
     @Override
     public void initialize() {
+        this.finished = false;
         PathConstraints constraints = new PathConstraints(
         0.25, 1.0,
             Units.degreesToRadians(90), Units.degreesToRadians(180));
         List<Translation2d> list = PathPlannerPath.bezierFromPoses(driveTrain.getPose(),
         driveTrain.getPose().plus(new Transform2d(1, 0, new Rotation2d())));
-        PathPlannerPath path = new PathPlannerPath(list, constraints, new GoalEndState(0,new Rotation2d(Math.PI)));
+        PathPlannerPath path = new PathPlannerPath(list, constraints, new GoalEndState(0.20, new Rotation2d(Math.PI)));
         path.preventFlipping =true;
-        Command follow  = AutoBuilder.followPath(path);
+        Command follow = AutoBuilder.followPath(path);
+        follow = follow.finallyDo(
+            (boolean interrupted) -> {
+                this.finished = true;
+        });
         follow.schedule();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return finished;
     }
 }
