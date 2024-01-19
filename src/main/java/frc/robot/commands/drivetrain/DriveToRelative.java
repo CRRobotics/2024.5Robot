@@ -21,13 +21,15 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class DriveToRealativePoint extends Command{
+public class DriveToRelative extends Command {
     DriveTrain driveTrain;
+    Pose2d translation;
     boolean finished;
 
 
-    public DriveToRealativePoint(DriveTrain driveTrain) {
+    public DriveToRelative(DriveTrain driveTrain, Pose2d translation) {
         this.driveTrain = driveTrain;
+        this.translation = translation;
     }
 
 
@@ -35,12 +37,18 @@ public class DriveToRealativePoint extends Command{
     public void initialize() {
         this.finished = false;
         PathConstraints constraints = new PathConstraints(
-        0.25, 1.0,
-            Units.degreesToRadians(90), Units.degreesToRadians(180));
-        List<Translation2d> list = PathPlannerPath.bezierFromPoses(driveTrain.getPose(),
-        driveTrain.getPose().plus(new Transform2d(1, 0, new Rotation2d())));
+        1.5, 2,
+            Units.degreesToRadians(360/2), Units.degreesToRadians(360/2));
+        List<Translation2d> list = PathPlannerPath.bezierFromPoses(
+            driveTrain.getPose(),
+            new Pose2d(
+                driveTrain.getPose().getX() + translation.getX(),
+                driveTrain.getPose().getY() + translation.getY(),
+                driveTrain.getPose().getRotation().plus(translation.getRotation())
+            )
+        );
         PathPlannerPath path = new PathPlannerPath(list, constraints, new GoalEndState(0.20, new Rotation2d(Math.PI)));
-        path.preventFlipping =true;
+        path.preventFlipping = true;
         Command follow = AutoBuilder.followPath(path);
         follow = follow.finallyDo(
             (boolean interrupted) -> {

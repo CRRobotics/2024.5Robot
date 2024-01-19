@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
-import frc.robot.commands.drivetrain.DriveToRealativePoint;
+import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LED;
@@ -55,8 +55,8 @@ public class RobotContainer {
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
     // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToRealativePoint(driveTrain));
     new JoystickButton(driver, XboxController.Button.kA.value).onTrue(new SequentialCommandGroup(
-      new DriveToRealativePoint(driveTrain),
-      new DriveToRealativePoint(driveTrain)
+      new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d())),
+      new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d()))
     ));
 
   }
