@@ -25,7 +25,7 @@ public class DriveToRelative extends Command {
     DriveTrain driveTrain;
     Pose2d translation;
     boolean finished;
-
+    Command followCommand;
 
     public DriveToRelative(DriveTrain driveTrain, Pose2d translation) {
         this.driveTrain = driveTrain;
@@ -49,12 +49,19 @@ public class DriveToRelative extends Command {
         );
         PathPlannerPath path = new PathPlannerPath(list, constraints, new GoalEndState(0.20, new Rotation2d(Math.PI)));
         path.preventFlipping = true;
-        Command follow = AutoBuilder.followPath(path);
-        follow = follow.finallyDo(
+        followCommand = AutoBuilder.followPath(path);
+        followCommand = followCommand.finallyDo(
             (boolean interrupted) -> {
                 this.finished = true;
         });
-        follow.schedule();
+        followCommand.schedule();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+            followCommand.cancel();
+        }
     }
 
     @Override
