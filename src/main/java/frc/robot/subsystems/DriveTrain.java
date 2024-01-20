@@ -89,6 +89,14 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         VecBuilder.fill(0.5, 0.5, 0.5) // visions standard deviation for x, y, theta
     );
 
+    public double getXMovement(){
+        return gyro.getVelocityX();
+    }
+    public double getYMovement(){
+        return gyro.getVelocityY();
+    }
+
+
     private Field2d field = new Field2d();
     // private Field2d odoField = new Field2d();
 

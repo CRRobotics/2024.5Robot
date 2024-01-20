@@ -52,6 +52,9 @@ public class LED extends SubsystemBase {
         for(int i=0;i<ledBuffer.getLength(); i++)
             ledBuffer.setLED(i, color);
     }
+    public void setPixel(int p, Color color){
+        ledBuffer.setLED(p, color);
+    }
     /**
      * // DEPRECATED!!!
      * 
