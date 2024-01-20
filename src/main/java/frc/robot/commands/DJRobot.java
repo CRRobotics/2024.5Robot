@@ -12,10 +12,11 @@ import com.ctre.phoenix.music.Orchestra;
 import org.team639.RobotContainer;
 import org.team639.subsystems.DriveTrain;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DJRobot extends CommandBase {
-  private DriveTrain driveTrain;
+public class DJRobot extends Command {
+  private frc.robot.subsystems.DriveTrain driveTrain;
   private Orchestra orchestra;
   private double time;
 
@@ -26,7 +27,7 @@ public class DJRobot extends CommandBase {
    * @param driveTrain DriveTrain to be used
    * @param time Time in seconds to play song
    */
-  public DJRobot(DriveTrain driveTrain, double time) {
+  public DJRobot(frc.robot.subsystems.DriveTrain driveTrain, double time) {
     this.driveTrain = driveTrain;
     this.time = time;
     addRequirements(driveTrain);
@@ -36,13 +37,13 @@ public class DJRobot extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    instruments.add(driveTrain.rightMain);
-    instruments.add(driveTrain.rightFollower);
-    instruments.add(driveTrain.leftMain);
-    instruments.add(driveTrain.leftFollower);
+    // instruments.add(driveTrain.rightMain);
+    // instruments.add(driveTrain.rightFollower);
+    // instruments.add(driveTrain.leftMain);
+    // instruments.add(driveTrain.leftFollower);
     
     orchestra = new Orchestra(instruments);
-    orchestra.loadMusic(RobotContainer.songChooser());
+    // orchestra.loadMusic(RobotContainer.songChooser());
     System.out.println("DJRobot Initializing");
   }
 
