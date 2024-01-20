@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 // import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
+import frc.robot.util.LocalADStarAK;
 import frc.robot.util.NetworkTableWrapper;
 import frc.robot.util.SwerveModule;
 public class DriveTrain extends SubsystemBase implements Constants.Drive {
@@ -467,6 +468,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
         SwerveModuleState[] targetStates = driveKinematics.toSwerveModuleStates(targetSpeeds);
         this.setModuleStates(targetStates);
+        this.updateObstacles();
       }
 
     public boolean flipPath(){
@@ -475,6 +477,11 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
             return alliance.get() == DriverStation.Alliance.Red;
         }
         return false;
+    }
+
+    public void updateObstacles(){
+        // NetworkTableWrapper.getDouble(i, "rx");
+        // LocalADStarAK.setDynamicObstacles(<>);
     }
 
     private Command FollowPathWithEvents(FollowPathHolonomic followPathHolonomic) {
