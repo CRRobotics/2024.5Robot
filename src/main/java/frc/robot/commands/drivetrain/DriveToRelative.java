@@ -12,6 +12,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.util.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -36,9 +37,6 @@ public class DriveToRelative extends Command {
     @Override
     public void initialize() {
         this.finished = false;
-        PathConstraints constraints = new PathConstraints(
-        1.5, 2,
-            Units.degreesToRadians(360/2), Units.degreesToRadians(360/2));
         List<Translation2d> list = PathPlannerPath.bezierFromPoses(
             driveTrain.getPose(),
             new Pose2d(
@@ -47,7 +45,7 @@ public class DriveToRelative extends Command {
                 driveTrain.getPose().getRotation().plus(translation.getRotation())
             )
         );
-        PathPlannerPath path = new PathPlannerPath(list, constraints, new GoalEndState(0.20, new Rotation2d(Math.PI)));
+        PathPlannerPath path = new PathPlannerPath(list, Constants.Drive.constraints, new GoalEndState(0.20, new Rotation2d(Math.PI)));
         path.preventFlipping = true;
         followCommand = AutoBuilder.followPath(path);
         followCommand = followCommand.finallyDo(
