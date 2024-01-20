@@ -16,8 +16,8 @@ public interface Constants {
     interface Auto {
         double maxSpeed = 3; // meters per second
         double maxAcceleration = 4; // meters per second squared
-        double maxAngularSpeed = Math.PI; // radians per second
-        double maxAngularAcceleration = Math.PI; // radians per second squared
+        double maxAngularSpeed = 3 * Math.PI; // radians per second
+        double maxAngularAcceleration = 3 * Math.PI; // radians per second squared
         double thetaP = 1; // pids for auto
         double xP = 1;
         double yP = 1;
@@ -27,7 +27,8 @@ public interface Constants {
         double balanceI = 0;
         double balanceD = 0;
         double balanceTolerance = 5;
-        PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAcceleration);
+        double testMult = 0.25;
+        PathConstraints constraints = new PathConstraints(maxSpeed * testMult, maxAcceleration * testMult, maxAngularSpeed * testMult, maxAcceleration * testMult);
     }
 
     interface Controller {

@@ -175,17 +175,22 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         );
         
         // update with visions data from these cameras ids:
-        for (String i : new String[]{"0", "2", "4"}) {
+        Translation2d tag8 = new Translation2d(0, 5);
+        for (String i : new String[]{"0", "2", "4", "6", "8", "10"}) {
             if (NetworkTableWrapper.getDouble(i, "ntags") != 0 && NetworkTableWrapper.getDouble(i, "rx") < 20 && NetworkTableWrapper.getDouble(i, "ry") < 20) {
-                double distance = getPose().getTranslation().getDistance(new Translation2d(NetworkTableWrapper.getDouble(i, "rx"), NetworkTableWrapper.getDouble(i, "ry")));
+                double x = NetworkTableWrapper.getDouble(i, "rx");
+                double y = NetworkTableWrapper.getDouble(i, "ry");
+                double theta = NetworkTableWrapper.getDouble(i, "theta");
+                double distance = tag8.getDistance(new Translation2d(x, y));
+                SmartDashboard.putNumber("distance to tag", distance);
                 poseEstimator.addVisionMeasurement(
                     new Pose2d(
-                        NetworkTableWrapper.getDouble(i, "rx"),
-                        NetworkTableWrapper.getDouble(i, "ry"),
-                        Rotation2d.fromRadians(NetworkTableWrapper.getDouble(i, "theta"))
+                        x,
+                        y,
+                        Rotation2d.fromRadians(theta)
                     ),
                     Timer.getFPGATimestamp() + 0.01, // needs to be tested and calibrated
-                    VecBuilder.fill(0.8 * distance, 0.8 * distance, 0.8 * distance) // needs to be calibrated
+                    VecBuilder.fill(1 * distance, 1 * distance, 1 * distance) // needs to be calibrated
                 );
             }
             SmartDashboard.putNumber(i + "Theta", NetworkTableWrapper.getDouble(i, "theta") * 180 / Math.PI);
