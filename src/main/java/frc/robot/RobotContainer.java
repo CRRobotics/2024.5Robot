@@ -48,7 +48,7 @@ public class RobotContainer {
     led = new LED(60);
 
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
-    led.setDefaultCommand(new LEDDisplayDrive(driveTrain, led));
+    led.setDefaultCommand(new LEDDisplayDrive(led));
   }
 
   

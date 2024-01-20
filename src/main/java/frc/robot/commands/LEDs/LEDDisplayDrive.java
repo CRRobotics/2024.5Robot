@@ -8,30 +8,39 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.util.Constants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LED;
 import edu.wpi.first.wpilibj.util.Color;
+import com.kauailabs.navx.frc.AHRS;
 
 public class LEDDisplayDrive extends Command implements Constants.Drive {
     DriveTrain driveTrain;
+    private final AHRS gyro;
     LED LED;
     GenericHID controller = new GenericHID(0);
 
 
-    public LEDDisplayDrive(DriveTrain driveTrain, LED LED) 
+    public LEDDisplayDrive(LED LED) 
     {
-        this.driveTrain = driveTrain;
         this.LED = LED;
+        gyro = new AHRS(SPI.Port.kMXP);
         addRequirements(driveTrain);
         addRequirements(LED);
+    }
+    private double getXMovement(){
+        return gyro.getVelocityX();
+    }
+    private double getYMovement(){
+        return gyro.getVelocityY();
     }
 
     @Override
     public void execute() {
-        while(driveTrain.getXMovement() > 0 && driveTrain.getXMovement() > driveTrain.getYMovement()){
-            LED.setPixel(10, Color.kAqua);
+        while(getXMovement() > 0 && getXMovement() > Math.abs(getYMovement())){
+            LED.setPixel(10, Color.kBlack);
         }
     }
 
