@@ -27,7 +27,6 @@ public class LEDDisplayDrive extends Command implements Constants.Drive {
     {
         this.LED = LED;
         gyro = new AHRS(SPI.Port.kMXP);
-        addRequirements(driveTrain);
         addRequirements(LED);
     }
     private double getXMovement(){
@@ -40,7 +39,7 @@ public class LEDDisplayDrive extends Command implements Constants.Drive {
     @Override
     public void execute() {
         while(getXMovement() > 0 && getXMovement() > Math.abs(getYMovement())){
-            LED.setPixel(10, Color.kBlack);
+            LED.setPixel(10, Color.kBisque);
         }
     }
 

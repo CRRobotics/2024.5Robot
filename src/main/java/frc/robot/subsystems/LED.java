@@ -138,21 +138,21 @@ public class LED extends SubsystemBase {
     
     @Override
     public void periodic() {
-        switch (RobotContainer.colorTable.getSelected()) {
-            case "red":
-            ColorWrapRGB(255, 0, 0);
-            break;
-            case "orange":
-            ColorWrapRGB(255, 165, 0);
-            break;
-            case "rainbow":
-            tick();
-            break;
-            default:
-            ColorWrapRGB(0, 0, 0);
-            break;
+        // switch (RobotContainer.colorTable.getSelected()) {
+        //     case "red":
+        //     ColorWrapRGB(255, 0, 0);
+        //     break;
+        //     case "orange":
+        //     ColorWrapRGB(255, 165, 0);
+        //     break;
+        //     case "rainbow":
+        //     tick();
+        //     break;
+        //     default:
+        //     ColorWrapRGB(0, 0, 0);
+        //     break;
             
-        }
-        led.setData(ledBuffer);
+        // }
+        // led.setData(ledBuffer);
     }
 }
