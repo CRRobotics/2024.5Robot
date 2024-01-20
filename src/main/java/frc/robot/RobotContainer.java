@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.LEDs.LEDDisplayDrive;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
@@ -33,16 +34,6 @@ public class RobotContainer {
   public static SendableChooser<String> inputMode;
   public static LED led;
   private final SendableChooser<Command> autoChooser;
-  private static SendableChooser<String> songChooser;
-
-  public static final String industry_baby;
-  public static final String old_town_road;
-
-  static
-  {
-    industry_baby = "industryBaby.chrp";
-    old_town_road  = "oldTownRoad.chrp";
-  }
 
   public RobotContainer() {
 
@@ -56,8 +47,8 @@ public class RobotContainer {
     addInputModes();
     led = new LED(60);
 
-    songChooser = new SendableChooser<>();
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
+    led.setDefaultCommand(new LEDDisplayDrive(driveTrain, led));
   }
 
   
@@ -78,12 +69,6 @@ public class RobotContainer {
     SmartDashboard.putData("Input Mode", inputMode);
   }
 
-  static {
-    songChooser.setDefaultOption("Old Town Road", old_town_road);
-    songChooser.addOption("Industry Baby", industry_baby);
-    SmartDashboard.putData("SongChooser", songChooser);
-
-  }
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
