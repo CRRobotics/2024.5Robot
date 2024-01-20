@@ -82,7 +82,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void simulationInit() {
-    robotContainer = new RobotContainer();
   }
 
   @Override

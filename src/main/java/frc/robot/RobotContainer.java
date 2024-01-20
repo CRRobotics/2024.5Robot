@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,6 +26,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LED;
 import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
+import frc.robot.util.LocalADStarAK;
 
 public class RobotContainer {
   private final DriveTrain driveTrain;
@@ -33,19 +35,8 @@ public class RobotContainer {
   public static SendableChooser<String> inputMode;
   public static LED led;
   private final SendableChooser<Command> autoChooser;
-  private static SendableChooser<String> songChooser;
-
-  public static final String industry_baby;
-  public static final String old_town_road;
-
-  static
-  {
-    industry_baby = "industryBaby.chrp";
-    old_town_road  = "oldTownRoad.chrp";
-  }
 
   public RobotContainer() {
-
     driveTrain = new DriveTrain();
     driveStates = DriveStates.normal;
     driver = new XboxController(Constants.Controller.driveControllerPort);
@@ -56,8 +47,8 @@ public class RobotContainer {
     addInputModes();
     led = new LED(60);
 
-    songChooser = new SendableChooser<>();
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
+    Pathfinding.setPathfinder(new LocalADStarAK());
   }
 
   
@@ -78,12 +69,6 @@ public class RobotContainer {
     SmartDashboard.putData("Input Mode", inputMode);
   }
 
-  static {
-    songChooser.setDefaultOption("Old Town Road", old_town_road);
-    songChooser.addOption("Industry Baby", industry_baby);
-    SmartDashboard.putData("SongChooser", songChooser);
-
-  }
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
