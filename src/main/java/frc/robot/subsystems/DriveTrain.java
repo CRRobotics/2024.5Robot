@@ -234,8 +234,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
      * @param pose The pose to which to set the odometry.
      */
     public void resetOdometry(Pose2d pose) {
+        setGyroAngle(pose.getRotation().getRadians());
         poseEstimator.resetPosition(
-                new Rotation2d(),
+                gyro.getRotation2d(),
                 new SwerveModulePosition[] {
                     frontLeft.getPosition(),
                     frontRight.getPosition(),
@@ -293,8 +294,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     }
 
     public void setGyroAngle(double angle) {
-        // gyro.setAngleAdjustment(angle * 180 / Math.PI);
-        gyro.setAngleAdjustment(getHeading());
+        gyro.setAngleAdjustment(angle * 180 / Math.PI);
     }
 
     public double getGyroAngle() {
@@ -307,7 +307,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
      * @return the robot's heading in degrees, from -180 to 180
      */
     public double getHeading() {
-        return poseEstimator.getEstimatedPosition().getRotation().getDegrees();
+        return poseEstimator.getEstimatedPosition().getRotation().getRadians();
     }
 
     public SwerveModuleState[] getModuleStates() {

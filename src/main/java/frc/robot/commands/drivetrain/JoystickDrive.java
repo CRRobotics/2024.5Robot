@@ -70,7 +70,7 @@ public class JoystickDrive extends Command implements Constants.Drive {
         double ySpeed = -MathUtil.applyDeadband(controller.getLeftX(), driveDeadBand);
         double rotation = -MathUtil.applyDeadband(controller.getRightX(), driveDeadBand);
         // boolean fieldRelative = SmartDashboard.getBoolean("field relative", false);
-        boolean fieldRelative = false;
+        boolean fieldRelative = true;
 
 
         SmartDashboard.putNumber("xspeed", -controller.getLeftY());
@@ -136,7 +136,7 @@ public class JoystickDrive extends Command implements Constants.Drive {
         SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(
             fieldRelative
                 // ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(DriverStation.getAlliance() == Alliance.Blue?driveTrain.getGyroAngle() + Math.PI: driveTrain.getGyroAngle() + Math.PI))
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(-driveTrain.getGyroAngle()))
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(RobotContainer.getAlliance().equals(Alliance.Blue) ? -driveTrain.getHeading() : driveTrain.getHeading()))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         driveTrain.setModuleStates(swerveModuleStates);
     }

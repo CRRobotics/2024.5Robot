@@ -6,15 +6,19 @@ package frc.robot;
 
 import java.util.Optional;
 
+import org.opencv.core.Mat;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -110,7 +114,7 @@ public class RobotContainer {
     return driveCommand;
   }
 
-  public Alliance getAlliance() {
+  public static Alliance getAlliance() {
     Optional<Alliance> ally = DriverStation.getAlliance();
     if (ally.isPresent()) {
         if (ally.get() == Alliance.Red) {
@@ -124,7 +128,16 @@ public class RobotContainer {
   }
 
   public void resetOdometry() {
-    driveTrain.resetOdometry(new Pose2d());
-    driveTrain.zeroHeading();
+    if (getAlliance().equals(Alliance.Blue)) {
+      driveTrain.resetOdometry(new Pose2d());
+      driveTrain.zeroHeading();
+    } else if (getAlliance().equals(Alliance.Red)) {
+      driveTrain.resetOdometry(new Pose2d(new Translation2d(16.54, 0), new Rotation2d(Math.PI)));
+      driveTrain.zeroHeading();
+      SmartDashboard.putString("gyro value", String.valueOf(driveTrain.getGyroAngle()));
+    }
+    
+      // driveTrain.resetOdometry(new Pose2d());
+      // driveTrain.zeroHeading();
   }
 }
