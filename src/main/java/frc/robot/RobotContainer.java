@@ -33,16 +33,6 @@ public class RobotContainer {
   public static SendableChooser<String> inputMode;
   public static LED led;
   private final SendableChooser<Command> autoChooser;
-  private static SendableChooser<String> songChooser;
-
-  public static final String industry_baby;
-  public static final String old_town_road;
-
-  static
-  {
-    industry_baby = "industryBaby.chrp";
-    old_town_road  = "oldTownRoad.chrp";
-  }
 
   public RobotContainer() {
 
@@ -56,7 +46,6 @@ public class RobotContainer {
     addInputModes();
     led = new LED(60);
 
-    songChooser = new SendableChooser<>();
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
   }
 
@@ -78,12 +67,6 @@ public class RobotContainer {
     SmartDashboard.putData("Input Mode", inputMode);
   }
 
-  static {
-    songChooser.setDefaultOption("Old Town Road", old_town_road);
-    songChooser.addOption("Industry Baby", industry_baby);
-    SmartDashboard.putData("SongChooser", songChooser);
-
-  }
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
