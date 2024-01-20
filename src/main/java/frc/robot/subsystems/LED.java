@@ -3,16 +3,19 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
+import com.kauailabs.navx.frc.AHRS;
 
 public class LED extends SubsystemBase {
     private AddressableLED led;
     private AddressableLEDBuffer ledBuffer;
+    private final AHRS gyro;
 
     int r;
     int g;
@@ -23,6 +26,7 @@ public class LED extends SubsystemBase {
     // state is a variable to determine whether red green and blue should be increasing or decreasing.
 
     public LED(int length){
+        gyro = new AHRS(SPI.Port.kMXP);
         led = new AddressableLED(0);
         ledBuffer = new AddressableLEDBuffer(length);
         led.setLength(length);
@@ -34,6 +38,9 @@ public class LED extends SubsystemBase {
         b = 0;
         state = 0;
         h = 0;
+    }
+    public AHRS getGyro(){
+        return gyro;
     }
     public boolean ColorWrapRGB(int r, int g, int b)
     {

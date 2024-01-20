@@ -14,11 +14,11 @@ import frc.robot.util.Constants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LED;
 import edu.wpi.first.wpilibj.util.Color;
-import com.kauailabs.navx.frc.AHRS;
+
 
 public class LEDDisplayDrive extends Command implements Constants.Drive {
     DriveTrain driveTrain;
-    private final AHRS gyro;
+   
     LED LED;
     GenericHID controller = new GenericHID(0);
 
@@ -26,19 +26,23 @@ public class LEDDisplayDrive extends Command implements Constants.Drive {
     public LEDDisplayDrive(LED LED) 
     {
         this.LED = LED;
-        gyro = new AHRS(SPI.Port.kMXP);
         addRequirements(LED);
     }
     private double getXMovement(){
-        return gyro.getVelocityX();
+        return LED.getGyro().getVelocityX();
     }
     private double getYMovement(){
-        return gyro.getVelocityY();
+        return LED.getGyro().getVelocityY();
     }
 
     @Override
     public void execute() {
         while(getXMovement() > 0 && getXMovement() > Math.abs(getYMovement())){
+            System.out.println("movingup");
+            LED.setPixel(10, Color.kBisque);
+        }
+        while(getYMovement() > 0 && getYMovement() > Math.abs(getXMovement())){
+            System.out.println("movingside");
             LED.setPixel(10, Color.kBisque);
         }
     }
