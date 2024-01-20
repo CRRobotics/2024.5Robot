@@ -36,7 +36,6 @@ public class RobotContainer {
   public static LED led;
   private final SendableChooser<Command> autoChooser;
 
-
   public RobotContainer() {
     driveTrain = new DriveTrain();
     driveStates = DriveStates.normal;
@@ -52,16 +51,13 @@ public class RobotContainer {
     Pathfinding.setPathfinder(new LocalADStarAK());
   }
 
+  
   private void configureBindings() {
     new JoystickButton(driver, 6).whileTrue(new DriveSlow());
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
     // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToRealativePoint(driveTrain));
-    new JoystickButton(driver, XboxController.Button.kA.value).onTrue(new SequentialCommandGroup(
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SequentialCommandGroup(
       new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d())),
-      new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d()))
-    ));
-    new JoystickButton(driver, XboxController.Button.kB.value).onTrue(new SequentialCommandGroup(
-      new DriveToRelative(driveTrain, new Pose2d(4, 5, new Rotation2d())),
       new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d()))
     ));
 

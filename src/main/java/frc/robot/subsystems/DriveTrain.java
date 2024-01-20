@@ -40,22 +40,22 @@ import frc.robot.util.NetworkTableWrapper;
 import frc.robot.util.SwerveModule;
 public class DriveTrain extends SubsystemBase implements Constants.Drive {
     // Create MAXSwerveModules
-    private final SwerveModule frontLeft = new SwerveModule( // chimera 11& 12
+    public final SwerveModule frontLeft = new SwerveModule( // chimera 11& 12
             Constants.Drive.chimeraWheelID,
             Constants.Drive.chimeraTurnID,
             Constants.Drive.frontLeftAngularOffset);
 
-    private final SwerveModule frontRight = new SwerveModule( // manticore 9&10
+    public final SwerveModule frontRight = new SwerveModule( // manticore 9&10
             Constants.Drive.manticoreWheelID,
             Constants.Drive.manticoreTurnID,
             Constants.Drive.frontRightAngularOffset);
 
-    private final SwerveModule backLeft = new SwerveModule( //phoenix 13&14
+    public final SwerveModule backLeft = new SwerveModule( //phoenix 13&14
             Constants.Drive.phoenixWheelID,
             Constants.Drive.phoenixTurnID,
             Constants.Drive.backLeftAngularOffset);
 
-    private final SwerveModule backRight = new SwerveModule( //Leviathan 5&6
+    public final SwerveModule backRight = new SwerveModule( //Leviathan 5&6
             Constants.Drive.leviathanWheelID,
             Constants.Drive.leviathanTurnID,
             Constants.Drive.backRightAngularOffset);
