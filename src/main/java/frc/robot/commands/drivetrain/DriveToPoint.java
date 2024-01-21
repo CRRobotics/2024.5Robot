@@ -32,6 +32,7 @@ public class DriveToPoint extends Command {
 
         @Override
         public void initialize() {
+        driveTrain.updateObstacles();
         Command pathfindingCommand = AutoBuilder.pathfindToPose(
             target,
             Constants.Drive.constraints,

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
+import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.subsystems.DriveTrain;
@@ -48,7 +49,6 @@ public class RobotContainer {
     led = new LED(60);
 
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
-    Pathfinding.setPathfinder(new LocalADStarAK());
   }
 
   
@@ -59,6 +59,9 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SequentialCommandGroup(
       new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d())),
       new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d()))
+    ));
+    new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new SequentialCommandGroup(
+      new DriveToPoint(driveTrain, new Pose2d(3, 0, new Rotation2d()))
     ));
 
   }
