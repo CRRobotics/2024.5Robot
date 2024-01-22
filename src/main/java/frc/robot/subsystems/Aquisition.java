@@ -1,3 +1,3 @@
-class Aquisition
+public class Aquisition extends SubsystemBase
 {
 }
