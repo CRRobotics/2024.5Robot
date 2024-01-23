@@ -55,13 +55,13 @@ public class JoystickDrive extends Command implements Constants.Drive {
         switch(RobotContainer.driveStates)
         {
             case speeed:
-                speedAdjustedMaxSpeed = maxSpeed * 1.4;
+                speedAdjustedMaxSpeed = maxSpeed * fastSpeedMultiplier;
                 break;
             case normal:
                 speedAdjustedMaxSpeed = maxSpeed;
                 break;
             case slow:
-                speedAdjustedMaxSpeed = maxSpeed * .25;
+                speedAdjustedMaxSpeed = maxSpeed * slowSpeedMultiplier;
                 break;
         }
         SmartDashboard.putNumber("adjusted max speed", speedAdjustedMaxSpeed);

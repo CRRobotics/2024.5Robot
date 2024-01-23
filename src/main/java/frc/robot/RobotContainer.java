@@ -38,7 +38,7 @@ import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
 import frc.robot.util.LocalADStarAK;
 
-public class RobotContainer {
+public class RobotContainer implements Constants.Field {
   private final DriveTrain driveTrain;
   public static DriveStates driveStates;
   private final XboxController driver;
@@ -134,7 +134,7 @@ public class RobotContainer {
       driveTrain.resetOdometry(new Pose2d());
       driveTrain.zeroHeading();
     } else if (getAlliance().equals(Alliance.Red)) {
-      driveTrain.resetOdometry(new Pose2d(new Translation2d(16.54, 0), new Rotation2d(Math.PI)));
+      driveTrain.resetOdometry(new Pose2d(new Translation2d(fieldWidth, 0), new Rotation2d(Math.PI)));
       driveTrain.zeroHeading();
       SmartDashboard.putString("gyro value", String.valueOf(driveTrain.getGyroAngle()));
     }

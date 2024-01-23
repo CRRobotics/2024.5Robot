@@ -15,13 +15,13 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.util.Constants;
 
-public class TurnToAngle extends Command implements Constants.Drive {
+public class TurnToAngle extends Command implements Constants.Drive, Constants.Auto.TurnToAngle {
   private DriveTrain driveTrain;
   private double setpoint;
   private boolean clockwise;
   private Rotation2d angle;
 
-  private PIDController controller = new PIDController(0.017, 0, 0);
+  private PIDController controller = new PIDController(kP, kI, kD);
 
   /**
    * Creates relative turn to angle that uses vision tracking
@@ -31,9 +31,9 @@ public class TurnToAngle extends Command implements Constants.Drive {
     this.driveTrain = driveTrain;
     this.angle = angle;
     addRequirements(driveTrain);
-    SmartDashboard.putNumber("turnpid/p", 2.2);
-    SmartDashboard.putNumber("turnpid/i", 0);
-    SmartDashboard.putNumber("turnpid/d", 0);
+    SmartDashboard.putNumber("turnpid/p", kP);
+    SmartDashboard.putNumber("turnpid/i", kI);
+    SmartDashboard.putNumber("turnpid/d", kD);
   }
 
   // Called when the command is initially scheduled.
@@ -57,9 +57,9 @@ public class TurnToAngle extends Command implements Constants.Drive {
     SmartDashboard.putNumber("turnpid/output", controller.calculate(driveTrain.getHeading(), setpoint));
 
     controller.setPID(
-      SmartDashboard.getNumber("turnpid/p", 0),
-      SmartDashboard.getNumber("turnpid/i", 0),
-      SmartDashboard.getNumber("turnpid/d", 0)
+      SmartDashboard.getNumber("turnpid/p", kP),
+      SmartDashboard.getNumber("turnpid/i", kI),
+      SmartDashboard.getNumber("turnpid/d", kD)
       );
     if (clockwise)
       turnCommand(controller.calculate(driveTrain.getHeading(), setpoint) + 0.08);

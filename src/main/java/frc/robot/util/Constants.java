@@ -28,7 +28,18 @@ public interface Constants {
         double balanceD = 0;
         double balanceTolerance = 5;
         double testMult = 0.25;
-        PathConstraints constraints = new PathConstraints(maxSpeed * testMult, maxAcceleration * testMult, maxAngularSpeed * testMult, maxAcceleration * testMult);
+        PathConstraints constraints = new PathConstraints(
+            maxSpeed * testMult,
+            maxAcceleration * testMult,
+            maxAngularSpeed * testMult,
+            maxAcceleration * testMult
+        );
+
+        interface TurnToAngle {
+            double kP = 2.2;
+            double kI = 0;
+            double kD = 0;
+        }
     }
 
     interface Controller {
@@ -73,6 +84,15 @@ public interface Constants {
         double radius = 0.4318; //Radius in meters
 
         PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAcceleration);
+
+        double fastSpeedMultiplier = 1.4;
+        double slowSpeedMultiplier = 0.25;
+    }
+
+    interface Field {
+        double fieldWidth = 16.54;
+        Translation2d ampBlue = new Translation2d(1.93294, 4.867656);
+        Translation2d speakerBlue = new Translation2d(0.512318, 5.553456);
     }
 
     interface SwerveModule {
