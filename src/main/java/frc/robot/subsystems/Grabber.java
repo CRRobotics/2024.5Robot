@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
 
@@ -18,6 +19,7 @@ public class Grabber extends SubsystemBase implements Constants{
      */
     public Grabber()
     {
+        motor.setNeutralMode(NeutralModeValue.Brake);
     }
 
     /**
