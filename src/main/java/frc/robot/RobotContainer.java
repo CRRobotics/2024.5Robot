@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
@@ -23,7 +24,9 @@ import frc.robot.commands.drivetrain.DriveSlow;
 import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.JoystickDrive;
+import frc.robot.commands.grabber.Grab;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.LED;
 import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
@@ -32,6 +35,7 @@ import frc.robot.util.LocalADStarAK;
 public class RobotContainer {
   private final DriveTrain driveTrain;
   public static DriveStates driveStates;
+  private final Grabber grabber;
   private final XboxController driver;
   public static SendableChooser<String> inputMode;
   public static LED led;
@@ -39,8 +43,12 @@ public class RobotContainer {
 
   public RobotContainer() {
     driveTrain = new DriveTrain();
+    grabber = new Grabber();
     driveStates = DriveStates.normal;
     driver = new XboxController(Constants.Controller.driveControllerPort);
+
+    NamedCommands.registerCommand("grab", new Grab(grabber));
+
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);

@@ -13,6 +13,7 @@ import edu.wpi.first.math.util.Units;
 
 public interface Constants {
 
+
     interface Auto {
         double maxSpeed = 3; // meters per second
         double maxAcceleration = 4; // meters per second squared
@@ -106,5 +107,10 @@ public interface Constants {
         double turnEncoderPositionPIDMaxInput = turnEncoderPositionConversion;
         IdleMode turnIdleMode = IdleMode.kBrake;
         int turnCurrentLimit = 20; // amps
+    }
+
+    interface Grabber {
+        int motorID = 18; //Placeholder
+        double grabSpeed = 0.1;
     }
 }
