@@ -5,5 +5,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Acquisition extends SubsystemBase
 {
-  CANSparkMax acquisitionMotor = new CANSparkMax(0,CANSparkMaxLowLevel.MotorType.kBrushless);
+  public acquisition()
+  {
+    CANSparkMax aqMotor = new CANSparkMax(0,CANSparkMaxLowLevel.MotorType.kBrushless);
+  }
+
+  public void intake()
+  {
+    aqMotor.set();
+  }
+
+  public void stop()
+  {
+    aqMotor.set(0);
+  }
+
+  public void reject()
+  {
+    aqMotor.set()
+  }
 }
