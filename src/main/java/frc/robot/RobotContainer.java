@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -30,6 +31,7 @@ import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
 import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.JoystickDrive;
+import frc.robot.commands.drivetrain.TurnToAngle;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LED;
 import frc.robot.util.Constants;
@@ -64,9 +66,10 @@ public class RobotContainer {
     new JoystickButton(driver, 6).whileTrue(new DriveSlow());
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
     // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToRealativePoint(driveTrain));
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SequentialCommandGroup(
-      new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d(Math.PI)))
-    ));
+    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SequentialCommandGroup(
+    //   new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d(Math.PI)))
+    // ));
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new TurnToAngle(driveTrain, new Rotation2d(Math.PI / 6)));
 
   }
 
