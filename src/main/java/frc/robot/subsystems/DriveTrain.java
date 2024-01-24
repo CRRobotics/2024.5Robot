@@ -4,11 +4,15 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+
 import java.util.stream.IntStream;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.pathfinding.Pathfinder;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 //import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -16,6 +20,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -64,6 +69,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive, Consta
 // Cerberus 7&8
     // The gyro sensor
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
+    private Pathfinder pathFinder;
     
     
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
@@ -133,6 +139,8 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive, Consta
             // Do whatever you want with the poses here
             field.getObject("path").setPoses(poses);
         });
+
+        Pathfinding.setPathfinder(pathFinder = new LocalADStarAK());
     }
 
     @Override
@@ -463,7 +471,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive, Consta
 
     public void updateObstacles(){
         // NetworkTableWrapper.getDouble(i, "rx");
-        // LocalADStarAK.setDynamicObstacles(<>);
+        ArrayList<Pair<Translation2d, Translation2d>> obstacles = new ArrayList<Pair<Translation2d, Translation2d>>();
+        obstacles.add(new Pair(new Translation2d(1, -1), new Translation2d(2, 1)));
+        pathFinder.setDynamicObstacles(obstacles, this.getPose().getTranslation());
     }
 
     private Command FollowPathWithEvents(FollowPathHolonomic followPathHolonomic) {

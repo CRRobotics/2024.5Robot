@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
+import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.drivetrain.TurnToAngle;
@@ -58,7 +59,6 @@ public class RobotContainer implements Constants.Field {
     led = new LED(60);
 
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
-    Pathfinding.setPathfinder(new LocalADStarAK());
   }
 
   
