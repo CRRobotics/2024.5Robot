@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.stream.IntStream;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -38,7 +40,7 @@ import frc.robot.util.Constants;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.NetworkTableWrapper;
 import frc.robot.util.SwerveModule;
-public class DriveTrain extends SubsystemBase implements Constants.Drive {
+public class DriveTrain extends SubsystemBase implements Constants.Drive, Constants.Drive.PoseEstimator {
     // Create MAXSwerveModules
     public final SwerveModule frontLeft = new SwerveModule( // chimera 11& 12
             Constants.Drive.chimeraWheelID,
@@ -85,9 +87,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
             backLeft.getPosition(),
             backRight.getPosition()
         },
-        new Pose2d(1.81, 0.45, Rotation2d.fromRadians(Math.PI)), // initial pose
-        VecBuilder.fill(0.1, 0.1, 0.1), // odometry standard deviation for x, y, theta
-        VecBuilder.fill(0.5, 0.5, 0.5) // visions standard deviation for x, y, theta
+        new Pose2d(0, 0, Rotation2d.fromRadians(Math.PI)), // initial pose
+        VecBuilder.fill(stateTrans, stateTrans, stateTheta), // odometry standard deviation for x, y, theta
+        VecBuilder.fill(visionTrans, visionTrans, visionTheta) // visions standard deviation for x, y, theta
     );
 
     private Field2d field = new Field2d();
@@ -135,27 +137,6 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("pitch", getPitch());
-        
-        double xTarget = DriverStation.getAlliance().equals(Alliance.Red) ? 14.73 : 1.82;
-        double[] scoringPositions = {
-            0.46, 1.07, 1.64, 2.2, 2.74, 1.81, 3.87, 4.42, 5.07 // y positions in m of 9 scoring positions
-        };
-        Translation2d robotPosition = getPose().getTranslation(); // current position
-
-        // calculates which position is closest
-        double[] distances = new double[9];
-        int minDistanceIndex = 0;
-        for (int i = 0; i < distances.length; i++) {
-            distances[i] = robotPosition.getDistance(new Translation2d(xTarget, scoringPositions[i]));
-            if (distances[i] < distances[minDistanceIndex]) {
-                minDistanceIndex = i;
-            }
-        }
-        SmartDashboard.putNumber("closest scoring position", minDistanceIndex);
-        SmartDashboard.putNumber("distanceToPosition", robotPosition.getDistance(new Translation2d(xTarget, scoringPositions[minDistanceIndex])));
-
-
         SmartDashboard.putNumber("gyro angle", gyro.getAngle());
         SwerveModulePosition[] swervePosition = {
             frontLeft.getPosition(),
@@ -176,24 +157,20 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         
         // update with visions data from these cameras ids:
         Translation2d tag8 = new Translation2d(0, 5);
-        for (String i : new String[]{"0", "2", "4", "6", "8", "10"}) {
-            if (NetworkTableWrapper.getDouble(i, "ntags") != 0 && NetworkTableWrapper.getDouble(i, "rx") < 20 && NetworkTableWrapper.getDouble(i, "ry") < 20) {
-                double x = NetworkTableWrapper.getDouble(i, "rx");
-                double y = NetworkTableWrapper.getDouble(i, "ry");
-                double theta = NetworkTableWrapper.getDouble(i, "theta");
+        for (String id : cameraIds) {
+            double x = NetworkTableWrapper.getDouble(id, "rx");
+            double y = NetworkTableWrapper.getDouble(id, "ry");
+            double ntags = NetworkTableWrapper.getDouble(id, "ntags");
+            double theta = NetworkTableWrapper.getDouble(id, "theta");
+            if (ntags != 0 && x != cameraErrorCode) {
                 double distance = tag8.getDistance(new Translation2d(x, y));
                 SmartDashboard.putNumber("distance to tag", distance);
                 poseEstimator.addVisionMeasurement(
-                    new Pose2d(
-                        x,
-                        y,
-                        Rotation2d.fromRadians(theta)
-                    ),
+                    new Pose2d(x, y, Rotation2d.fromRadians(theta)),
                     Timer.getFPGATimestamp() + 0.01, // needs to be tested and calibrated
                     VecBuilder.fill(1 * distance, 1 * distance, 1 * distance) // needs to be calibrated
                 );
             }
-            SmartDashboard.putNumber(i + "Theta", NetworkTableWrapper.getDouble(i, "theta") * 180 / Math.PI);
         }
 
         // field

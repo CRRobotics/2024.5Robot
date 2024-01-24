@@ -87,6 +87,16 @@ public interface Constants {
 
         double fastSpeedMultiplier = 1.4;
         double slowSpeedMultiplier = 0.25;
+
+        String[] cameraIds = new String[]{"0", "2", "4", "6", "8", "10"};
+        int cameraErrorCode = 63900;
+
+        interface PoseEstimator {
+            double stateTrans = 0.1;
+            double stateTheta = 0.1;
+            double visionTrans = 0.5;
+            double visionTheta = 0.5;
+        }
     }
 
     interface Field {
