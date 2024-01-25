@@ -22,6 +22,9 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
+/**
+ * Tells the drive train to use a path to a realative point on the field
+ */
 public class DriveToRelative extends Command {
     DriveTrain driveTrain;
     Pose2d translation;
