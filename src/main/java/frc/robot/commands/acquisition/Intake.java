@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.Acquisition;
 
+/**
+ * Spins the Acquisition in such a way that the game piece comes into the possesion of the robot
+ */
 public class Intake extends CommandBase
 {
     Acquisition acq;
