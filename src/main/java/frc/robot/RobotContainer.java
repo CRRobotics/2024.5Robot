@@ -29,6 +29,9 @@ import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
 import frc.robot.util.LocalADStarAK;
 
+/**
+ * Simulates the robot
+ */
 public class RobotContainer {
   private final DriveTrain driveTrain;
   public static DriveStates driveStates;
@@ -37,6 +40,9 @@ public class RobotContainer {
   public static LED led;
   private final SendableChooser<Command> autoChooser;
 
+  /**
+   * Initializes the robot
+   */
   public RobotContainer() {
     driveTrain = new DriveTrain();
     driveStates = DriveStates.normal;
@@ -51,8 +57,10 @@ public class RobotContainer {
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
   }
 
-  
-  private void configureBindings() {
+  /**
+   * Configures bindings
+   */
+  private static void configureBindings() {
     new JoystickButton(driver, 6).whileTrue(new DriveSlow());
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
     // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToRealativePoint(driveTrain));
@@ -66,19 +74,33 @@ public class RobotContainer {
 
   }
 
+  /**
+   * Adds dropdown menu options (smart dashboard)
+   */
   private static void addInputModes() {
     inputMode.setDefaultOption("controller", "controller");
     inputMode.addOption("ddr", "ddr");
     SmartDashboard.putData("Input Mode", inputMode);
   }
 
+  /**
+   * Runs autonomous command
+   * @return autonomous command
+   */
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
+
+  /**
+   * Creates sendable choosers
+   */
   public static SendableChooser<String> colorTable = new SendableChooser<>();
   public static SendableChooser<Integer> tickSpeedChooser = new SendableChooser<>();
 
-    static{
+  /**
+   * Add options to color chooser
+   */
+    static {
         colorTable.addOption("red", "red");
         colorTable.addOption("blue", "blue");
         colorTable.addOption("rainbow", "rainbow");
@@ -93,6 +115,11 @@ public class RobotContainer {
         SmartDashboard.putData(tickSpeedChooser);
     
     }
+  
+  /**
+   * Chooses drive mode
+   * @return drive mode
+   */
   public Command getDriveCommand() {
     Command driveCommand;
     switch (inputMode.getSelected()) {
@@ -109,6 +136,9 @@ public class RobotContainer {
     return driveCommand;
   }
 
+  /**
+   * Resets the odometry
+   */
   public void resetOdometry() {
     driveTrain.resetOdometry(new Pose2d());
     driveTrain.zeroHeading();

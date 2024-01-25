@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Winch extends SubsystemBase
 {
-    public winch()
+    public Winch()
     {
         CANSparkMax LeftClimbMotor = new CANSparkMax(0,CANSparkMaxLowLevel.MotorType.kBrushless);
         CANSparkMax RightClimbMotor = new CANSparkMax(0,CANSparkMaxLowLevel.MotorType.kBrushless);

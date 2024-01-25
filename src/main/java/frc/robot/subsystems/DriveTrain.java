@@ -11,7 +11,6 @@ import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
-//import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
@@ -37,39 +36,46 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-// import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.NetworkTableWrapper;
 import frc.robot.util.SwerveModule;
+
+/**
+ * Simulates the drivetrain
+ */
 public class DriveTrain extends SubsystemBase implements Constants.Drive {
     // Create MAXSwerveModules
-    public final SwerveModule frontLeft = new SwerveModule( // chimera 11& 12
+    public final SwerveModule frontLeft = new SwerveModule( // chimera 11 & 12
             Constants.Drive.chimeraWheelID,
             Constants.Drive.chimeraTurnID,
             Constants.Drive.frontLeftAngularOffset);
 
-    public final SwerveModule frontRight = new SwerveModule( // manticore 9&10
+    public final SwerveModule frontRight = new SwerveModule( // manticore 9 & 10
             Constants.Drive.manticoreWheelID,
             Constants.Drive.manticoreTurnID,
             Constants.Drive.frontRightAngularOffset);
 
-    public final SwerveModule backLeft = new SwerveModule( //phoenix 13&14
+    public final SwerveModule backLeft = new SwerveModule( //phoenix 13 & 14
             Constants.Drive.phoenixWheelID,
             Constants.Drive.phoenixTurnID,
             Constants.Drive.backLeftAngularOffset);
 
-    public final SwerveModule backRight = new SwerveModule( //Leviathan 5&6
+    public final SwerveModule backRight = new SwerveModule( //Leviathan 5 & 6
             Constants.Drive.leviathanWheelID,
             Constants.Drive.leviathanTurnID,
             Constants.Drive.backRightAngularOffset);
+            
 // Cerberus 7&8
+
     // The gyro sensor
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
     private Pathfinder pathFinder;
     
-    
+    /**
+     * Keeps track of robot location based on data from encoders
+     */
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
         Constants.Drive.driveKinematics,
         Rotation2d.fromDegrees(gyro.getAngle()),
@@ -81,7 +87,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         }
     );
     
-    // Kalman filter for tracking robot pose
+    /**
+     * Kalman filter for tracking robot pose
+     */ 
     SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
         Constants.Drive.driveKinematics, // kinematics
         Rotation2d.fromDegrees(-gyro.getAngle()), // initial angle
@@ -99,7 +107,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     private Field2d field = new Field2d();
     // private Field2d odoField = new Field2d();
 
-    /** Creates a new DriveSubsystem. */
+    /** 
+     * Creates a new DriveSubsystem
+     */
     public DriveTrain() {
         // resetOdometry(new Pose2d(1.6, 4.4, Rotation2d.fromRadians(2.8)));
         zeroHeading();
@@ -206,23 +216,26 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         SmartDashboard.putData(field);
     }
 
+    /**
+     * Finds the field
+     * @return the field
+     */
     public Field2d getField() {
         return field;
     }
 
     /**
-     * Returns the currently-estimated pose of the robot.
-     *
-     * @return The pose.
+     * Returns the currently-estimated pose of the robot
+     * @return the pose
      */
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
     }
 
     /**
-     * Resets the odometry to the specified pose.
-     *
-     * @param pose The pose to which to set the odometry.
+     * Resets the odometry to the specified pose
+     * @param pose The pose to which to set the odometry
+     * @param rotation The rotation to which to set the odometry
      */
     public void resetOdometry(Pose2d pose, Rotation2d rotation) {
         poseEstimator.resetPosition(
@@ -237,9 +250,8 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     }
 
      /**
-     * Resets the odometry to the specified pose.
-     *
-     * @param pose The pose to which to set the odometry.
+     * Resets the odometry to the specified pose
+     * @param pose The pose to which to set the odometry
      */
     public void resetOdometry(Pose2d pose) {
         poseEstimator.resetPosition(
@@ -254,7 +266,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     }
 
     /**
-     * Sets the wheels into an X formation to prevent movement.
+     * Sets the wheels into an X formation to prevent movement
      */
     public void setX() {
         frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
@@ -264,9 +276,8 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     }
 
     /**
-     * Sets the swerve ModuleStates.
-     *
-     * @param desiredStates The desired SwerveModule states.
+     * Sets the swerve ModuleStates
+     * @param desiredStates The desired SwerveModule states
      */
     public void setModuleStates(SwerveModuleState[] desiredStates)
     {
@@ -278,6 +289,10 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         backRight.setDesiredState(desiredStates[3]);
     }
 
+    /**
+     * Sets the swerve ModuleSpeeds
+     * @param speed The desired SwerveModule speeds
+     */
     public void setMotorSpeeds(double speed) {
         setModuleStates(new SwerveModuleState[]{
             new SwerveModuleState(speed, new Rotation2d(0)),
@@ -287,7 +302,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         });
     }
 
-    /** Resets the drive encoders to currently read a position of 0. */
+    /**
+     * Resets the drive encoders to currently read a position of 0
+    */
     public void resetEncoders() {
         frontLeft.resetEncoders();
         frontRight.resetEncoders();
@@ -295,29 +312,42 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         backRight.resetEncoders();
     }
 
-    /** Zeroes the heading of the robot. */
+    /** 
+     * Zeroes the heading of the robot
+    */
     public void zeroHeading() {
         gyro.reset();
     }
 
+    /**
+     * Sets the angle of the gyroscope in radians
+     * @param angle the angle to set the gyroscope to
+     */
     public void setGyroAngle(double angle) {
         // gyro.setAngleAdjustment(angle * 180 / Math.PI);
         gyro.setAngleAdjustment(getHeading());
     }
 
+    /**
+     * Returns the angle of the gyroscope in radians
+     * @return the angle of teh gyroscope in radians
+     */
     public double getGyroAngle() {
         return -gyro.getAngle() * Math.PI / 180;
     }
 
     /**
-     * Returns the heading of the robot.
-     *
+     * Returns the heading of the robot
      * @return the robot's heading in degrees, from -180 to 180
      */
     public double getHeading() {
-        return poseEstimator.getEstimatedPosition().getRotation().getDegrees();
+        return poseEstimator.getEstimatedPosition().getRotation().getRadians();
     }
 
+    /**
+     * Returns the states for the four SwerveModules
+     * @return the states for the four SwerveModules
+     */
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = {
             frontLeft.getState(),
@@ -328,18 +358,25 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         return states;
     }
 
+    /**
+     * Returns the pitch of the gyroscope
+     * @return the pitch of the gyroscope
+     */
     public double getPitch() {
         return gyro.getPitch();
     }
 
+    /**
+     * Returns the roll of the gyroscope
+     * @return the roll of the gyroscope
+     */
     public double getRoll() {
         return gyro.getRoll();
     }
 
     /**
-     * Returns the turn rate of the robot from the gyroscope.
-     *
-     * @return The turn rate of the robot, in degrees per second
+     * Returns the turn rate of the robot from the gyroscope
+     * @return the turn rate of the robot, in degrees per second
      */
     public double getTurnRate() {
         return gyro.getRate() * (Constants.Drive.gyroReversed ? -1.0 : 1.0);
@@ -441,6 +478,11 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         return driveCommand;
     } */
 
+    /**
+     * Returns a command that follows a specific path
+     * @param path The path to follow
+     * @return The command that follows the path
+     */
     public Command followPathCommand(PathPlannerPath path) {
         PIDController thetaController = new PIDController(
             SmartDashboard.getNumber("drivetrain/thetaP", 0),
@@ -468,18 +510,30 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         );
     }
 
+    /**
+     * Retunrs chassis speeds
+     * @return Chassis speeds
+     */
     public ChassisSpeeds getChassisSpeeds(){
         return driveKinematics.toChassisSpeeds(frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
     }
 
+    /**
+     * The robot drives at chassis speed
+     * @param robotRelativeSpeeds The chassis speed at which the robot will drive at
+     */
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
         ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
         SwerveModuleState[] targetStates = driveKinematics.toSwerveModuleStates(targetSpeeds);
         this.setModuleStates(targetStates);
         this.updateObstacles();
-      }
+    }
 
-    public boolean flipPath(){
+    /**
+     * Returns true if your alliance is red, false otherwise
+     * @return true if your alliance is red, false otherwise
+     */
+    public boolean flipPath() {
         var alliance = DriverStation.getAlliance();
         if (alliance.isPresent()) {
             return alliance.get() == DriverStation.Alliance.Red;
@@ -487,13 +541,21 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         return false;
     }
 
-    public void updateObstacles(){
+    /**
+     * Sets locations to avoid when auto generating paths
+     */
+    public void updateObstacles() {
         // NetworkTableWrapper.getDouble(i, "rx");
         ArrayList<Pair<Translation2d, Translation2d>> obstacles = new ArrayList<Pair<Translation2d, Translation2d>>();
         obstacles.add(new Pair(new Translation2d(1, -1), new Translation2d(2, 1)));
         pathFinder.setDynamicObstacles(obstacles, this.getPose().getTranslation());
     }
 
+    /**
+     * Returns a command to follow a path that can include events
+     * @param followPathHolonomic The path to follow
+     * @return The command that follows the path
+     */
     private Command FollowPathWithEvents(FollowPathHolonomic followPathHolonomic) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'FollowPathWithEvents'");
