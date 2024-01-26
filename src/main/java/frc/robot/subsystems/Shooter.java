@@ -9,12 +9,12 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.Constants;
 
 /**
  * Simulates the launcher subsystem
  */
-public class Shooter extends SubsystemBase
-{
+public class Shooter extends SubsystemBase implements Constants.Shooter {
     TalonFX leftShooterMotor;
     TalonFX rightShooterMotor;
     CANSparkMax leftPivotMotor;
@@ -26,29 +26,33 @@ public class Shooter extends SubsystemBase
     RelativeEncoder encoderR;
     Slot0Configs leftSlot;
     Slot0Configs rightSlot;
-    VelocityVoltage velocity;
+    VelocityVoltage voltageController;
 
-    public Shooter()
-    {
+    public Shooter() {
         leftShooterMotor = new TalonFX(0);
-        rightShooterMotor = new TalonFX(0);
         leftPivotMotor = new CANSparkMax(0, MotorType.kBrushless);
-        rightPivotMotor = new CANSparkMax(0, MotorType.kBrushless);
-        rightConfig = new TalonFXConfiguration();
         leftConfig = new TalonFXConfiguration();
         leftSlot = new Slot0Configs();
-        rightSlot = new Slot0Configs();
         leftSlot.kP = 0;
         leftSlot.kI = 0;
         leftSlot.kD = 0;
+        encoderL = leftPivotMotor.getEncoder();
+
+        rightShooterMotor = new TalonFX(0);
+        rightPivotMotor = new CANSparkMax(0, MotorType.kBrushless);
+        rightConfig = new TalonFXConfiguration();
+        rightSlot = new Slot0Configs();
         rightSlot.kP = 0;
         rightSlot.kI = 0;
         rightSlot.kD = 0;
-        pid = new PIDController(kP, kI, kD); // will edit later
-        encoderL = leftPivotMotor.getEncoder();
         encoderR = rightPivotMotor.getEncoder();
-        velocity = new VelocityVoltage(0);
-        velocity.Slot = 0;
+
+        //TODO: do we need multiple of these
+        voltageController = new VelocityVoltage(null, null, false,
+            kF, 0, false, true, true);
+            new VelocityVoltage(kF, kF, false, kF, 0, false, false, false)
+        // maybe use this too
+        // voltageController.clone();
     }
 
     /**
@@ -57,8 +61,9 @@ public class Shooter extends SubsystemBase
      */
     public void fire(double setPoint)
     {
-        leftShooterMotor.setControl(velocity.withVelocity(setPoint));
-        rightShooterMotor.setControl(velocity.withVelocity(setPoint));
+        voltageController.Velocity = setPoint;
+        leftShooterMotor.setControl(voltageController);
+        rightShooterMotor.setControl(voltageController);
     }
 
     /**

@@ -74,6 +74,10 @@ public interface Constants {
         PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAcceleration);
     }
 
+    interface Shooter {
+        double kF = 0;
+    }
+
     interface SwerveModule {
         double wheelDiameter = 0.0762; //meters
         double wheelCircumference = Math.PI * wheelDiameter; // meters
