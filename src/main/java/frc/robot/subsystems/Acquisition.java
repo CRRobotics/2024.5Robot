@@ -22,12 +22,13 @@ public class Acquisition extends SubsystemBase
 
   /**
    * Intakes the cargo (not at a set speed yet)
+   * hi ethan
    */
   public void intake()
   {
     aqMotor.set(0);
     leftIndexMotor.set(0);
-    rightIndexmotor.set(-0);
+    rightIndexMotor.set(-0);
   }
 
   /**
