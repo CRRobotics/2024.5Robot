@@ -6,12 +6,12 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.Constants;
 
 /**
  * Simulates the winch
  */
-public class Winch extends SubsystemBase
-{
+public class Winch extends SubsystemBase implements Constants.Winch {
     CANSparkMax leftClimbMotor;
     CANSparkMax rightClimbMotor;
     PIDController pid;
@@ -23,31 +23,20 @@ public class Winch extends SubsystemBase
      */
     public Winch()
     {
-        leftClimbMotor = new CANSparkMax(0, MotorType.kBrushless);
-        rightClimbMotor = new CANSparkMax(0, MotorType.kBrushless);
+        leftClimbMotor = new CANSparkMax(leftID, MotorType.kBrushless);
+        rightClimbMotor = new CANSparkMax(rightID, MotorType.kBrushless);
         pid = new PIDController(kP, kI, kD);
         encoderL = leftClimbMotor.getEncoder();
         encoderR = rightClimbMotor.getEncoder();
     }
 
     /**
-     * Extends the winch to a set point
-     * @param setPoint The set point to extend the winch
+     * Extends the winch to a setpoint
+     * @param setpoint The setpoint to extend the winch to
      */
-    public void extend(double setPoint)
+    public void setPosition(double setpoint)
     {
-        leftClimbMotor.set(pid.calculate(encoderL.getPosition(), setPoint));
-        rightClimbMotor.set(pid.calculate(encoderR.getPosition(), setPoint));
+        leftClimbMotor.set(pid.calculate(encoderL.getPosition(), setpoint));
+        rightClimbMotor.set(pid.calculate(encoderR.getPosition(), setpoint));
     }
-
-    /**
-     * Retracts the winch to a set point
-     * @param setPoint The set point to retract the winch
-     */
-    public void retract(double setPoint)
-    {
-        leftClimbMotor.set(pid.calculate(encoderL.getPosition(), setPoint));
-        rightClimbMotor.set(pid.calculate(encoderR.getPosition(), setPoint));
-    }
-    
 }

@@ -107,4 +107,13 @@ public interface Constants {
         IdleMode turnIdleMode = IdleMode.kBrake;
         int turnCurrentLimit = 20; // amps
     }
+
+    interface Winch {
+        double kP = 0;
+        double kI = 0;
+        double kD = 0;
+
+        int leftID = 0;
+        int rightID = 0;
+    }
 }
