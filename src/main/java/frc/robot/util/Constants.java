@@ -13,6 +13,17 @@ import edu.wpi.first.math.util.Units;
 
 public interface Constants {
 
+    interface Acquisition {
+        int aqID = 0;
+        int leftID = 0;
+        int rightID = 0;
+
+        double aqIntakeSpeed = 0;
+        double aqRejectSpeed = 0;
+        double indexIntakeSpeed = 0;
+        double indexRejectSpeed = 0;
+    }
+
     interface Auto {
         double maxSpeed = 3; // meters per second
         double maxAcceleration = 4; // meters per second squared
