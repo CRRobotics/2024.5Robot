@@ -10,13 +10,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Acquisition extends SubsystemBase
 {
   CANSparkMax aqMotor;
+  CANSparkMax leftIndexMotor;
+  CANSparkMax rightIndexMotor;
 
-  /**
-   * Initializes the acquisition
-   */
   public Acquisition()
   {
     aqMotor = new CANSparkMax(0, MotorType.kBrushless);
+    leftIndexMotor = new CANSparkMax(0, MotorType.kBrushless);
+    rightIndexMotor = new CANSparkMax(0, MotorType.kBrushless);
   }
 
   /**
@@ -25,6 +26,8 @@ public class Acquisition extends SubsystemBase
   public void intake()
   {
     aqMotor.set(0);
+    leftIndexMotor.set(0);
+    rightIndexmotor.set(-0);
   }
 
   /**
@@ -33,6 +36,8 @@ public class Acquisition extends SubsystemBase
   public void stop()
   {
     aqMotor.set(0);
+    leftIndexMotor.set(0);
+    rightIndexMotor.set(0);
   }
 
   /**
@@ -41,5 +46,7 @@ public class Acquisition extends SubsystemBase
   public void reject()
   {
     aqMotor.set(0);
+    leftIndexMotor.set(-0);
+    rightIndexMotor.set(0);
   }
 }
