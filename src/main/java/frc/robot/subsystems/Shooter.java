@@ -1,8 +1,9 @@
 package frc.robot.subsystems;
-
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -23,6 +24,9 @@ public class Shooter extends SubsystemBase
     PIDController pid;
     RelativeEncoder encoderL;
     RelativeEncoder encoderR;
+    Slot0Configs leftSlot;
+    Slot0Configs rightSlot;
+    VelocityVoltage velocity;
 
     public Shooter()
     {
@@ -32,15 +36,19 @@ public class Shooter extends SubsystemBase
         rightPivotMotor = new CANSparkMax(0, MotorType.kBrushless);
         rightConfig = new TalonFXConfiguration();
         leftConfig = new TalonFXConfiguration();
-        leftShooterMotor.config_kP(0,0);
-        leftShooterMotor.config_kI(0,0);
-        leftShooterMotor.config_kD(0,0);
-        rightShooterMotor.config_kP(0,0);
-        rightShooterMotor.config_kI(0,0);
-        rightShooterMotor.config_kD(0,0);
+        leftSlot = new Slot0Configs();
+        rightSlot = new Slot0Configs();
+        leftSlot.kP = 0;
+        leftSlot.kI = 0;
+        leftSlot.kD = 0;
+        rightSlot.kP = 0;
+        rightSlot.kI = 0;
+        rightSlot.kD = 0;
         pid = new PIDController(kP, kI, kD); // will edit later
         encoderL = leftPivotMotor.getEncoder();
         encoderR = rightPivotMotor.getEncoder();
+        velocity = new VelocityVoltage(0);
+        velocity.Slot = 0;
     }
 
     /**
@@ -49,8 +57,8 @@ public class Shooter extends SubsystemBase
      */
     public void fire(double setPoint)
     {
-        leftShooterMotor.set(TalonFXControlMode.Velocity, setPoint);
-        rightShooterMotor.set(TalonFXControlMode.Velocity, setPoint);
+        leftShooterMotor.setControl(velocity.withVelocity(setPoint));
+        rightShooterMotor.setControl(velocity.withVelocity(setPoint));
     }
 
     /**
