@@ -22,7 +22,6 @@ public class Acquisition extends SubsystemBase
 
   /**
    * Intakes the cargo (not at a set speed yet)
-   * hi ethan
    */
   public void intake()
   {
