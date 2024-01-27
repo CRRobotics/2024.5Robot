@@ -103,6 +103,15 @@ public interface Constants {
         double fieldWidth = 16.54;
         Translation2d ampBlue = new Translation2d(1.93294, 4.867656);
         Translation2d speakerBlue = new Translation2d(0.512318, 5.553456);
+
+        Translation2d tag1 = new Translation2d(15.513558, 1.071626);
+        Translation2d tag2 = new Translation2d(15.513558, 2.748026);
+        Translation2d tag3 = new Translation2d(15.513558, 4.424426);
+        Translation2d tag4 = new Translation2d(16.178784, 6.749796);
+        Translation2d tag5 = new Translation2d(0.36195, 6.749796);
+        Translation2d tag6 = new Translation2d(1.02743, 4.424426);
+        Translation2d tag7 = new Translation2d(1.02743, 2.748026);
+        Translation2d tag8 = new Translation2d(1.02743, 1.071626);
     }
 
     interface SwerveModule {
