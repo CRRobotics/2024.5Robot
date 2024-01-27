@@ -1,39 +1,39 @@
 package frc.robot.commands.acquisition;
 
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Acquisition;
+import frc.robot.subsystems.Indexer;
 
 /**
  * Spins the Acquisition in such a way that the game piece comes into the possesion of the robot
  */
-public class Intake extends CommandBase
-{
+public class Intake extends Command {
     Acquisition acq;
-    XboxController controller = new XboxController(0);
+    Indexer indexer;
 
-    public Intake(Acquisition acq)
+    public Intake(Acquisition acq, Indexer indexer)
     {
         this.acq = acq;
+        this.indexer = indexer;
         addRequirements(acq);
     }
 
     @Override
     public void initialize() {
-        acq.setSpeed(0.6);
+        
     }
 
     @Override
     public void execute()
     {
-        acq.setSpeed(0.6);
+        acq.intake();
+        indexer.intake();
     }
 
     @Override
     public void end(boolean interrupted) {
-        acq.setSpeed(0);
+        acq.stop();
+        indexer.stop();
     }
 
     @Override

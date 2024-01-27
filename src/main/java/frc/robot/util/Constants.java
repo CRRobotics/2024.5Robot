@@ -15,13 +15,8 @@ public interface Constants {
 
     interface Acquisition {
         int aqID = 0;
-        int leftID = 0;
-        int rightID = 0;
-
         double aqIntakeSpeed = 0;
         double aqRejectSpeed = 0;
-        double indexIntakeSpeed = 0;
-        double indexRejectSpeed = 0;
     }
 
     interface Auto {
@@ -83,6 +78,12 @@ public interface Constants {
         double radius = 0.4318; //Radius in meters
 
         PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAcceleration);
+    }
+
+    interface Indexer {
+        int indexID = 0;
+        double indexIntakeSpeed = 0;
+        double indexRejectSpeed = 0;
     }
 
     interface SwerveModule {
