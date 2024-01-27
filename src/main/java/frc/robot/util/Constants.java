@@ -104,14 +104,22 @@ public interface Constants {
         Translation2d ampBlue = new Translation2d(1.93294, 4.867656);
         Translation2d speakerBlue = new Translation2d(0.512318, 5.553456);
 
-        Translation2d tag1 = new Translation2d(15.513558, 1.071626);
-        Translation2d tag2 = new Translation2d(15.513558, 2.748026);
-        Translation2d tag3 = new Translation2d(15.513558, 4.424426);
-        Translation2d tag4 = new Translation2d(16.178784, 6.749796);
-        Translation2d tag5 = new Translation2d(0.36195, 6.749796);
-        Translation2d tag6 = new Translation2d(1.02743, 4.424426);
-        Translation2d tag7 = new Translation2d(1.02743, 2.748026);
-        Translation2d tag8 = new Translation2d(1.02743, 1.071626);
+        Translation2d tag1 = new Translation2d(15.079472, 0.245872);
+        Translation2d tag2 = new Translation2d(16.185134, 0.883666);
+        Translation2d tag3 = new Translation2d(16.579342, 4.982718);
+        Translation2d tag4 = new Translation2d(16.579342, 5.547868);
+        Translation2d tag5 = new Translation2d(14.700758, 8.2042);
+        Translation2d tag6 = new Translation2d(1.8415, 8.2042);
+        Translation2d tag7 = new Translation2d(-0.0381, 5.547868);
+        Translation2d tag8 = new Translation2d(-0.0381, 4.982718);
+        Translation2d tag9 = new Translation2d(0.356108, 0.883666);
+        Translation2d tag10 = new Translation2d(1.461516, 0.245872);
+        Translation2d tag11 = new Translation2d(11.904726, 3.713226);
+        Translation2d tag12 = new Translation2d(11.904726, 4.49834);
+        Translation2d tag13 = new Translation2d(11.220196, 4.105148);
+        Translation2d tag14 = new Translation2d(5.320792, 4.105148);
+        Translation2d tag15 = new Translation2d(4.641342, 4.49834);
+        Translation2d tag16 = new Translation2d(4.641342, 3.713226);
     }
 
     interface SwerveModule {
