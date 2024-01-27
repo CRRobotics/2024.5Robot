@@ -9,7 +9,7 @@ import frc.robot.util.AngleSpeed;
 import frc.robot.util.Constants;
 import frc.robot.util.ValueFromDistance;
 
-public class SpeakerShot extends Command implements Constants.Field {
+public class SpeakerShot extends Command implements Constants.Field, Constants.Shooter {
     //eventually need other subsystems
     private Shooter shooter;
     private DriveTrain driveTrain;
@@ -27,33 +27,26 @@ public class SpeakerShot extends Command implements Constants.Field {
 
     @Override
     public void initialize() {
-        if(!Robot.lockedOn())
-            end(true);
-            
-        shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), ));
-        shooter.setCoast();
+        shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
+            ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), speakerBlueTarget) //TODO: make this work for either side
+        );
         startTime = System.currentTimeMillis();
-        shooter.setActuator(shootAngleSpeed.getAngle());
-        shooter.setSpeed(Constants.ShooterConstants.reverseIndexSpeed);
-        indexer.setIndexMotor(-Constants.IndexerConstants.indexMotorSpeed);
-
-        //acquisition.acquisitionNeutral();
-        acquisition.acquisitionDown();
-        led.redFlare();
+        shooter.aim(shootAngleSpeed.getAngle());
+        shooter.setSpeed(reverseIndexSpeed);
+        // indexer.setIndexMotor(reverseIndexSpeed);
     }
 
     @Override
     public void execute() {
-        if(System.currentTimeMillis() >= startTime + Constants.ShooterConstants.reverseIndexWhenShootingTime)
-        {
-            indexer.setIndexMotor(0);
-            shooter.setSpeedRPM(shootAngleSpeed.getSpeed());
+        if (System.currentTimeMillis() >= startTime + reverseTime) {
+            // indexer.setIndexMotor(0);
+            shooter.setSpeed(shootAngleSpeed.getSpeed());
         }
-        if(System.currentTimeMillis() >= startTime + Constants.ShooterConstants.reverseIndexWhenShootingTime + Constants.ShooterConstants.spinUpTime)
-        {
-            shooter.setSpeedRPM(shootAngleSpeed.getSpeed());
-            indexer.setIndexMotor(Constants.IndexerConstants.indexMotorSpeed);
-            acquisition.spinAcquisition(Constants.AcquisitionConstants.acquisitionSpeedSlow);
+
+        if (System.currentTimeMillis() >= startTime + spinUpTime) {
+            shooter.setSpeed(shootAngleSpeed.getSpeed());
+            // indexer.setIndexMotor(Constants.IndexerConstants.indexMotorSpeed);
+            // acquisition.spinAcquisition(Constants.AcquisitionConstants.acquisitionSpeedSlow);
         }
 
 
@@ -62,19 +55,16 @@ public class SpeakerShot extends Command implements Constants.Field {
     @Override
     public void end(boolean interrupted) {
         shooter.setSpeed(0);
-        indexer.setIndexMotor(0);
-        acquisition.stopAcquisitionMotor();
-        shooter.setBrake();
+        // indexer.setIndexMotor(0);
+        // acquisition.stopAcquisitionMotor();
+        shooter.aim(restAngle);
     }
 
     @Override
     public boolean isFinished() {
-        if(System.currentTimeMillis() > startTime + Constants.ShooterConstants.pureShootingTime)
+        if (System.currentTimeMillis() > startTime + shootTime)
             return true;
-        if(ControllerWrapper.DriverRightTrigger.get() || ControllerWrapper.ControllerRightTrigger.get())
-        {
-            return true;
-        }
+        //TODO: cancel when button pressed
         return false;
 
 

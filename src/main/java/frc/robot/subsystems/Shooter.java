@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -32,6 +32,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         leftShooterMotor = new TalonFX(0);
         leftPivotMotor = new CANSparkMax(0, MotorType.kBrushless);
         leftConfig = new TalonFXConfiguration();
+        leftShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         leftSlot = new Slot0Configs();
         leftSlot.kP = 0;
         leftSlot.kI = 0;
@@ -41,6 +42,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         rightShooterMotor = new TalonFX(0);
         rightPivotMotor = new CANSparkMax(0, MotorType.kBrushless);
         rightConfig = new TalonFXConfiguration();
+        rightShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         rightSlot = new Slot0Configs();
         rightSlot.kP = 0;
         rightSlot.kI = 0;
@@ -55,12 +57,11 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     }
 
     /**
-     * Fires the launcher at a set point
-     * @param setPoint The set point to fire the launcher at
+     * Runs the shooter at a speed
+     * @param setpoint The speed to run the shooter at
      */
-    public void fire(double setPoint)
-    {
-        voltageController.Velocity = setPoint;
+    public void setSpeed(double setpoint) {
+        voltageController.Velocity = setpoint; // is this rpm
         leftShooterMotor.setControl(voltageController);
         rightShooterMotor.setControl(voltageController);
     }
@@ -69,8 +70,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
      * Aims the launcher to a set point
      * @param setPoint The set point to aim the launcher at
      */
-    public void aim(double setPoint)
-    {
+    public void aim(double setPoint) { // is this radians
         leftPivotMotor.set(pid.calculate(encoderL.getPosition(), setPoint));
         rightPivotMotor.set(pid.calculate(encoderR.getPosition(), setPoint));
     }
