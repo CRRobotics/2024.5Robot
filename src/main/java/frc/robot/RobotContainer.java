@@ -131,19 +131,10 @@ public class RobotContainer implements Constants.Field {
   }
 
   public void resetOdometry() {
-    if (getAlliance().equals(Alliance.Blue)) {
-      driveTrain.resetOdometry(new Pose2d());
-      driveTrain.zeroHeading();
-    } else if (getAlliance().equals(Alliance.Red)) {
-      driveTrain.resetOdometry(new Pose2d(new Translation2d(fieldWidth, 0), new Rotation2d(Math.PI)));
-      driveTrain.zeroHeading();
-      SmartDashboard.putString("gyro value", String.valueOf(driveTrain.getGyroAngle()));
+    Pose2d pose = new Pose2d(0, 0, new Rotation2d(0)); //TODO: Test this
+    if (getAlliance().equals(Alliance.Red)) {
+      pose = new Pose2d(fieldWidth, 0, new Rotation2d(Math.PI));
     }
-
-    // Pose2d pose = new Pose2d(0, 0, new Rotation2d(0)); TODO: Test this
-    // if (getAlliance().equals(Alliance.Red)) {
-    //   pose = new Pose2d(fieldWidth, 0, new Rotation2d(Math.PI));
-    // }
-    // driveTrain.resetOdometry(pose);
+    driveTrain.resetOdometry(pose);
   }
 }

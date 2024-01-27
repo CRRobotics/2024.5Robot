@@ -126,8 +126,8 @@ public class JoystickDrive extends Command implements Constants.Drive {
 
         // Convert the commanded speeds into the correct units for the drivetrain
         
-        double xSpeedDelivered = xSpeedCommanded * speedAdjustedMaxSpeed;
-        double ySpeedDelivered = ySpeedCommanded * speedAdjustedMaxSpeed;
+        double xSpeedDelivered = xSpeedCommanded * speedAdjustedMaxSpeed * (RobotContainer.getAlliance().equals(Alliance.Blue) ? 1 : -1);
+        double ySpeedDelivered = ySpeedCommanded * speedAdjustedMaxSpeed * (RobotContainer.getAlliance().equals(Alliance.Blue) ? 1 : -1);
         double rotDelivered = currentRotation * maxAngularSpeed;
         SmartDashboard.putNumber("xSpeedCommanded", xSpeedCommanded);
         SmartDashboard.putNumber("ySpeedCommanded", ySpeedCommanded);
