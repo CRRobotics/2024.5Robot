@@ -101,8 +101,6 @@ public interface Constants {
 
     interface Field {
         double fieldWidth = 16.54;
-        Translation2d ampBlue = new Translation2d(1.93294, 4.867656);
-        Translation2d speakerBlue = new Translation2d(0.512318, 5.553456);
 
         Translation2d tag1 = new Translation2d(15.079472, 0.245872);
         Translation2d tag2 = new Translation2d(16.185134, 0.883666);
@@ -120,6 +118,10 @@ public interface Constants {
         Translation2d tag14 = new Translation2d(5.320792, 4.105148);
         Translation2d tag15 = new Translation2d(4.641342, 4.49834);
         Translation2d tag16 = new Translation2d(4.641342, 3.713226);
+
+        Translation2d ampBlue = new Translation2d(1.93294, 4.867656);
+        Translation2d speakerBlueBumper = new Translation2d(0.512318, 5.553456);
+        Translation2d speakerBlueTarget = tag7; //maybe find a way to clone this
     }
 
     interface SwerveModule {
