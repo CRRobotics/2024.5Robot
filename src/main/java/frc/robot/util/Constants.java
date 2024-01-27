@@ -120,8 +120,13 @@ public interface Constants {
         Translation2d tag16 = new Translation2d(4.641342, 3.713226);
 
         Translation2d ampBlue = new Translation2d(1.93294, 4.867656);
-        Translation2d speakerBlueBumper = new Translation2d(0.512318, 5.553456);
-        Translation2d speakerBlueTarget = tag7; //maybe find a way to clone this
+        Translation2d subwooferBlue = new Translation2d(0.512318, 5.553456);
+        Translation2d speakerBlue = tag7; //maybe find a way to clone this
+
+        Translation2d ampRed = ampBlue.minus(new Translation2d(fieldWidth, 0));
+        Translation2d subwooferRed = subwooferBlue.minus(new Translation2d(fieldWidth, 0));
+        Translation2d speakerRed = speakerBlue.minus(new Translation2d(fieldWidth, 0));
+
     }
 
     interface SwerveModule {
