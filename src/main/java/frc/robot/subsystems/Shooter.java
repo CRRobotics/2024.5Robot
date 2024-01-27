@@ -48,9 +48,8 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         encoderR = rightPivotMotor.getEncoder();
 
         //TODO: do we need multiple of these
-        voltageController = new VelocityVoltage(null, null, false,
-            kF, 0, false, true, true);
-            new VelocityVoltage(kF, kF, false, kF, 0, false, false, false)
+        voltageController =  new VelocityVoltage(0, 0, false, kF,
+            0, false, true, true);
         // maybe use this too
         // voltageController.clone();
     }
