@@ -42,7 +42,8 @@ public class Winch extends SubsystemBase implements Constants.Winch
         if (toplimitSwitch.get()) 
         {
             motor.set(0);
-        } else 
+        } 
+        else 
         {
             motor.set(speed);
         }
