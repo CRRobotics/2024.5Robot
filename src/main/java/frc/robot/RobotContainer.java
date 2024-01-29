@@ -11,6 +11,8 @@ import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,6 +25,7 @@ import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
 import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRelative;
+import frc.robot.commands.drivetrain.DriveToRing;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.grabber.Grab;
 import frc.robot.subsystems.DriveTrain;
@@ -63,7 +66,6 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(driver, 6).whileTrue(new DriveSlow());
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
-    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToRealativePoint(driveTrain));
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SequentialCommandGroup(
       new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d())),
       new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d()))
@@ -71,7 +73,10 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new SequentialCommandGroup(
       new DriveToPoint(driveTrain, new Pose2d(3, 0, new Rotation2d()))
     ));
-
+    new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(
+      new SequentialCommandGroup(
+        new DriveToRing(driveTrain, grabber)
+    ));
   }
 
   private static void addInputModes() {
@@ -118,7 +123,7 @@ public class RobotContainer {
   }
 
   public void resetOdometry() {
-    driveTrain.resetOdometry(new Pose2d());
+    driveTrain.resetOdometry(new Pose2d(5.0,5.0, new Rotation2d(Math.PI/3)));
     driveTrain.zeroHeading();
   }
 }

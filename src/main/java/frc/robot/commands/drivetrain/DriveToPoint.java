@@ -30,8 +30,8 @@ public class DriveToPoint extends Command {
         this.target = target;
     }
 
-        @Override
-        public void initialize() {
+    @Override
+    public void initialize() {
         driveTrain.updateObstacles();
         Command pathfindingCommand = AutoBuilder.pathfindToPose(
             target,

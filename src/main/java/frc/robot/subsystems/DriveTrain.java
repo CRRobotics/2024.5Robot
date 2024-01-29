@@ -487,11 +487,16 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         return false;
     }
 
+    public Pathfinder getPathFinder(){
+        return pathFinder;
+    }
+
     public void updateObstacles(){
-        // NetworkTableWrapper.getDouble(i, "rx");
-        ArrayList<Pair<Translation2d, Translation2d>> obstacles = new ArrayList<Pair<Translation2d, Translation2d>>();
-        obstacles.add(new Pair(new Translation2d(1, -1), new Translation2d(2, 1)));
-        pathFinder.setDynamicObstacles(obstacles, this.getPose().getTranslation());
+        // // NetworkTableWrapper.getDouble(i, "rx");
+        // ArrayList<Pair<Translation2d, Translation2d>> obstacles = new ArrayList<Pair<Translation2d, Translation2d>>();
+        // obstacles.add(new Pair(new Translation2d(1, -1), new Translation2d(2, 1)));
+        // pathFinder.setDynamicObstacles(obstacles, this.getPose().getTranslation());
+        //Commented out until network tables are ready
     }
 
     private Command FollowPathWithEvents(FollowPathHolonomic followPathHolonomic) {
