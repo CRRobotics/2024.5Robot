@@ -11,7 +11,10 @@ import frc.robot.util.Constants;
 /**
  * Simulates the winch
  */
-public class Winch extends SubsystemBase implements Constants.Winch {
+public class Winch extends SubsystemBase implements Constants.Winch 
+{
+    DigitalInput toplimitSwitch;
+    DigitalInput bottomlimitSwitch;
     CANSparkMax leftClimbMotor;
     CANSparkMax rightClimbMotor;
     
@@ -20,6 +23,8 @@ public class Winch extends SubsystemBase implements Constants.Winch {
      */
     public Winch()
     {
+        toplimitSwitch = new DigitalInput(0);
+        bottomLimitSwitch = new DigitalInput(1);
         leftClimbMotor = new CANSparkMax(leftID, MotorType.kBrushless);
         rightClimbMotor = new CANSparkMax(rightID, MotorType.kBrushless);
     }
