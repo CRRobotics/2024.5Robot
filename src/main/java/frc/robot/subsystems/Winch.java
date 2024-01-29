@@ -33,9 +33,27 @@ public class Winch extends SubsystemBase implements Constants.Winch
      * Extends the winch to a setpoint
      * @param setpoint The setpoint to extend the winch to
      */
-    public void setPosition(double setpoint)
+    public void setSpeed(double speed)
     {
         leftClimbMotor.set();
         rightClimbMotor.set();
+        if (speed > 0) 
+        {
+        if (toplimitSwitch.get()) 
+        {
+            motor.set(0);
+        } else 
+        {
+            motor.set(speed);
+        }
+    } else 
+        {
+        if (bottomlimitSwitch.get()) 
+        {
+            motor.set(0);
+        } else {
+            motor.set(speed);
+        }
+    }
     }
 }
