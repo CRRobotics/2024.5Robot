@@ -14,9 +14,6 @@ import frc.robot.util.Constants;
 public class Winch extends SubsystemBase implements Constants.Winch {
     CANSparkMax leftClimbMotor;
     CANSparkMax rightClimbMotor;
-    PIDController pid;
-    RelativeEncoder encoderL;
-    RelativeEncoder encoderR;
     
     /**
      * Initializes the winch
@@ -25,9 +22,6 @@ public class Winch extends SubsystemBase implements Constants.Winch {
     {
         leftClimbMotor = new CANSparkMax(leftID, MotorType.kBrushless);
         rightClimbMotor = new CANSparkMax(rightID, MotorType.kBrushless);
-        pid = new PIDController(kP, kI, kD);
-        encoderL = leftClimbMotor.getEncoder();
-        encoderR = rightClimbMotor.getEncoder();
     }
 
     /**
@@ -36,7 +30,7 @@ public class Winch extends SubsystemBase implements Constants.Winch {
      */
     public void setPosition(double setpoint)
     {
-        leftClimbMotor.set(pid.calculate(encoderL.getPosition(), setpoint));
-        rightClimbMotor.set(pid.calculate(encoderR.getPosition(), setpoint));
+        leftClimbMotor.set();
+        rightClimbMotor.set();
     }
 }
