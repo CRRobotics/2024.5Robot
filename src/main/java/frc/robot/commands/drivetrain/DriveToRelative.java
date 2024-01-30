@@ -34,7 +34,7 @@ public class DriveToRelative extends Command {
     public DriveToRelative(DriveTrain driveTrain, Transform2d translationRelative, boolean robotRelative) {
         this.driveTrain = driveTrain;
         this.translationRelative = translationRelative;            
-        this.translation = new Pose2d(translationRelative.getX(), translationRelative.getY(), translationRelative.getRotation());
+        this.translation = new Pose2d(translationRelative.getX(), translationRelative.getY(), new Rotation2d(translationRelative.getRotation().getRadians()));
         this.robotRelative = robotRelative;
     }
 
@@ -65,7 +65,7 @@ public class DriveToRelative extends Command {
                 )
             );
         }
-        PathPlannerPath path = new PathPlannerPath(list, Constants.Drive.constraints, new GoalEndState(0.20, translation.getRotation()));
+        PathPlannerPath path = new PathPlannerPath(list, Constants.Drive.constraints, new GoalEndState(0, translation.getRotation()));
         path.preventFlipping = true;
         followCommand = AutoBuilder.followPath(path);
         followCommand = followCommand.finallyDo(

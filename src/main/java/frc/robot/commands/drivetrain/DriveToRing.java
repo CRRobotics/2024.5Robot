@@ -28,29 +28,53 @@ public class DriveToRing extends Command{
     private DriveTrain driveTrain;
     private Grabber grabber;
     private boolean isFinished = false;
+    private DriveToRelative drive;
+    private Transform2d translation;
+    private int i = 0;
 
     public DriveToRing(DriveTrain driveTrain, Grabber grabber) {
         this.driveTrain = driveTrain;
+
     }
 
         @Override
         public void initialize(){
-            double[] pieceData = {60.0, 60.0, 0, 0};
 
-            //pieceData = NetworkTableWrapper.getArray("","llpython");
+            double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
+            if (pieceData.length == 0){
+                System.out.println("Empty Array");
+            }
+            System.out.println(pieceData[0] + ", " + pieceData[1]);
+            // Double[] pieceData = {20.0, 60.0};
 
-            Translation2d closestPiece = new Translation2d(pieceData[1] * 0.0254, (pieceData[0] - 9) * -0.0254);
+            Translation2d closestPiece = new Translation2d((pieceData[1] - 9) * -0.0254, (pieceData[0]) * 0.0254);
 
             GetGlobalCoordinates globalCoord = new GetGlobalCoordinates(driveTrain, closestPiece);
 
-            Transform2d translation = new Transform2d(closestPiece.getX(), closestPiece.getY(), new Rotation2d(globalCoord.targetToRobotAngle * -1));
-            DriveToRelative drive = new DriveToRelative(driveTrain, translation, true);
+            translation = new Transform2d(closestPiece.getX(), closestPiece.getY(), new Rotation2d(globalCoord.targetToRobotAngle +  + driveTrain.getPose().getRotation().getRadians()));
+            drive = new DriveToRelative(driveTrain, translation, true);
             drive.schedule();
-            if (drive.isFinished()){
+        }
+
+        @Override
+        public void execute(){
+            if(i == 50){
+                double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
+                System.out.println(pieceData[0] + " " + pieceData[1]);
+                if (pieceData.length == 0){
+                System.out.println("Empty Array");
+                }
+                drive.cancel();
+                drive = new DriveToRelative(driveTrain, translation, true);
+                drive.schedule();
+                if (drive.isFinished()){
                 Grab grab = new Grab(grabber);
                 grab.schedule();
+                isFinished = true;
+                }
+                i = 0;
             }
-            this.isFinished = true;
+            i ++;
         }
 
         @Override

@@ -36,7 +36,6 @@ public class GetGlobalCoordinates {
 
         this.inputX = pieceData.getX();
         this.inputY = pieceData.getY();
-        this.targetDistanceToBot = Math.pow(Math.pow(inputX,2)+Math.pow(inputY,2),0.5);
         this.targetToRobotAngle = getTargetAngleToRobot(this.inputX,this.inputY);
 
         this.globalAngleOfTarget = this.rotationAngle + this.targetToRobotAngle;
@@ -48,10 +47,10 @@ public class GetGlobalCoordinates {
     
     //get the target angle reletive to x-axis of robot
     public double getTargetAngleToRobot(double xToRobot, double yToRobot){
-        double targetAngle = Math.atan2(yToRobot, xToRobot);
-        if (xToRobot < 0) {
-            targetAngle *= -1;
-        }
+        System.out.println(yToRobot + ", " + xToRobot);
+        double targetAngle = Math.asin(yToRobot / xToRobot);
+
+        System.out.println(targetAngle * 180/Math.PI);
         return targetAngle;
     }
 }
