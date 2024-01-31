@@ -40,29 +40,29 @@ public class DriveToRing extends Command{
         @Override
         public void initialize(){
 
-            double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
-            if (pieceData.length == 0){
-                System.out.println("Empty Array");
-            }
-            System.out.println(pieceData[0] + ", " + pieceData[1]);
-            // Double[] pieceData = {20.0, 60.0};
+            // double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
+            // if (pieceData.length == 0){
+            //     System.out.println("Empty Array");
+            // }
+            // System.out.println(pieceData[0] + ", " + pieceData[1]);
+            double[] pieceData = {20.0, 60.0};
 
-            Translation2d closestPiece = new Translation2d((pieceData[1] - 9) * -0.0254, (pieceData[0]) * 0.0254);
+            Translation2d closestPiece = new Translation2d((pieceData[1]) * -0.0254, (pieceData[0]) * 0.0254);
 
             GetGlobalCoordinates globalCoord = new GetGlobalCoordinates(driveTrain, closestPiece);
 
-            target = new Pose2d(closestPiece.getX(), closestPiece.getY(), new Rotation2d(globalCoord.targetToRobotAngle +  + driveTrain.getPose().getRotation().getRadians()));
-            drive = Command pathfindingCommand = AutoBuilder.pathfindToPose(
+            Pose2d target = new Pose2d(closestPiece.getX(), closestPiece.getY(), new Rotation2d(globalCoord.targetToRobotAngle + driveTrain.getPose().getRotation().getRadians()));
+            Command pathfindingCommand = AutoBuilder.pathfindToPose(
                 target, 
                 Constants.Drive.constraints,
                 0.0,
                 0.0
-            )
-            drive.schedule();
+            );
+            pathfindingCommand.schedule();
         }
 
         @Override
-        public void execute(){
+        public void execute(){  
             if(i == 50){
                 double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
                 System.out.println(pieceData[0] + " " + pieceData[1]);
