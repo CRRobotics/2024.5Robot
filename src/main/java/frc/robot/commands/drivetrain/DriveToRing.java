@@ -51,8 +51,13 @@ public class DriveToRing extends Command{
 
             GetGlobalCoordinates globalCoord = new GetGlobalCoordinates(driveTrain, closestPiece);
 
-            translation = new Transform2d(closestPiece.getX(), closestPiece.getY(), new Rotation2d(globalCoord.targetToRobotAngle +  + driveTrain.getPose().getRotation().getRadians()));
-            drive = new DriveToRelative(driveTrain, translation, true);
+            target = new Pose2d(closestPiece.getX(), closestPiece.getY(), new Rotation2d(globalCoord.targetToRobotAngle +  + driveTrain.getPose().getRotation().getRadians()));
+            drive = Command pathfindingCommand = AutoBuilder.pathfindToPose(
+                target, 
+                Constants.Drive.constraints,
+                0.0,
+                0.0
+            )
             drive.schedule();
         }
 
