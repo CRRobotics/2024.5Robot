@@ -61,7 +61,7 @@ public interface Constants {
                 new Translation2d(-wheelBase / 2, -trackWidth / 2));//Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
         double maxSpeed = 0.5; // meters per second
         double maxAcceleration = 0.5;
-        double maxAngularSpeed = 2 * Math.PI; // radians per second;
+        double maxAngularSpeed = Math.PI/4; // radians per second;
         double maxAngularAcceleration = Math.PI; // radians per second squared
         boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
 
@@ -72,7 +72,7 @@ public interface Constants {
         double rotationSlewRate = 2.0; // percent per second (1 = 100%)
         double radius = 0.4318; //Radius in meters
 
-        PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAcceleration);
+        PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAngularAcceleration);
     }
 
     interface SwerveModule {

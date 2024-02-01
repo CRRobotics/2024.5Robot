@@ -50,9 +50,13 @@ public class DriveToRelative extends Command {
     public void initialize() {
         this.finished = false;
         List<Translation2d> list;
+        Pose2d initPose = new Pose2d(driveTrain.getPose().getTranslation(), translationRelative.getRotation());
+        System.out.println(initPose.getRotation());
         if (robotRelative) {
-            list = PathPlannerPath.bezierFromPoses(driveTrain.getPose(),
-            driveTrain.getPose().plus(translationRelative));
+            list = PathPlannerPath.bezierFromPoses(
+                initPose,
+                initPose.plus(new Transform2d(translationRelative.getTranslation(), new Rotation2d(0)))
+            );
             System.out.println(translationRelative);
         }
         else {
@@ -73,6 +77,12 @@ public class DriveToRelative extends Command {
                 this.finished = true;
         });
         followCommand.schedule();
+    }
+
+    @Override
+    public void execute() {
+        System.out.println(driveTrain.getPose().getRotation());
+        System.out.println(driveTrain.getPose().getTranslation());
     }
 
     @Override
