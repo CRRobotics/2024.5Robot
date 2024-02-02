@@ -35,7 +35,8 @@ public class DriveToRing extends Command{
 
     public DriveToRing(DriveTrain driveTrain, Grabber grabber) {
         this.driveTrain = driveTrain;
-
+        SmartDashboard.putNumber("piece/a", 0);
+        SmartDashboard.putNumber("piece/b", 0);
     }
 
         @Override
@@ -46,7 +47,7 @@ public class DriveToRing extends Command{
             //     System.out.println("Empty Array");
             // }
             // System.out.println(pieceData[0] + ", " + pieceData[1]);
-            Double[] pieceData = {20.0, 60.0};
+            Double[] pieceData = {SmartDashboard.getNumber("piece/a", 0), SmartDashboard.getNumber("piece/b", 0)};
 
             Translation2d closestPiece = new Translation2d(
                 Math.sqrt(Math.pow(pieceData[1] * 0.0254, 2) - Math.pow(pieceData[0] * 0.0254, 2)),
@@ -56,8 +57,8 @@ public class DriveToRing extends Command{
             GetGlobalCoordinates globalCoord = new GetGlobalCoordinates(driveTrain, closestPiece);
 
             double distance = pieceData[1] * 0.0254;
-            double theta = Math.atan(closestPiece.getY() / closestPiece.getX()) + driveTrain.getPose().getRotation().getRadians();
-            translation = new Transform2d(distance * Math.sin(theta), -distance * Math.cos(theta), new Rotation2d(theta));
+            double theta = Math.PI + driveTrain.getPose().getRotation().getRadians() - Math.asin(pieceData[0]/pieceData[1]);
+            translation = new Transform2d(distance * Math.cos(theta), distance * Math.sin(theta), new Rotation2d(theta));
             System.out.println(translation);
             // translation = new Transform2d(closestPiece.getX(), closestPiece.getY(), new Rotation2d(Math.atan(closestPiece.getY() / closestPiece.getX())));
             drive = new DriveToRelative(driveTrain, translation, true);

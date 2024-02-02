@@ -72,7 +72,7 @@ public class DriveToRelative extends Command {
                 )
             );
         }
-        PathPlannerPath path = new PathPlannerPath(list, Constants.Drive.constraints, new GoalEndState(0, driveTrain.getPose().getRotation().plus(translationRelative.getRotation())));
+        PathPlannerPath path = new PathPlannerPath(list, Constants.Drive.constraints, new GoalEndState(0, translationRelative.getRotation()));
         path.preventFlipping = true;
         followCommand = AutoBuilder.followPath(path);
         followCommand = followCommand.finallyDo(
