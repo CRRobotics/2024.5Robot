@@ -1,28 +1,32 @@
 package frc.robot.subsystems;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
 
-import com.robotics.CANSparkMax;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.Constants;
 
 /**
  * Runs the acquisition
  */
 public class Acquisition extends SubsystemBase
 {
-
+  CANSparkMax aqMotor;
   /**
    * Initializes the acquisition
    */
   public Acquisition()
   {
-    CANSparkMax aqMotor = new CANSparkMax(0,CANSparkMaxLowLevel.MotorType.kBrushless);
+    aqMotor = new CANSparkMax(0,CANSparkMaxLowLevel.MotorType.kBrushless);
   }
 
   /**
    * Intakes cargo
    */
-  public void intake()
+  public void intake(double speed)
   {
-    aqMotor.set();
+    aqMotor.set(speed);
   }
 
   /**
@@ -36,8 +40,8 @@ public class Acquisition extends SubsystemBase
   /**
    * Ejects acquisition out
    */
-  public void reject()
+  public void reject(double speed)
   {
-    aqMotor.set();
+    aqMotor.set(speed);
   }
 }

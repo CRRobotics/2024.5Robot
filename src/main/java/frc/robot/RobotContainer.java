@@ -5,17 +5,21 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
@@ -29,9 +33,6 @@ import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
 import frc.robot.util.LocalADStarAK;
 
-/**
- * Simulates the robot
- */
 public class RobotContainer {
   private final DriveTrain driveTrain;
   public static DriveStates driveStates;
@@ -40,9 +41,6 @@ public class RobotContainer {
   public static LED led;
   private final SendableChooser<Command> autoChooser;
 
-  /**
-   * Initializes the robot
-   */
   public RobotContainer() {
     driveTrain = new DriveTrain();
     driveStates = DriveStates.normal;
@@ -57,10 +55,8 @@ public class RobotContainer {
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
   }
 
-  /**
-   * Configures bindings
-   */
-  private static void configureBindings() {
+  
+  private void configureBindings() {
     new JoystickButton(driver, 6).whileTrue(new DriveSlow());
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
     // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToRealativePoint(driveTrain));
@@ -71,12 +67,11 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new SequentialCommandGroup(
       new DriveToPoint(driveTrain, new Pose2d(3, 0, new Rotation2d()))
     ));
-
+    new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(
+      new InstantCommand(() -> CommandScheduler.getInstance().disable())
+    );
   }
 
-  /**
-   * Adds dropdown menu options (smart dashboard)
-   */
   private static void addInputModes() {
     inputMode.setDefaultOption("controller", "controller");
     inputMode.addOption("ddr", "ddr");
@@ -97,10 +92,7 @@ public class RobotContainer {
   public static SendableChooser<String> colorTable = new SendableChooser<>();
   public static SendableChooser<Integer> tickSpeedChooser = new SendableChooser<>();
 
-  /**
-   * Add options to color chooser
-   */
-    static {
+    static{
         colorTable.addOption("red", "red");
         colorTable.addOption("blue", "blue");
         colorTable.addOption("rainbow", "rainbow");
@@ -136,11 +128,8 @@ public class RobotContainer {
     return driveCommand;
   }
 
-  /**
-   * Resets the odometry
-   */
   public void resetOdometry() {
-    driveTrain.resetOdometry(new Pose2d());
+    driveTrain.resetOdometry(new Pose2d(5.0,5.0, new Rotation2d(Math.PI/3)));
     driveTrain.zeroHeading();
   }
 }
