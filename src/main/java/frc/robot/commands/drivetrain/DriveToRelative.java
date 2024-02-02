@@ -51,13 +51,16 @@ public class DriveToRelative extends Command {
         this.finished = false;
         List<Translation2d> list;
         Pose2d initPose = new Pose2d(driveTrain.getPose().getTranslation(), translationRelative.getRotation());
-        System.out.println(initPose.getRotation());
+        double distance = Math.sqrt(Math.pow(initPose.getX(), 2) + Math.pow(initPose.getY(), 2));
+        // double theta = initPose.getRotation();
         if (robotRelative) {
             list = PathPlannerPath.bezierFromPoses(
                 initPose,
-                initPose.plus(new Transform2d(translationRelative.getTranslation(), new Rotation2d(0)))
+                // initPose.plus(new Transform2d(translationRelative.getTranslation(), new Rotation2d(0)))
+                new Pose2d(initPose.getX() + translationRelative.getX(), initPose.getY() + translationRelative.getY(), initPose.getRotation())
             );
-            System.out.println(translationRelative);
+            System.out.println("translation: " + translationRelative);
+            System.out.println("relative: " + String.valueOf(translationRelative.getRotation().minus(driveTrain.getPose().getRotation())));
         }
         else {
             list = PathPlannerPath.bezierFromPoses(
@@ -69,7 +72,7 @@ public class DriveToRelative extends Command {
                 )
             );
         }
-        PathPlannerPath path = new PathPlannerPath(list, Constants.Drive.constraints, new GoalEndState(0, translation.getRotation()));
+        PathPlannerPath path = new PathPlannerPath(list, Constants.Drive.constraints, new GoalEndState(0, driveTrain.getPose().getRotation().plus(translationRelative.getRotation())));
         path.preventFlipping = true;
         followCommand = AutoBuilder.followPath(path);
         followCommand = followCommand.finallyDo(

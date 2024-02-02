@@ -15,8 +15,8 @@ public interface Constants {
 
 
     interface Auto {
-        double maxSpeed = 3; // meters per second
-        double maxAcceleration = 4; // meters per second squared
+        double maxSpeed = 0.5; // meters per second
+        double maxAcceleration = 0.5; // meters per second squared
         double maxAngularSpeed = Math.PI; // radians per second
         double maxAngularAcceleration = Math.PI; // radians per second squared
         double thetaP = 1; // pids for auto

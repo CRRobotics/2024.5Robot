@@ -46,25 +46,33 @@ public class DriveToRing extends Command{
             //     System.out.println("Empty Array");
             // }
             // System.out.println(pieceData[0] + ", " + pieceData[1]);
-            double[] pieceData = {-20.0, 60.0};
-            // double[] pieceData = {-20.0 * -0.0254, 60.0 * -0.0254};
+            Double[] pieceData = {20.0, 60.0};
 
-            Translation2d closestPiece = new Translation2d((pieceData[1]) * -0.0254, (pieceData[0]) * 0.0254);
-
+            Translation2d closestPiece = new Translation2d(
+                Math.sqrt(Math.pow(pieceData[1] * 0.0254, 2) - Math.pow(pieceData[0] * 0.0254, 2)),
+                -(pieceData[0]) * 0.0254
+                );
+                System.out.println("closest:" + closestPiece);
             GetGlobalCoordinates globalCoord = new GetGlobalCoordinates(driveTrain, closestPiece);
 
+            double distance = pieceData[1] * 0.0254;
+            double theta = Math.atan(closestPiece.getY() / closestPiece.getX()) + driveTrain.getPose().getRotation().getRadians();
+            translation = new Transform2d(distance * Math.sin(theta), -distance * Math.cos(theta), new Rotation2d(theta));
+            System.out.println(translation);
+            // translation = new Transform2d(closestPiece.getX(), closestPiece.getY(), new Rotation2d(Math.atan(closestPiece.getY() / closestPiece.getX())));
+            drive = new DriveToRelative(driveTrain, translation, true);
+            drive.schedule();
             // Transform2d target = new Transform2d(
             //     Math.sqrt(Math.pow(pieceData[1], 2) - Math.pow(pieceData[0], 2)),
             //     Math.sqrt(pieceData[0]),
             //     new Rotation2d(Math.asin(pieceData[0] / pieceData[1]))
             // );
-            Transform2d target = new Transform2d(closestPiece.getX(), closestPiece.getY(), new Rotation2d(globalCoord.targetToRobotAngle + driveTrain.getPose().getRotation().getRadians()));
-            DriveToRelative pathfindingCommand = new DriveToRelative(driveTrain, target, true);
-            pathfindingCommand.schedule();
+            // DriveToRelative pathfindingCommand = new DriveToRelative(driveTrain, target, true);
+            // pathfindingCommand.schedule();
         }
 
         @Override
-        public void execute(){  
+        public void execute(){
             // if(i == 50){
             //     double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
             //     System.out.println(pieceData[0] + " " + pieceData[1]);
