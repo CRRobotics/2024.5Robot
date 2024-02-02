@@ -13,6 +13,12 @@ import edu.wpi.first.math.util.Units;
 
 public interface Constants {
 
+    interface Acquisition {
+        int aqID = 0;
+        double aqIntakeSpeed = 0;
+        double aqRejectSpeed = 0;
+    }
+
     interface Auto {
         double maxSpeed = 3; // meters per second
         double maxAcceleration = 4; // meters per second squared
@@ -74,6 +80,7 @@ public interface Constants {
         PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAcceleration);
     }
 
+<<<<<<< HEAD
     interface Field {
         double fieldWidth = 16.54;
 
@@ -107,6 +114,12 @@ public interface Constants {
         double reverseTime = 0;
         double spinUpTime = 0;
         double shootTime = 0;
+=======
+    interface Indexer {
+        int indexID = 0;
+        double indexIntakeSpeed = 0;
+        double indexRejectSpeed = 0;
+>>>>>>> Acquisition
     }
 
     interface SwerveModule {
