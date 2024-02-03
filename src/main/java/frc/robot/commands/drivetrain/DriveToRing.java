@@ -57,7 +57,7 @@ public class DriveToRing extends Command{
             GetGlobalCoordinates globalCoord = new GetGlobalCoordinates(driveTrain, closestPiece);
 
             double distance = pieceData[1] * 0.0254;
-            double theta = Math.PI + driveTrain.getPose().getRotation().getRadians() - Math.asin(pieceData[0]/pieceData[1]);
+            double theta = driveTrain.getPose().getRotation().getRadians() - Math.asin(pieceData[0]/pieceData[1]);
             translation = new Transform2d(distance * Math.cos(theta), distance * Math.sin(theta), new Rotation2d(theta));
             System.out.println(translation);
             // translation = new Transform2d(closestPiece.getX(), closestPiece.getY(), new Rotation2d(Math.atan(closestPiece.getY() / closestPiece.getX())));

@@ -73,10 +73,9 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new SequentialCommandGroup(
       new DriveToPoint(driveTrain, new Pose2d(3, 0, new Rotation2d()))
     ));
-    new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(
-      new SequentialCommandGroup(
+    new JoystickButton(driver, XboxController.Button.kY.value).onTrue(
         new DriveToRing(driveTrain, grabber)
-    ));
+    );
   }
 
   private static void addInputModes() {
