@@ -17,37 +17,37 @@ import frc.robot.util.Constants;
 public class Shooter extends SubsystemBase implements Constants.Shooter {
     TalonFX leftShooterMotor;
     TalonFX rightShooterMotor;
-    CANSparkMax leftPivotMotor;
-    CANSparkMax rightPivotMotor;
     TalonFXConfiguration rightConfig;
     TalonFXConfiguration leftConfig;
-    PIDController pid;
-    RelativeEncoder encoderL;
-    RelativeEncoder encoderR;
     Slot0Configs leftSlot;
     Slot0Configs rightSlot;
+
+    PIDController pid;
+    CANSparkMax PivotMotor;
+    RelativeEncoder Pivotencoder;
     VelocityVoltage voltageController;
 
     public Shooter() {
         leftShooterMotor = new TalonFX(0);
-        leftPivotMotor = new CANSparkMax(0, MotorType.kBrushless);
         leftConfig = new TalonFXConfiguration();
         leftShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         leftSlot = new Slot0Configs();
         leftSlot.kP = 0;
         leftSlot.kI = 0;
         leftSlot.kD = 0;
-        encoderL = leftPivotMotor.getEncoder();
 
         rightShooterMotor = new TalonFX(0);
-        rightPivotMotor = new CANSparkMax(0, MotorType.kBrushless);
         rightConfig = new TalonFXConfiguration();
         rightShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         rightSlot = new Slot0Configs();
         rightSlot.kP = 0;
         rightSlot.kI = 0;
         rightSlot.kD = 0;
-        encoderR = rightPivotMotor.getEncoder();
+        
+        PivotMotor = new CANSparkMax(0, MotorType.kBrushless);
+        Pivotencoder = PivotMotor.getEncoder();
+
+
 
         //TODO: do we need multiple of these
         voltageController =  new VelocityVoltage(0, 0, false, kF,
@@ -71,7 +71,6 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
      * @param setPoint The set point to aim the launcher at
      */
     public void aim(double setPoint) { // is this radians
-        leftPivotMotor.set(pid.calculate(encoderL.getPosition(), setPoint));
-        rightPivotMotor.set(pid.calculate(encoderR.getPosition(), setPoint));
+        PivotMotor.set(pid.calculate(Pivotencoder.getPosition(), setPoint));
     }
 }
