@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.util.Optional;
 
+import javax.swing.JToggleButton;
+
 import org.opencv.core.Mat;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -15,6 +17,8 @@ import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -79,6 +83,9 @@ public class RobotContainer implements Constants.Field {
     ));
     new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(
         new DriveToRing(driveTrain, grabber)
+    );
+    new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(
+      new TurnToAngle(driveTrain, new Rotation2d(0))
     );
   }
 

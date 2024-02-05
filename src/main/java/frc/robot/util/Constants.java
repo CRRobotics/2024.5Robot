@@ -128,7 +128,6 @@ public interface Constants {
         Translation2d subwooferRed = subwooferBlue.minus(new Translation2d(fieldWidth, 0));
         Translation2d speakerRed = speakerBlue.minus(new Translation2d(fieldWidth, 0));
 
-        PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAngularAcceleration);
     }
 
     interface SwerveModule {
