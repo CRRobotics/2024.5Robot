@@ -113,10 +113,10 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive, Consta
             this::driveRobotRelative,
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                     new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+                    new PIDConstants(10.0, 0.0, 0.0), // Rotation PID constants
                     4.5, // Max module speed, in m/s
                     0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-                    new ReplanningConfig(true, false, 0.5, 0.2) // Default path replanning config. See the API for the options here
+                    new ReplanningConfig(true, true, 0.1, 0.2) // Default path replanning config. See the API for the options here
             ),
             this::flipPath,
             this // Reference to this subsystem to set requirements
@@ -326,7 +326,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive, Consta
 
     public Command followPathCommand(PathPlannerPath path) {
         PIDController thetaController = new PIDController(
-            SmartDashboard.getNumber("drivetrain/thetaP", 0),
+            SmartDashboard.getNumber("drivetrain/thetaP", 0.5),
             SmartDashboard.getNumber("drivetrain/thetaI", 0),
             SmartDashboard.getNumber("drivetrain/thetaD", 0)
         ); // Rotation PID controller
@@ -341,8 +341,8 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive, Consta
                 this::getChassisSpeeds, // SwerveDriveKinematics
                 this::driveRobotRelative,
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
-                    new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
+                    new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
+                    new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
                 Constants.Drive.maxSpeed, // Max module speed, in m/s
                 Constants.Drive.radius, // Drive base radius in meters. Distance from robot center to furthest module.,
                     new ReplanningConfig(true, false, 0.5, 0.2)), // Default path replanning config. See the API for the options here
@@ -370,11 +370,16 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive, Consta
         return false;
     }
 
+    public Pathfinder getPathFinder(){
+        return pathFinder;
+    }
+
     public void updateObstacles(){
-        // NetworkTableWrapper.getDouble(i, "rx");
-        ArrayList<Pair<Translation2d, Translation2d>> obstacles = new ArrayList<Pair<Translation2d, Translation2d>>();
-        obstacles.add(new Pair(new Translation2d(1, -1), new Translation2d(2, 1)));
-        pathFinder.setDynamicObstacles(obstacles, this.getPose().getTranslation());
+        // // NetworkTableWrapper.getDouble(i, "rx");
+        // ArrayList<Pair<Translation2d, Translation2d>> obstacles = new ArrayList<Pair<Translation2d, Translation2d>>();
+        // obstacles.add(new Pair(new Translation2d(1, -1), new Translation2d(2, 1)));
+        // pathFinder.setDynamicObstacles(obstacles, this.getPose().getTranslation());
+        //Commented out until network tables are ready
     }
 
     private Command FollowPathWithEvents(FollowPathHolonomic followPathHolonomic) {

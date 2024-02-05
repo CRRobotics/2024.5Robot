@@ -13,11 +13,12 @@ import edu.wpi.first.math.util.Units;
 
 public interface Constants {
 
+
     interface Auto {
-        double maxSpeed = 3; // meters per second
-        double maxAcceleration = 4; // meters per second squared
-        double maxAngularSpeed = 3 * Math.PI; // radians per second
-        double maxAngularAcceleration = 3 * Math.PI; // radians per second squared
+        double maxSpeed = 0.5; // meters per second
+        double maxAcceleration = 0.5; // meters per second squared
+        double maxAngularSpeed = Math.PI; // radians per second
+        double maxAngularAcceleration = Math.PI; // radians per second squared
         double thetaP = 1; // pids for auto
         double xP = 1;
         double yP = 1;
@@ -70,10 +71,10 @@ public interface Constants {
                 new Translation2d(wheelBase / 2, -trackWidth / 2),
                 new Translation2d(-wheelBase / 2, trackWidth / 2),
                 new Translation2d(-wheelBase / 2, -trackWidth / 2));//Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
-        double maxSpeed = 4; // meters per second
-        double maxAcceleration = 4;
-        double maxAngularSpeed = 2 * Math.PI; // radians per second;
-        double maxAngularAcceleration = Math.PI; // radians per second squared
+        double maxSpeed = 1; // meters per second
+        double maxAcceleration = 1;
+        double maxAngularSpeed = Math.PI; // radians per second;
+        double maxAngularAcceleration = 2 * Math.PI; // radians per second squared
         boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
 
         double driveDeadBand = 0.025;
@@ -127,6 +128,7 @@ public interface Constants {
         Translation2d subwooferRed = subwooferBlue.minus(new Translation2d(fieldWidth, 0));
         Translation2d speakerRed = speakerBlue.minus(new Translation2d(fieldWidth, 0));
 
+        PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAngularAcceleration);
     }
 
     interface SwerveModule {
@@ -161,5 +163,10 @@ public interface Constants {
         double turnEncoderPositionPIDMaxInput = turnEncoderPositionConversion;
         IdleMode turnIdleMode = IdleMode.kBrake;
         int turnCurrentLimit = 20; // amps
+    }
+
+    interface Grabber {
+        int motorID = 18; //Placeholder
+        double grabSpeed = 0.1;
     }
 }

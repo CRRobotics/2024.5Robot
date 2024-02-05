@@ -9,14 +9,12 @@ import java.util.Optional;
 import org.opencv.core.Mat;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -31,9 +29,12 @@ import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
 import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRelative;
+import frc.robot.commands.drivetrain.DriveToRing;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.drivetrain.TurnToAngle;
+import frc.robot.commands.grabber.Grab;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.LED;
 import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
@@ -42,6 +43,7 @@ import frc.robot.util.LocalADStarAK;
 public class RobotContainer implements Constants.Field {
   private final DriveTrain driveTrain;
   public static DriveStates driveStates;
+  private final Grabber grabber;
   private final XboxController driver;
   public static SendableChooser<String> inputMode;
   public static LED led;
@@ -49,8 +51,12 @@ public class RobotContainer implements Constants.Field {
 
   public RobotContainer() {
     driveTrain = new DriveTrain();
+    grabber = new Grabber();
     driveStates = DriveStates.normal;
     driver = new XboxController(Constants.Controller.driveControllerPort);
+
+    NamedCommands.registerCommand("grab", new Grab(grabber));
+
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -63,15 +69,17 @@ public class RobotContainer implements Constants.Field {
 
   
   private void configureBindings() {
-    new JoystickButton(driver, XboxController.Button.kB.value).onTrue(new JoystickDrive(driveTrain));
-    new JoystickButton(driver, XboxController.Button.kRightBumper.value).whileTrue(new DriveSlow());
-    new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new DriveFast());
-    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToRealativePoint(driveTrain));
-    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SequentialCommandGroup(
-    //   new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d(Math.PI)))
-    // ));
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new TurnToAngle(driveTrain, new Rotation2d(Math.PI / 6)));
-
+    new JoystickButton(driver, 6).whileTrue(new DriveSlow());
+    new JoystickButton(driver, 5).whileTrue(new DriveFast());
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(
+      new DriveToRelative(driveTrain, new Translation2d(1, 2))
+    );
+    new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new SequentialCommandGroup(
+      new DriveToPoint(driveTrain, new Pose2d(3, 0, new Rotation2d()))
+    ));
+    new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(
+        new DriveToRing(driveTrain, grabber)
+    );
   }
 
   private static void addInputModes() {
