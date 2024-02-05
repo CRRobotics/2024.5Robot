@@ -25,75 +25,53 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class DriveToRelative extends Command {
     DriveTrain driveTrain;
-    Pose2d translation;
-    Transform2d translationRelative;
+    Transform2d transformation;
+    boolean calculateRotation;
     boolean finished;
     Command followCommand;
-    boolean robotRelative;
 
-    public DriveToRelative(DriveTrain driveTrain, Transform2d translationRelative, boolean robotRelative) {
+    public DriveToRelative(DriveTrain driveTrain, Transform2d transformation) {
         this.driveTrain = driveTrain;
-        this.translationRelative = translationRelative;            
-        this.translation = new Pose2d(translationRelative.getX(), translationRelative.getY(), new Rotation2d(translationRelative.getRotation().getRadians()));
-        this.robotRelative = robotRelative;
+        this.transformation = transformation;
+        this.calculateRotation = false;
     }
 
-    public DriveToRelative(DriveTrain driveTrain, Pose2d translation) {
-        this.driveTrain = driveTrain;
-        this.translation = translation;
-        this.translationRelative = new Transform2d(translation.getX(), translation.getY(), translation.getRotation());
-        this.robotRelative = false;
+    public DriveToRelative(DriveTrain driveTrain, Translation2d translation) {
+        this(driveTrain, new Transform2d(translation, new Rotation2d()));
+        this.calculateRotation = true;
     }
 
 
     @Override
     public void initialize() {
         this.finished = false;
-        List<Translation2d> list;
-        Pose2d initPose = new Pose2d(driveTrain.getPose().getTranslation(), translationRelative.getRotation());
-        double distance = Math.sqrt(Math.pow(initPose.getX(), 2) + Math.pow(initPose.getY(), 2));
-        // double theta = initPose.getRotation();
-        if (robotRelative) {
-            list = PathPlannerPath.bezierFromPoses(
-                initPose,
-                // initPose.plus(new Transform2d(translationRelative.getTranslation(), new Rotation2d(0)))
-                new Pose2d(initPose.getX() + translationRelative.getX(), initPose.getY() + translationRelative.getY(), initPose.getRotation())
-            );
-            System.out.println("translation: " + translationRelative);
-            System.out.println("relative: " + String.valueOf(translationRelative.getRotation().minus(driveTrain.getPose().getRotation())));
+        double distance = Math.sqrt(Math.pow(transformation.getX(), 2) + Math.pow(transformation.getY(), 2));
+        double theta = -Math.atan(transformation.getY() / transformation.getX()) + driveTrain.getPose().getRotation().getRadians();
+        if (calculateRotation) {
+            transformation = new Transform2d(transformation.getTranslation(), new Rotation2d(theta));
         }
-        else {
-            list = PathPlannerPath.bezierFromPoses(
-                driveTrain.getPose(),
-                new Pose2d(
-                    driveTrain.getPose().getX() + translation.getX(),
-                    driveTrain.getPose().getY() + translation.getY(),
-                    driveTrain.getPose().getRotation().plus(translation.getRotation())
-                )
-            );
-        }
-        PathPlannerPath path = new PathPlannerPath(list, Constants.Drive.constraints, new GoalEndState(0, translationRelative.getRotation()));
+
+        Pose2d initPose = new Pose2d(driveTrain.getPose().getTranslation(), transformation.getRotation());
+        Translation2d translation = new Translation2d(distance * Math.cos(theta), distance * Math.sin(theta));
+        List<Translation2d> list = PathPlannerPath.bezierFromPoses(
+            initPose,
+            new Pose2d(initPose.getX() + translation.getX(), initPose.getY() + translation.getY(), initPose.getRotation())
+        );
+
+        PathPlannerPath path = new PathPlannerPath(list, Constants.Drive.constraints, new GoalEndState(0, transformation.getRotation()));
         path.preventFlipping = true;
         // followCommand = AutoBuilder.followPath(path);
         followCommand = AutoBuilder.followPath(path);
-        followCommand = followCommand.finallyDo(
-            (boolean interrupted) -> {
-                this.finished = true;
-        });
+        // followCommand = followCommand.finallyDo(
+        //     (boolean interrupted) -> {
+        //         this.finished = true;
+        // });
         followCommand.schedule();
     }
 
     @Override
-    public void execute() {
-        System.out.println(driveTrain.getPose().getRotation());
-        System.out.println(driveTrain.getPose().getTranslation());
-    }
-
-    @Override
     public void end(boolean interrupted) {
-        if (interrupted) {
-            followCommand.cancel();
-        }
+        followCommand.cancel();
     }
 
     @Override

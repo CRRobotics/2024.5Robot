@@ -66,14 +66,13 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(driver, 6).whileTrue(new DriveSlow());
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SequentialCommandGroup(
-      new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d())),
-      new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d()))
-    ));
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(
+      new DriveToRelative(driveTrain, new Translation2d(1, 2))
+    );
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new SequentialCommandGroup(
       new DriveToPoint(driveTrain, new Pose2d(3, 0, new Rotation2d()))
     ));
-    new JoystickButton(driver, XboxController.Button.kY.value).onTrue(
+    new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(
         new DriveToRing(driveTrain, grabber)
     );
   }

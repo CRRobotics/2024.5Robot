@@ -27,11 +27,8 @@ import frc.robot.util.NetworkTableWrapper;
 
 public class DriveToRing extends Command{
     private DriveTrain driveTrain;
-    private Grabber grabber;
     private boolean isFinished = false;
-    private DriveToRelative drive;
-    private Transform2d translation;
-    private int i = 0;
+    private Command drive;
 
     public DriveToRing(DriveTrain driveTrain, Grabber grabber) {
         this.driveTrain = driveTrain;
@@ -51,51 +48,26 @@ public class DriveToRing extends Command{
 
             Translation2d closestPiece = new Translation2d(
                 Math.sqrt(Math.pow(pieceData[1] * 0.0254, 2) - Math.pow(pieceData[0] * 0.0254, 2)),
-                -(pieceData[0]) * 0.0254
-                );
-                System.out.println("closest:" + closestPiece);
-            GetGlobalCoordinates globalCoord = new GetGlobalCoordinates(driveTrain, closestPiece);
+                (pieceData[0]) * 0.0254
+            );
 
-            double distance = pieceData[1] * 0.0254;
-            double theta = driveTrain.getPose().getRotation().getRadians() - Math.asin(pieceData[0]/pieceData[1]);
-            translation = new Transform2d(distance * Math.cos(theta), distance * Math.sin(theta), new Rotation2d(theta));
-            System.out.println(translation);
-            // translation = new Transform2d(closestPiece.getX(), closestPiece.getY(), new Rotation2d(Math.atan(closestPiece.getY() / closestPiece.getX())));
-            drive = new DriveToRelative(driveTrain, translation, true);
+            drive = new DriveToRelative(driveTrain, closestPiece);
+            // drive = drive.finallyDo(
+            //     (boolean interrupted) -> {
+            //         isFinished = true;
+            //     });
             drive.schedule();
-            // Transform2d target = new Transform2d(
-            //     Math.sqrt(Math.pow(pieceData[1], 2) - Math.pow(pieceData[0], 2)),
-            //     Math.sqrt(pieceData[0]),
-            //     new Rotation2d(Math.asin(pieceData[0] / pieceData[1]))
-            // );
-            // DriveToRelative pathfindingCommand = new DriveToRelative(driveTrain, target, true);
-            // pathfindingCommand.schedule();
-        }
-
-        @Override
-        public void execute(){
-            // if(i == 50){
-            //     double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
-            //     System.out.println(pieceData[0] + " " + pieceData[1]);
-            //     if (pieceData.length == 0){
-            //     System.out.println("Empty Array");
-            //     }
-            //     drive.cancel();
-            //     drive = new DriveToRelative(driveTrain, translation, true);
-            //     drive.schedule();
-            //     if (drive.isFinished()){
-            //     Grab grab = new Grab(grabber);
-            //     grab.schedule();
-            //     isFinished = true;
-            //     }
-            //     i = 0;
-            // }
-            // i ++;
         }
 
         @Override
         public boolean isFinished(){
             return isFinished;
+        }
+
+        @Override
+        public void end(boolean interrupted) {
+            System.out.println("cancelling DriveToRing");
+            drive.cancel();
         }
 }
 
