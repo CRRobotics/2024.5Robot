@@ -154,4 +154,8 @@ public interface Constants {
         IdleMode turnIdleMode = IdleMode.kBrake;
         int turnCurrentLimit = 20; // amps
     }
+
+    interface Field{
+        
+    }
 }

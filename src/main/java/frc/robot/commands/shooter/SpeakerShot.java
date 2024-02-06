@@ -1,5 +1,6 @@
 package frc.robot.commands.shooter;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
@@ -28,7 +29,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     @Override
     public void initialize() {
         shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
-            ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), speakerBlueTarget) //TODO: make this work for either side
+            ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), new Translation2d(/*speakerBlueTarget */)) //TODO: make this work for either side
         );
         startTime = System.currentTimeMillis();
         shooter.aim(shootAngleSpeed.getAngle());
