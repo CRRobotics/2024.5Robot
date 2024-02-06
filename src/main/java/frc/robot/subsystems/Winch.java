@@ -5,6 +5,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
+import com.revrobotics.SparkLimitSwitch;
+import com.revrobotics.CANSparkBase;
+import com.revrobotics.SparkLimitSwitch.Type;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 
@@ -13,8 +18,10 @@ import frc.robot.util.Constants;
  */
 public class Winch extends SubsystemBase implements Constants.Winch 
 {
-    DigitalInput toplimitSwitch;
-    DigitalInput bottomlimitSwitch;
+    public SparkLimitSwitch topLeftSwitch;
+    public SparkLimitSwitch bottomLeftSwitch;
+    public SparkLimitSwitch topRightSwitch;
+    public SparkLimitSwitch bottomRightSwitch;
     CANSparkMax leftClimbMotor;
     CANSparkMax rightClimbMotor;
     
@@ -23,10 +30,17 @@ public class Winch extends SubsystemBase implements Constants.Winch
      */
     public Winch()
     {
-        toplimitSwitch = new DigitalInput(0);
-        bottomLimitSwitch = new DigitalInput(1);
         leftClimbMotor = new CANSparkMax(leftID, MotorType.kBrushless);
+        topLeftSwitch = leftClimbMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.fromId(leftID));
+        topLeftSwitch.enableLimitSwitch(true);
+        bottomLeftSwitch = leftClimbMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.fromId(leftID));
+        bottomLeftSwitch.enableLimitSwitch(true);
+
         rightClimbMotor = new CANSparkMax(rightID, MotorType.kBrushless);
+        topRightSwitch = rightClimbMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.fromId(rightID));
+        topRightSwitch.enableLimitSwitch(true);
+        bottomRightSwitch = rightClimbMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.fromId(rightID));
+        bottomRightSwitch.enableLimitSwitch(true);
     }
 
     /**
@@ -35,27 +49,7 @@ public class Winch extends SubsystemBase implements Constants.Winch
      */
     public void setSpeed(double speed)
     {
-        leftClimbMotor.set();
-        rightClimbMotor.set();
-        if (speed > 0) 
-        {
-            if (toplimitSwitch.get()) 
-            {
-                motor.set(0);
-            } 
-            else 
-            {
-                motor.set(speed);
-            }
-        } 
-        else 
-        {
-            if (bottomlimitSwitch.get()) 
-            {
-                motor.set(0);
-            } else {
-                motor.set(speed);
-            }
-        }
+        leftClimbMotor.set(speed);
+        rightClimbMotor.set(speed);
     }
 }

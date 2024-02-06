@@ -2,32 +2,33 @@ package frc.robot.commands.climb;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.Winch;
+import frc.robot.util.Constants;
 
-public class Extend extends CommandBase
+public class Retract extends Command implements Constants.Winch
 {
-    public Retract(Winch wnch)
-    {
-        this.wnch = wnch;
-        addRequirements(wnch);
+    Winch winch;
+
+    public Retract(Winch winch) {
+        this.winch = winch;
+        addRequirements(winch);
     }
 
     @Override
     public void initialize() {
-        wnch.setSpeed(0.6);
+        winch.setSpeed(retractSpeed);
     }
 
     @Override
-    public void execute()
-    {
-        wnch.setSpeed(0.6);
+    public void execute() {
+        winch.setSpeed(retractSpeed);
     }
 
     @Override
     public void end(boolean interrupted) {
-        wnch.setSpeed(0);
+        winch.setSpeed(0);
     }
 
     @Override

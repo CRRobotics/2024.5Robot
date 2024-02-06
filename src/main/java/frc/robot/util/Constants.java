@@ -113,7 +113,10 @@ public interface Constants {
         double kI = 0;
         double kD = 0;
 
-        int leftID = 0;
-        int rightID = 0;
+        int leftID = 0; //To be assigned
+        int rightID = 0; //To be assigned
+
+        Double extendSpeed = 0.6;
+        Double retractSpeed = -0.6;
     }
 }

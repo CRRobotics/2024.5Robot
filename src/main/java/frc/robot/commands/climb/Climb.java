@@ -7,23 +7,32 @@ import frc.robot.Robot;
 import frc.robot.subsystems.Winch;
 import frc.robot.util.Constants;
 
-public class Extend extends Command implements Constants.Winch
+public class Climb extends Command implements Constants.Winch
 {
     Winch winch;
+    Boolean extended;
 
-    public Extend(Winch winch) {
+    public Climb(Winch winch) {
         this.winch = winch;
         addRequirements(winch);
+        extended = false;
     }
 
     @Override
     public void initialize() {
-        winch.setSpeed(extendSpeed);
     }
 
     @Override
     public void execute() {
-        winch.setSpeed(extendSpeed);
+        if (winch.topLeftSwitch.isPressed() == true && winch.topRightSwitch.isPressed() == true && !extended){
+            winch.setSpeed(extendSpeed);
+        } else {
+            extended = true;
+        }
+        
+        if (winch.bottomLeftSwitch.isPressed() == true && winch.bottomLeftSwitch.isPressed() == true && extended){
+            winch.setSpeed(extendSpeed);
+        }
     }
 
     @Override
