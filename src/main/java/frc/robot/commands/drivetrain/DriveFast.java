@@ -4,6 +4,10 @@ import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.util.DriveStates;
+
+/**
+ * Commands the drive train to use fast driving
+ */
 public class DriveFast extends Command{
     DriveTrain driveTrain;
     public DriveFast(){}

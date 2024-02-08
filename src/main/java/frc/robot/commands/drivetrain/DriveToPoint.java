@@ -20,6 +20,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 
+/**
+ * Tells the drive train to use a path to drive to an absolute point on the field
+ */
 public class DriveToPoint extends Command {
     DriveTrain driveTrain;
     Pose2d target;

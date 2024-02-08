@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.util.Constants;
 import frc.robot.subsystems.DriveTrain;
 
+/**
+ * Allows the DDR control system to drive
+ */
 public class DDRDrive extends Command implements Constants.Drive {
     DriveTrain driveTrain;
     GenericHID controller = new GenericHID(0);
@@ -33,7 +36,11 @@ public class DDRDrive extends Command implements Constants.Drive {
         driveTrain.setModuleStates(swerveModuleStates);
 
     }
-
+    /**
+     * Takes in the button and checks if it is pressed
+     * @param id the identity of the button
+     * @return the state of the button
+     */
     private double getButton(int id) {
         if (Math.abs(controller.getRawAxis(4)) > 0.1)
             return controller.getRawButton(id) ? 1 : 0;
