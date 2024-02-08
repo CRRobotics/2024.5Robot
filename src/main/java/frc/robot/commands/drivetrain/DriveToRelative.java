@@ -44,11 +44,12 @@ public class DriveToRelative extends Command {
 
     @Override
     public void initialize() {
+        System.out.println("running drive to relative");
         this.finished = false;
         double distance = Math.sqrt(Math.pow(transformation.getX(), 2) + Math.pow(transformation.getY(), 2));
-        double theta = -Math.atan(transformation.getY() / transformation.getX()) + driveTrain.getPose().getRotation().getRadians();
+        double theta = -Math.atan2(transformation.getY(), transformation.getX()) + driveTrain.getPose().getRotation().getRadians();
         if (calculateRotation) {
-            transformation = new Transform2d(transformation.getTranslation(), new Rotation2d(theta));
+            transformation = new Transform2d(transformation.getTranslation(), new Rotation2d(theta + Math.PI));
         }
 
         Pose2d initPose = new Pose2d(driveTrain.getPose().getTranslation(), transformation.getRotation());

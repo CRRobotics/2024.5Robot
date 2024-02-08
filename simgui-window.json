@@ -25,6 +25,11 @@
     }
   },
   "Window": {
+    "###/FMSInfo": {
+      "Collapsed": "0",
+      "Pos": "60,60",
+      "Size": "217,194"
+    },
     "###/SmartDashboard/Auto Chooser": {
       "Collapsed": "0",
       "Pos": "249,53",
@@ -32,8 +37,8 @@
     },
     "###/SmartDashboard/Field": {
       "Collapsed": "0",
-      "Pos": "326,228",
-      "Size": "1262,788"
+      "Pos": "364,594",
+      "Size": "1198,512"
     },
     "###FMS": {
       "Collapsed": "0",

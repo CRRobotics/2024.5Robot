@@ -32,18 +32,19 @@ public class DriveToPoint extends Command {
 
     @Override
     public void initialize() {
+        System.out.println("drive to pointing");
         driveTrain.updateObstacles();
         Command pathfindingCommand = AutoBuilder.pathfindToPose(
             target,
-            Constants.Drive.constraints,
+            Constants.Auto.constraints,
             0.0, // Goal end velocity in meters/sec
             0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
         );
         this.finished = false;
-        pathfindingCommand = pathfindingCommand.finallyDo(
-            (boolean interrupted) -> {
-                this.finished = true;
-        });
+        // pathfindingCommand = pathfindingCommand.finallyDo(
+        //     (boolean interrupted) -> {
+        //         this.finished = true;
+        // });
         pathfindingCommand.schedule();
     }
 

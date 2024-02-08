@@ -15,10 +15,10 @@ public interface Constants {
 
 
     interface Auto {
-        double maxSpeed = 0.5; // meters per second
-        double maxAcceleration = 0.5; // meters per second squared
-        double maxAngularSpeed = Math.PI; // radians per second
-        double maxAngularAcceleration = Math.PI; // radians per second squared
+        double maxSpeed = 2; // meters per second
+        double maxAcceleration = 2; // meters per second squared
+        double maxAngularSpeed = 2 * Math.PI; // radians per second
+        double maxAngularAcceleration = 2 * Math.PI; // radians per second squared
         double thetaP = 1; // pids for auto
         double xP = 1;
         double yP = 1;
@@ -32,8 +32,8 @@ public interface Constants {
         PathConstraints constraints = new PathConstraints(
             maxSpeed * testMult,
             maxAcceleration * testMult,
-            maxAngularSpeed * testMult,
-            maxAcceleration * testMult
+            maxAngularSpeed * testMult / 2,
+            maxAcceleration * testMult / 2
         );
 
         interface TurnToAngle {
@@ -48,20 +48,20 @@ public interface Constants {
     }
 
     interface Drive {
-        int chimeraWheelID = 11;
-        int chimeraTurnID = 12;
+        int frontLeftWheelID = 2;
+        int frontLeftTurnID = 1;
         double frontLeftAngularOffset = -Math.PI / 2;
 
-        int manticoreWheelID = 9;
-        int manticoreTurnID = 10;
+        int frontRightWheelID = 8;
+        int frontRightTurnID = 7;
         double frontRightAngularOffset = 0;
 
-        int phoenixWheelID = 13;
-        int phoenixTurnID = 14;
+        int backLeftWheelID = 4;
+        int backLeftTurnID = 3;
         double backLeftAngularOffset = Math.PI;
 
-        int leviathanWheelID = 5;
-        int leviathanTurnID = 6;
+        int backRightWheelID = 6;
+        int backRightTurnID = 5;
         double backRightAngularOffset = Math.PI / 2;
 
         double trackWidth = Units.inchesToMeters(26.5);// Distance between centers of right and left wheels on robot//TODO Set kTrackWidth to actual track width
@@ -71,7 +71,7 @@ public interface Constants {
                 new Translation2d(wheelBase / 2, -trackWidth / 2),
                 new Translation2d(-wheelBase / 2, trackWidth / 2),
                 new Translation2d(-wheelBase / 2, -trackWidth / 2));//Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
-        double maxSpeed = 1; // meters per second
+        double maxSpeed = 0.5; // meters per second
         double maxAcceleration = 1;
         double maxAngularSpeed = Math.PI; // radians per second;
         double maxAngularAcceleration = 2 * Math.PI; // radians per second squared

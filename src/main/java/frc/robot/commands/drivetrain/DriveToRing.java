@@ -18,10 +18,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.grabber.Grab;
 import frc.robot.misc.GetGlobalCoordinates;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Grabber;
 import frc.robot.util.Constants;
 import frc.robot.util.NetworkTableWrapper;
 
@@ -29,8 +27,9 @@ public class DriveToRing extends Command{
     private DriveTrain driveTrain;
     private boolean isFinished = false;
     private Command drive;
+    private int i = 0;
 
-    public DriveToRing(DriveTrain driveTrain, Grabber grabber) {
+    public DriveToRing(DriveTrain driveTrain) {
         this.driveTrain = driveTrain;
         SmartDashboard.putNumber("piece/a", 0);
         SmartDashboard.putNumber("piece/b", 0);
@@ -39,16 +38,16 @@ public class DriveToRing extends Command{
         @Override
         public void initialize(){
 
-            // double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
-            // if (pieceData.length == 0){
-            //     System.out.println("Empty Array");
-            // }
-            // System.out.println(pieceData[0] + ", " + pieceData[1]);
-            Double[] pieceData = {SmartDashboard.getNumber("piece/a", 0), SmartDashboard.getNumber("piece/b", 0)};
+            double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
+            if (pieceData.length == 0){
+                System.out.println("Empty Array");
+            }
+            System.out.println(pieceData[0] + ", " + pieceData[1]);
+            // Double[] pieceData = {SmartDashboard.getNumber("piece/a", 0), SmartDashboard.getNumber("piece/b", 0)};
 
             Translation2d closestPiece = new Translation2d(
-                Math.sqrt(Math.pow(pieceData[1] * 0.0254, 2) - Math.pow(pieceData[0] * 0.0254, 2)),
-                (pieceData[0]) * 0.0254
+                -pieceData[1] * 0.0254 + 0.13,
+                -(pieceData[0]) * 0.0254
             );
 
             drive = new DriveToRelative(driveTrain, closestPiece);
@@ -57,6 +56,31 @@ public class DriveToRing extends Command{
             //         isFinished = true;
             //     });
             drive.schedule();
+        }
+
+        @Override
+        public void execute() {
+            i++;
+            if (i % 40 == 0) {
+                double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
+                if (pieceData.length == 0){
+                    System.out.println("Empty Array");
+                }
+                System.out.println(pieceData[0] + ", " + pieceData[1]);
+                // Double[] pieceData = {SmartDashboard.getNumber("piece/a", 0), SmartDashboard.getNumber("piece/b", 0)};
+
+                Translation2d closestPiece = new Translation2d(
+                    -pieceData[1] * 0.0254 + 0.13,
+                    -(pieceData[0]) * 0.0254
+                );
+
+                drive = new DriveToRelative(driveTrain, closestPiece);
+                // drive = drive.finallyDo(
+                //     (boolean interrupted) -> {
+                //         isFinished = true;
+                //     });
+                drive.schedule();
+            }
         }
 
         @Override

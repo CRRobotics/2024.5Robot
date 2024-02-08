@@ -36,9 +36,8 @@ import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.DriveToRing;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.drivetrain.TurnToAngle;
-import frc.robot.commands.grabber.Grab;
+import frc.robot.commands.drivetrain.TurnToSpeaker;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Grabber;
 import frc.robot.subsystems.LED;
 import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
@@ -47,7 +46,7 @@ import frc.robot.util.LocalADStarAK;
 public class RobotContainer implements Constants.Field {
   private final DriveTrain driveTrain;
   public static DriveStates driveStates;
-  private final Grabber grabber;
+  // private final Grabber grabber;
   private final XboxController driver;
   public static SendableChooser<String> inputMode;
   public static LED led;
@@ -55,11 +54,11 @@ public class RobotContainer implements Constants.Field {
 
   public RobotContainer() {
     driveTrain = new DriveTrain();
-    grabber = new Grabber();
+    // grabber = new Grabber();
     driveStates = DriveStates.normal;
     driver = new XboxController(Constants.Controller.driveControllerPort);
 
-    NamedCommands.registerCommand("grab", new Grab(grabber));
+    // NamedCommands.registerCommand("grab", new Grab(grabber));
 
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -78,14 +77,14 @@ public class RobotContainer implements Constants.Field {
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(
       new DriveToRelative(driveTrain, new Translation2d(1, 2))
     );
-    new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new SequentialCommandGroup(
-      new DriveToPoint(driveTrain, new Pose2d(3, 0, new Rotation2d()))
-    ));
-    new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(
-        new DriveToRing(driveTrain, grabber)
+    new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(
+      new DriveToPoint(driveTrain, new Pose2d(-0.0381 + 1, 4.982718, new Rotation2d(Math.PI)))
     );
+    // new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(
+    //     new DriveToRing(driveTrain, grabber)
+    // );
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(
-      new TurnToAngle(driveTrain, new Rotation2d(0))
+      new TurnToSpeaker(driveTrain)
     );
   }
 
@@ -136,9 +135,11 @@ public class RobotContainer implements Constants.Field {
     Optional<Alliance> ally = DriverStation.getAlliance();
     if (ally.isPresent()) {
         if (ally.get() == Alliance.Red) {
+            SmartDashboard.putString("alliance", "red");
             return Alliance.Red;
         }
-        if (ally.get() == Alliance.Blue) {
+        if (ally.get() == Alliance.Blue) {  
+            SmartDashboard.putString("alliance", "blue");
             return Alliance.Blue;
         }
     }

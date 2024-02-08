@@ -48,23 +48,23 @@ import frc.robot.util.SwerveModule;
 public class DriveTrain extends SubsystemBase implements Constants.Drive, Constants.Drive.PoseEstimator {
     // Create MAXSwerveModules
     public final SwerveModule frontLeft = new SwerveModule( // chimera 11& 12
-            Constants.Drive.chimeraWheelID,
-            Constants.Drive.chimeraTurnID,
+            Constants.Drive.frontLeftWheelID,
+            Constants.Drive.frontLeftTurnID,
             Constants.Drive.frontLeftAngularOffset);
 
     public final SwerveModule frontRight = new SwerveModule( // manticore 9&10
-            Constants.Drive.manticoreWheelID,
-            Constants.Drive.manticoreTurnID,
+            Constants.Drive.frontRightWheelID,
+            Constants.Drive.frontRightTurnID,
             Constants.Drive.frontRightAngularOffset);
 
     public final SwerveModule backLeft = new SwerveModule( //phoenix 13&14
-            Constants.Drive.phoenixWheelID,
-            Constants.Drive.phoenixTurnID,
+            Constants.Drive.backLeftWheelID,
+            Constants.Drive.backLeftTurnID,
             Constants.Drive.backLeftAngularOffset);
 
     public final SwerveModule backRight = new SwerveModule( //Leviathan 5&6
-            Constants.Drive.leviathanWheelID,
-            Constants.Drive.leviathanTurnID,
+            Constants.Drive.backRightWheelID,
+            Constants.Drive.backRightTurnID,
             Constants.Drive.backRightAngularOffset);
 // Cerberus 7&8
     // The gyro sensor

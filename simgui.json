@@ -85,6 +85,9 @@
         "open": true,
         "piece": {
           "open": true
+        },
+        "target rotation angle": {
+          "open": true
         }
       }
     }
@@ -95,6 +98,7 @@
     },
     "Connections": {
       "open": true
-    }
+    },
+    "visible": true
   }
 }

@@ -45,6 +45,7 @@ public class TurnToAngle extends Command implements Constants.Drive, Constants.A
 
     controller.setTolerance(0.01, 0.1);
     controller.setSetpoint(setpoint);
+    controller.enableContinuousInput(-Math.PI, Math.PI);
 
     System.out.println("Auto rotate initializing");
   }
@@ -60,11 +61,11 @@ public class TurnToAngle extends Command implements Constants.Drive, Constants.A
       SmartDashboard.getNumber("turnpid/p", kP),
       SmartDashboard.getNumber("turnpid/i", kI),
       SmartDashboard.getNumber("turnpid/d", kD)
-      );
-    if (clockwise)
-      turnCommand(controller.calculate(driveTrain.getHeading(), setpoint) + 0.08);
-    else
-      turnCommand(-controller.calculate(driveTrain.getHeading(), setpoint) - 0.08);
+    );
+    // if (clockwise)
+      turnCommand(controller.calculate(driveTrain.getPose().getRotation().getRadians(), setpoint) + 0.08);
+    // else
+    //   turnCommand(-controller.calculate(driveTrain.getPose().getRotation().getRadians(), setpoint) - 0.08);
   }
 
   // Called once the command ends or is interrupted.
