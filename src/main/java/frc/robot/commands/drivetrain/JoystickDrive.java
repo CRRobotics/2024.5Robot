@@ -55,13 +55,13 @@ public class JoystickDrive extends Command implements Constants.Drive {
         switch(RobotContainer.driveStates)
         {
             case speeed:
-                speedAdjustedMaxSpeed = maxSpeed * 1.4;
+                speedAdjustedMaxSpeed = maxSpeed * fastSpeedMultiplier;
                 break;
             case normal:
                 speedAdjustedMaxSpeed = maxSpeed;
                 break;
             case slow:
-                speedAdjustedMaxSpeed = maxSpeed * .25;
+                speedAdjustedMaxSpeed = maxSpeed * slowSpeedMultiplier;
                 break;
         }
         SmartDashboard.putNumber("adjusted max speed", speedAdjustedMaxSpeed);
@@ -70,7 +70,7 @@ public class JoystickDrive extends Command implements Constants.Drive {
         double ySpeed = -MathUtil.applyDeadband(controller.getLeftX(), driveDeadBand);
         double rotation = -MathUtil.applyDeadband(controller.getRightX(), driveDeadBand);
         // boolean fieldRelative = SmartDashboard.getBoolean("field relative", false);
-        boolean fieldRelative = false;
+        boolean fieldRelative = true;
 
 
         SmartDashboard.putNumber("xspeed", -controller.getLeftY());
@@ -126,8 +126,8 @@ public class JoystickDrive extends Command implements Constants.Drive {
 
         // Convert the commanded speeds into the correct units for the drivetrain
         
-        double xSpeedDelivered = xSpeedCommanded * speedAdjustedMaxSpeed;
-        double ySpeedDelivered = ySpeedCommanded * speedAdjustedMaxSpeed;
+        double xSpeedDelivered = xSpeedCommanded * speedAdjustedMaxSpeed * (RobotContainer.getAlliance().equals(Alliance.Blue) ? 1 : -1);
+        double ySpeedDelivered = ySpeedCommanded * speedAdjustedMaxSpeed * (RobotContainer.getAlliance().equals(Alliance.Blue) ? 1 : -1);
         double rotDelivered = currentRotation * maxAngularSpeed;
         SmartDashboard.putNumber("xSpeedCommanded", xSpeedCommanded);
         SmartDashboard.putNumber("ySpeedCommanded", ySpeedCommanded);
@@ -136,7 +136,7 @@ public class JoystickDrive extends Command implements Constants.Drive {
         SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(
             fieldRelative
                 // ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(DriverStation.getAlliance() == Alliance.Blue?driveTrain.getGyroAngle() + Math.PI: driveTrain.getGyroAngle() + Math.PI))
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(driveTrain.getGyroAngle() + Math.PI))
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromRadians(RobotContainer.getAlliance().equals(Alliance.Blue) ? driveTrain.getHeading() : driveTrain.getHeading()))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         driveTrain.setModuleStates(swerveModuleStates);
     }
