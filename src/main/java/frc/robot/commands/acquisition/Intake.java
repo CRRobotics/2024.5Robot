@@ -15,7 +15,6 @@ public class Intake extends Command {
     {
         this.acq = acq;
         this.indexer = indexer;
-        addRequirements(acq);
     }
 
     @Override

@@ -168,4 +168,14 @@ public interface Constants {
         int motorID = 18; //Placeholder
         double grabSpeed = 0.1;
     }
+
+    interface Indexer{
+
+    }
+
+    public interface Acquisition {
+        int aqID = 9;
+        double aqIntakeSpeed = 0.5;
+        double aqRejectSpeed = -0.5;
+    }
 }

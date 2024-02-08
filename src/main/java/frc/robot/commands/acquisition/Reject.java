@@ -12,7 +12,6 @@ public class Reject extends Command {
     public Reject(Acquisition acq)
     {
         this.acq = acq;
-        addRequirements(acq);
     }
 
     @Override
