@@ -93,6 +93,7 @@ public class JoystickDrive extends Command implements Constants.Drive {
 
         // Calculate the direction slew rate based on an estimate of the lateral acceleration
         double directionSlewRate;
+        SmartDashboard.putNumber("Current Translation Mag", currentTranslationMag);
         if (currentTranslationMag != 0.0) {
             directionSlewRate = Math.abs(kDirectionSlewRate / currentTranslationMag);
         } else {

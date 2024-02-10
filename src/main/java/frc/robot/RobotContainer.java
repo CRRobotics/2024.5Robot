@@ -85,13 +85,13 @@ public class RobotContainer implements Constants.Field {
   private void configureBindings() {
     new JoystickButton(driver, 6).whileTrue(new DriveSlow());
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(
-      new DriveToRelative(driveTrain, new Translation2d(1, 2))
-    );
-    new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(
-      new DriveToPoint(driveTrain, new Pose2d(-0.0381 + 1, 4.982718, new Rotation2d(Math.PI)))
-    );
-    // new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(
+    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(
+    //   new DriveToRelative(driveTrain, new Translation2d(1, 2))
+    // );
+    // new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(
+    //   new DriveToPoint(driveTrain, new Pose2d(-0.0381 + 1, 4.982718, new Rotation2d(Math.PI)))
+    // );
+    // // new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(
     //     new DriveToRing(driveTrain, grabber)
     // );
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(

@@ -24,10 +24,6 @@ public interface Constants {
         double yP = 1;
         TrapezoidProfile.Constraints thetaPIDConstraints = new TrapezoidProfile.Constraints(
             maxAngularSpeed, maxAngularAcceleration);
-        double balanceP = 0;
-        double balanceI = 0;
-        double balanceD = 0;
-        double balanceTolerance = 5;
         double testMult = 0.25;
         PathConstraints constraints = new PathConstraints(
             maxSpeed * testMult,
@@ -71,17 +67,17 @@ public interface Constants {
                 new Translation2d(wheelBase / 2, -trackWidth / 2),
                 new Translation2d(-wheelBase / 2, trackWidth / 2),
                 new Translation2d(-wheelBase / 2, -trackWidth / 2));//Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
-        double maxSpeed = 0.5; // meters per second
-        double maxAcceleration = 1;
+        double maxSpeed = 1; // meters per second
+        double maxAcceleration = 5;
         double maxAngularSpeed = Math.PI; // radians per second;
         double maxAngularAcceleration = 2 * Math.PI; // radians per second squared
         boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
 
         double driveDeadBand = 0.025;
 
-        double magnitudeSlewRate = 2.4; //rads per second
+        double magnitudeSlewRate = 10; //rads per second
         double kDirectionSlewRate = 1.8; // percent per second (1 = 100%)
-        double rotationSlewRate = 2.0; // percent per second (1 = 100%)
+        double rotationSlewRate = 10; // percent per second (1 = 100%)
         double radius = 0.4318; //Radius in meters
 
         PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAcceleration);
