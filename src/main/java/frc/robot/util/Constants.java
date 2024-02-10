@@ -64,8 +64,8 @@ public interface Constants {
         int backRightTurnID = 5;
         double backRightAngularOffset = Math.PI / 2;
 
-        double trackWidth = Units.inchesToMeters(24.625);// Distance between centers of right and left wheels on robot//TODO Set kTrackWidth to actual track width
-        double wheelBase = Units.inchesToMeters(24.625);// Distance between front and back wheels on robot //TODO Set kWheelBase to actual wheel base
+        double trackWidth = Units.inchesToMeters(24.5);// Distance between centers of right and left wheels on robot//TODO Set kTrackWidth to actual track width
+        double wheelBase = Units.inchesToMeters(24.5);// Distance between front and back wheels on robot //TODO Set kWheelBase to actual wheel base
         SwerveDriveKinematics driveKinematics = new SwerveDriveKinematics(
                 new Translation2d(wheelBase / 2, trackWidth / 2),
                 new Translation2d(wheelBase / 2, -trackWidth / 2),
@@ -175,7 +175,7 @@ public interface Constants {
 
     public interface Acquisition {
         int aqID = 9;
-        double aqIntakeSpeed = 0.5;
-        double aqRejectSpeed = -0.5;
+        double aqIntakeSpeed = 0.1;
+        double aqRejectSpeed = -0.1;
     }
 }
