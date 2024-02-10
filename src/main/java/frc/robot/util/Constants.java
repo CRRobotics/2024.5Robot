@@ -100,6 +100,10 @@ public interface Constants {
     }
 
     interface Shooter {
+        int leftShooterMotorID = 0;
+        int rightShooterMotorID = 0;
+        int pivotMotorID = 0;
+
         double kF = 0;
         double restAngle = 0;
 

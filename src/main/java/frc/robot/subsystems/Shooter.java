@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
+import java.net.CacheRequest;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -19,32 +22,29 @@ import frc.robot.util.Constants;
 public class Shooter extends SubsystemBase implements Constants.Shooter {
     TalonFX leftShooterMotor;
     TalonFX rightShooterMotor;
-    CANSparkMax pivotMotor;
-    TalonFXConfiguration rightConfig;
-    TalonFXConfiguration leftConfig;
-    PIDController pid;
-    RelativeEncoder encoder;
-    Slot0Configs leftSlot;
-    Slot0Configs rightSlot;
     VelocityVoltage voltageController;
+    Slot0Configs slotConfig;
+    CANSparkMax pivotMotor;
+    RelativeEncoder encoder;
+    PIDController pid;
 
     public Shooter() {
-        leftShooterMotor = new TalonFX(0);
-        leftConfig = new TalonFXConfiguration();
+        leftShooterMotor = new TalonFX(leftShooterMotorID);
         leftShooterMotor.setNeutralMode(NeutralModeValue.Coast);
-        leftSlot = new Slot0Configs();
-        leftSlot.kP = 0;
-        leftSlot.kI = 0;
-        leftSlot.kD = 0;
 
-        rightShooterMotor = new TalonFX(0);
-        rightConfig = new TalonFXConfiguration();
+        rightShooterMotor = new TalonFX(rightShooterMotorID);
         rightShooterMotor.setNeutralMode(NeutralModeValue.Coast);
-        rightSlot = new Slot0Configs();
-        rightSlot.kP = 0;
-        rightSlot.kI = 0;
-        rightSlot.kD = 0;
 
+        
+        // voltageController =  new VelocityVoltage(0, 0, false, kF,
+        //     0, false, true, true);
+        voltageController = new VelocityVoltage(0);
+
+        slotConfig = new Slot0Configs();
+        slotConfig.kP = 0;
+        slotConfig.kI = 0;
+        slotConfig.kD = 0;
+        leftShooterMotor.getConfigurator().apply(slotConfig);
         
         pivotMotor = new CANSparkMax(0, MotorType.kBrushless);
         encoder = pivotMotor.getEncoder();
@@ -55,12 +55,6 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         SmartDashboard.putNumber("pivot/i", 0);
         SmartDashboard.putNumber("pivot/d", 0);
         SmartDashboard.putNumber("pivot/setpoint", 0);
-
-        //TODO: do we need multiple of these
-        voltageController =  new VelocityVoltage(0, 0, false, kF,
-            0, false, true, true);
-        // maybe use this too
-        // voltageController.clone();
     }
 
     /**
@@ -68,9 +62,9 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
      * @param setpoint The speed to run the shooter at
      */
     public void setSpeed(double setpoint) {
-        voltageController.Velocity = setpoint; // is this rpm
-        leftShooterMotor.setControl(voltageController);
-        rightShooterMotor.setControl(voltageController);
+        voltageController.Slot = 0;
+        leftShooterMotor.setControl(voltageController.withVelocity(setpoint));
+        rightShooterMotor.setControl(new Follower(leftShooterMotorID, true));
     }
 
     /**
