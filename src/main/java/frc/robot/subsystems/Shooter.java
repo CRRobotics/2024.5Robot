@@ -51,9 +51,9 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         slotConfig.kD = 0;
         leftShooterMotor.getConfigurator().apply(slotConfig);
         
-        pivotMotor = new CANSparkMax(0, MotorType.kBrushless);
+        pivotMotor = new CANSparkMax(pivotMotorID, MotorType.kBrushless);
         encoder = pivotMotor.getEncoder();
-        encoder.setPositionConversionFactor(1.0/100);
+        encoder.setPositionConversionFactor(1.0/166.667);
         pid = new PIDController(0, 0, 0);
 
         // bottomSwitch = pivotMotor.getReverseLimitSwitch(Type.kNormallyOpen);
@@ -78,12 +78,13 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     }
 
     /**
-     * Aims the launcher to a set point
+     * Aims the launcher to a set point in radians
      * @param setPoint The set point to aim the launcher at
      */
-    public void aim(double setPoint) { // is this radians
+    public void aim(double setPoint) {
         System.out.println("aiming");
         setPoint = SmartDashboard.getNumber("pivot/setpoint", 0);
+        setPoint /= 2 * Math.PI;
         pid = new PIDController(SmartDashboard.getNumber("pivot/p", 0), SmartDashboard.getNumber("pivot/i", 0), SmartDashboard.getNumber("pivot/d", 0));
         pivotMotor.set(pid.calculate(encoder.getPosition(), setPoint));
     }
