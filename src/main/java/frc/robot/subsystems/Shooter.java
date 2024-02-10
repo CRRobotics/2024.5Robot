@@ -9,8 +9,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkLimitSwitch.Type;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,6 +30,8 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     CANSparkMax pivotMotor;
     RelativeEncoder encoder;
     PIDController pid;
+    SparkLimitSwitch bottomSwitch;
+    SparkLimitSwitch topSwitch;
 
     public Shooter() {
         leftShooterMotor = new TalonFX(leftShooterMotorID);
@@ -50,6 +55,11 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         encoder = pivotMotor.getEncoder();
         encoder.setPositionConversionFactor(1.0/100);
         pid = new PIDController(0, 0, 0);
+
+        // bottomSwitch = pivotMotor.getReverseLimitSwitch(Type.kNormallyOpen);
+        // bottomSwitch.enableLimitSwitch(true);
+        // topSwitch = pivotMotor.getForwardLimitSwitch(Type.kNormallyOpen);
+        // topSwitch.enableLimitSwitch(true);
 
         SmartDashboard.putNumber("pivot/p", 0);
         SmartDashboard.putNumber("pivot/i", 0);
