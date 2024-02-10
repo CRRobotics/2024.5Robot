@@ -6,8 +6,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 
@@ -17,37 +19,42 @@ import frc.robot.util.Constants;
 public class Shooter extends SubsystemBase implements Constants.Shooter {
     TalonFX leftShooterMotor;
     TalonFX rightShooterMotor;
-    CANSparkMax leftPivotMotor;
-    CANSparkMax rightPivotMotor;
+    CANSparkMax pivotMotor;
     TalonFXConfiguration rightConfig;
     TalonFXConfiguration leftConfig;
     PIDController pid;
-    RelativeEncoder encoderL;
-    RelativeEncoder encoderR;
+    RelativeEncoder encoder;
     Slot0Configs leftSlot;
     Slot0Configs rightSlot;
     VelocityVoltage voltageController;
 
     public Shooter() {
         leftShooterMotor = new TalonFX(0);
-        leftPivotMotor = new CANSparkMax(0, MotorType.kBrushless);
         leftConfig = new TalonFXConfiguration();
         leftShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         leftSlot = new Slot0Configs();
         leftSlot.kP = 0;
         leftSlot.kI = 0;
         leftSlot.kD = 0;
-        encoderL = leftPivotMotor.getEncoder();
 
         rightShooterMotor = new TalonFX(0);
-        rightPivotMotor = new CANSparkMax(0, MotorType.kBrushless);
         rightConfig = new TalonFXConfiguration();
         rightShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         rightSlot = new Slot0Configs();
         rightSlot.kP = 0;
         rightSlot.kI = 0;
         rightSlot.kD = 0;
-        encoderR = rightPivotMotor.getEncoder();
+
+        
+        pivotMotor = new CANSparkMax(0, MotorType.kBrushless);
+        encoder = pivotMotor.getEncoder();
+        encoder.setPositionConversionFactor(1.0/100);
+        pid = new PIDController(0, 0, 0);
+
+        SmartDashboard.putNumber("pivot/p", 0);
+        SmartDashboard.putNumber("pivot/i", 0);
+        SmartDashboard.putNumber("pivot/d", 0);
+        SmartDashboard.putNumber("pivot/setpoint", 0);
 
         //TODO: do we need multiple of these
         voltageController =  new VelocityVoltage(0, 0, false, kF,
@@ -71,7 +78,9 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
      * @param setPoint The set point to aim the launcher at
      */
     public void aim(double setPoint) { // is this radians
-        leftPivotMotor.set(pid.calculate(encoderL.getPosition(), setPoint));
-        rightPivotMotor.set(pid.calculate(encoderR.getPosition(), setPoint));
+        System.out.println("aiming");
+        setPoint = SmartDashboard.getNumber("pivot/setpoint", 0);
+        pid = new PIDController(SmartDashboard.getNumber("pivot/p", 0), SmartDashboard.getNumber("pivot/i", 0), SmartDashboard.getNumber("pivot/d", 0));
+        pivotMotor.set(pid.calculate(encoder.getPosition(), setPoint));
     }
 }

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.drivetrain.DDRDrive;
@@ -25,6 +26,7 @@ import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LED;
+import frc.robot.subsystems.Shooter;
 import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
 import frc.robot.util.LocalADStarAK;
@@ -36,9 +38,11 @@ public class RobotContainer {
   public static SendableChooser<String> inputMode;
   public static LED led;
   private final SendableChooser<Command> autoChooser;
+  private final Shooter shooter;
 
   public RobotContainer() {
     driveTrain = new DriveTrain();
+    shooter = new Shooter();
     driveStates = DriveStates.normal;
     driver = new XboxController(Constants.Controller.driveControllerPort);
     configureBindings();
@@ -55,14 +59,9 @@ public class RobotContainer {
   private void configureBindings() {
     new JoystickButton(driver, 6).whileTrue(new DriveSlow());
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
-    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToRealativePoint(driveTrain));
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SequentialCommandGroup(
-      new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d())),
-      new DriveToRelative(driveTrain, new Pose2d(1, 0, new Rotation2d()))
-    ));
-    new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new SequentialCommandGroup(
-      new DriveToPoint(driveTrain, new Pose2d(3, 0, new Rotation2d()))
-    ));
+    new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(
+      new RunCommand(() -> shooter.aim(0), shooter)
+    );
 
   }
 
