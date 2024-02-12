@@ -29,7 +29,7 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
     @Override
     public void initialize() {
         shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
-            ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), new Translation2d(/*ampBlueTarget */)) //TODO: make this work for either side
+            ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), new Translation2d(ampBlue)) //TODO: make this work for either side
         );
         startTime = System.currentTimeMillis();
         shooter.aim(shootAngleSpeed.getAngle());
