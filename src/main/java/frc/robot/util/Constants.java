@@ -161,10 +161,10 @@ public interface Constants {
     }
 
 
-    interface Indexer{
-        int indexID;
-        double indexIntakeSpeed = 0.5;
-        double indexRejectSpeed = 0.5;
+    interface Indexer {
+        int indexID = 10; //Placeholder
+        double indexIntakeSpeed = 0.1;
+        double indexRejectSpeed = -0.1;
 
     }
 
