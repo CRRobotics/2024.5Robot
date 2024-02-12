@@ -33,4 +33,8 @@ public class Indexer extends SubsystemBase implements Constants.Indexer {
   public void reject() {
     indexer.set(indexRejectSpeed);
   }
+
+  public void windUp() {
+    
+  }
 }

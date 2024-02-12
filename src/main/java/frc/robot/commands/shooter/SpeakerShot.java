@@ -34,20 +34,20 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
         startTime = System.currentTimeMillis();
         shooter.aim(shootAngleSpeed.getAngle());
         shooter.setSpeed(reverseIndexSpeed);
-        // indexer.setIndexMotor(reverseIndexSpeed);
+        indexer.reject();
     }
 
     @Override
     public void execute() {
         if (System.currentTimeMillis() >= startTime + reverseTime) {
-            // indexer.setIndexMotor(0);
+            indexer.stop();
             shooter.setSpeed(shootAngleSpeed.getSpeed());
         }
 
         if (System.currentTimeMillis() >= startTime + spinUpTime) {
             shooter.setSpeed(shootAngleSpeed.getSpeed());
-            // indexer.setIndexMotor(Constants.IndexerConstants.indexMotorSpeed);
-            // acquisition.spinAcquisition(Constants.AcquisitionConstants.acquisitionSpeedSlow);
+            indexer.setIndexMotor(Constants.IndexerConstants.indexMotorSpeed);
+            indexer.intake()
         }
 
 
@@ -56,7 +56,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     @Override
     public void end(boolean interrupted) {
         shooter.setSpeed(0);
-        // indexer.setIndexMotor(0);
+        indexer.setIndexMotor(0);
         // acquisition.stopAcquisitionMotor();
         shooter.aim(restAngle);
     }
