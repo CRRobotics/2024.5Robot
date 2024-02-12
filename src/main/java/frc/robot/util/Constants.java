@@ -166,6 +166,9 @@ public interface Constants {
     }
 
     interface Indexer{
+        int indexID;
+        double indexIntakeSpeed = 0.5;
+        double indexRejectSpeed = 0.5;
 
     }
 
