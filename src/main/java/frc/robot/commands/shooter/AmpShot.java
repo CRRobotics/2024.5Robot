@@ -10,7 +10,7 @@ import frc.robot.util.AngleSpeed;
 import frc.robot.util.Constants;
 import frc.robot.util.ValueFromDistance;
 
-public class SpeakerShot extends Command implements Constants.Field, Constants.Shooter, Constants.Indexer {
+public class AmpShot extends Command implements Constants.Field, Constants.Shooter, Constants.Indexer {
     //eventually need other subsystems
     private Shooter shooter;
     private DriveTrain driveTrain;
@@ -18,7 +18,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     private long startTime;
     private AngleSpeed shootAngleSpeed;
 
-    public SpeakerShot(Shooter shooter, DriveTrain driveTrain) {
+    public AmpShot(Shooter shooter, DriveTrain driveTrain) {
         this.shooter = shooter;
         this.driveTrain = driveTrain;
 
