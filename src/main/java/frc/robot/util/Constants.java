@@ -160,10 +160,6 @@ public interface Constants {
         int turnCurrentLimit = 20; // amps
     }
 
-    interface Grabber {
-        int motorID = 18; //Placeholder
-        double grabSpeed = 0.1;
-    }
 
     interface Indexer{
         int indexID;
