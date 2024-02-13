@@ -13,30 +13,27 @@ import edu.wpi.first.math.util.Units;
 
 public interface Constants {
 
+    interface Acquisition {
+        int aqID = 0;
+        double aqIntakeSpeed = 0;
+        double aqRejectSpeed = 0;
+    }
 
     interface Auto {
-        double maxSpeed = 2; // meters per second
-        double maxAcceleration = 2; // meters per second squared
-        double maxAngularSpeed = 2 * Math.PI; // radians per second
-        double maxAngularAcceleration = 2 * Math.PI; // radians per second squared
+        double maxSpeed = 3; // meters per second
+        double maxAcceleration = 4; // meters per second squared
+        double maxAngularSpeed = Math.PI; // radians per second
+        double maxAngularAcceleration = Math.PI; // radians per second squared
         double thetaP = 1; // pids for auto
         double xP = 1;
         double yP = 1;
         TrapezoidProfile.Constraints thetaPIDConstraints = new TrapezoidProfile.Constraints(
             maxAngularSpeed, maxAngularAcceleration);
-        double testMult = 0.25;
-        PathConstraints constraints = new PathConstraints(
-            maxSpeed * testMult,
-            maxAcceleration * testMult,
-            maxAngularSpeed * testMult / 2,
-            maxAcceleration * testMult / 2
-        );
-
-        interface TurnToAngle {
-            double kP = 2.2;
-            double kI = 0;
-            double kD = 0;
-        }
+        double balanceP = 0;
+        double balanceI = 0;
+        double balanceD = 0;
+        double balanceTolerance = 5;
+        PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAcceleration);
     }
 
     interface Controller {
@@ -44,56 +41,43 @@ public interface Constants {
     }
 
     interface Drive {
-        int frontLeftWheelID = 2;
-        int frontLeftTurnID = 1;
+        int chimeraWheelID = 11;
+        int chimeraTurnID = 12;
         double frontLeftAngularOffset = -Math.PI / 2;
 
-        int frontRightWheelID = 8;
-        int frontRightTurnID = 7;
+        int manticoreWheelID = 9;
+        int manticoreTurnID = 10;
         double frontRightAngularOffset = 0;
 
-        int backLeftWheelID = 4;
-        int backLeftTurnID = 3;
+        int phoenixWheelID = 13;
+        int phoenixTurnID = 14;
         double backLeftAngularOffset = Math.PI;
 
-        int backRightWheelID = 6;
-        int backRightTurnID = 5;
+        int leviathanWheelID = 5;
+        int leviathanTurnID = 6;
         double backRightAngularOffset = Math.PI / 2;
 
-        double trackWidth = Units.inchesToMeters(24.5);// Distance between centers of right and left wheels on robot//TODO Set kTrackWidth to actual track width
-        double wheelBase = Units.inchesToMeters(24.5);// Distance between front and back wheels on robot //TODO Set kWheelBase to actual wheel base
+        double trackWidth = Units.inchesToMeters(26.5);// Distance between centers of right and left wheels on robot//TODO Set kTrackWidth to actual track width
+        double wheelBase = Units.inchesToMeters(26.5);// Distance between front and back wheels on robot //TODO Set kWheelBase to actual wheel base
         SwerveDriveKinematics driveKinematics = new SwerveDriveKinematics(
                 new Translation2d(wheelBase / 2, trackWidth / 2),
                 new Translation2d(wheelBase / 2, -trackWidth / 2),
                 new Translation2d(-wheelBase / 2, trackWidth / 2),
                 new Translation2d(-wheelBase / 2, -trackWidth / 2));//Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
-        double maxSpeed = 1; // meters per second
-        double maxAcceleration = 5;
-        double maxAngularSpeed = Math.PI; // radians per second;
-        double maxAngularAcceleration = 2 * Math.PI; // radians per second squared
+        double maxSpeed = 4; // meters per second
+        double maxAcceleration = 4;
+        double maxAngularSpeed = 2 * Math.PI; // radians per second;
+        double maxAngularAcceleration = Math.PI; // radians per second squared
         boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
 
         double driveDeadBand = 0.025;
 
-        double magnitudeSlewRate = 10; //rads per second
+        double magnitudeSlewRate = 2.4; //rads per second
         double kDirectionSlewRate = 1.8; // percent per second (1 = 100%)
-        double rotationSlewRate = 10; // percent per second (1 = 100%)
+        double rotationSlewRate = 2.0; // percent per second (1 = 100%)
         double radius = 0.4318; //Radius in meters
 
         PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAcceleration);
-
-        double fastSpeedMultiplier = 1.4;
-        double slowSpeedMultiplier = 0.25;
-
-        String[] cameraIds = new String[]{"0", "2", "4", "6", "8", "10"};
-        int cameraErrorCode = 63900;
-
-        interface PoseEstimator {
-            double stateTrans = 0.1;
-            double stateTheta = 0.1;
-            double visionTrans = 0.5;
-            double visionTheta = 0.5;
-        }
     }
 
     interface Field {
@@ -125,6 +109,21 @@ public interface Constants {
         Translation2d speakerRed = speakerBlue.minus(new Translation2d(fieldWidth, 0));
 
     }
+
+    interface Shooter {
+        double kF = 0;
+        double restAngle = 0;
+        double reverseIndexSpeed = 0;
+        double reverseTime = 0;
+        double spinUpTime = 0;
+        double shootTime = 0;
+    }
+    interface Indexer {
+        int indexID = 0;
+        double indexIntakeSpeed = 0;
+        double indexRejectSpeed = 0;
+    }
+
 
     interface SwerveModule {
         double wheelDiameter = 0.0762; //meters
@@ -158,19 +157,5 @@ public interface Constants {
         double turnEncoderPositionPIDMaxInput = turnEncoderPositionConversion;
         IdleMode turnIdleMode = IdleMode.kBrake;
         int turnCurrentLimit = 20; // amps
-    }
-
-
-    interface Indexer {
-        int indexID = 10; //Placeholder
-        double indexIntakeSpeed = 0.1;
-        double indexRejectSpeed = -0.1;
-
-    }
-
-    public interface Acquisition {
-        int aqID = 9;
-        double aqIntakeSpeed = 0.1;
-        double aqRejectSpeed = -0.1;
     }
 }
