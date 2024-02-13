@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 
+import java.util.stream.IntStream;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -43,26 +45,26 @@ import frc.robot.util.Constants;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.NetworkTableWrapper;
 import frc.robot.util.SwerveModule;
-public class DriveTrain extends SubsystemBase implements Constants.Drive {
+public class DriveTrain extends SubsystemBase implements Constants.Drive, Constants.Drive.PoseEstimator {
     // Create MAXSwerveModules
     public final SwerveModule frontLeft = new SwerveModule( // chimera 11& 12
-            Constants.Drive.chimeraWheelID,
-            Constants.Drive.chimeraTurnID,
+            Constants.Drive.frontLeftWheelID,
+            Constants.Drive.frontLeftTurnID,
             Constants.Drive.frontLeftAngularOffset);
 
     public final SwerveModule frontRight = new SwerveModule( // manticore 9&10
-            Constants.Drive.manticoreWheelID,
-            Constants.Drive.manticoreTurnID,
+            Constants.Drive.frontRightWheelID,
+            Constants.Drive.frontRightTurnID,
             Constants.Drive.frontRightAngularOffset);
 
     public final SwerveModule backLeft = new SwerveModule( //phoenix 13&14
-            Constants.Drive.phoenixWheelID,
-            Constants.Drive.phoenixTurnID,
+            Constants.Drive.backLeftWheelID,
+            Constants.Drive.backLeftTurnID,
             Constants.Drive.backLeftAngularOffset);
 
     public final SwerveModule backRight = new SwerveModule( //Leviathan 5&6
-            Constants.Drive.leviathanWheelID,
-            Constants.Drive.leviathanTurnID,
+            Constants.Drive.backRightWheelID,
+            Constants.Drive.backRightTurnID,
             Constants.Drive.backRightAngularOffset);
 // Cerberus 7&8
     // The gyro sensor
@@ -91,9 +93,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
             backLeft.getPosition(),
             backRight.getPosition()
         },
-        new Pose2d(1.81, 0.45, Rotation2d.fromRadians(Math.PI)), // initial pose
-        VecBuilder.fill(0.1, 0.1, 0.1), // odometry standard deviation for x, y, theta
-        VecBuilder.fill(0.5, 0.5, 0.5) // visions standard deviation for x, y, theta
+        new Pose2d(0, 0, Rotation2d.fromRadians(Math.PI)), // initial pose
+        VecBuilder.fill(stateTrans, stateTrans, stateTheta), // odometry standard deviation for x, y, theta
+        VecBuilder.fill(visionTrans, visionTrans, visionTheta) // visions standard deviation for x, y, theta
     );
 
     private Field2d field = new Field2d();
@@ -111,10 +113,10 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
             this::driveRobotRelative,
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                     new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+                    new PIDConstants(10.0, 0.0, 0.0), // Rotation PID constants
                     4.5, // Max module speed, in m/s
                     0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-                    new ReplanningConfig(true, false, 0.5, 0.2) // Default path replanning config. See the API for the options here
+                    new ReplanningConfig(true, true, 0.1, 0.2) // Default path replanning config. See the API for the options here
             ),
             this::flipPath,
             this // Reference to this subsystem to set requirements
@@ -143,27 +145,6 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("pitch", getPitch());
-        
-        double xTarget = DriverStation.getAlliance().equals(Alliance.Red) ? 14.73 : 1.82;
-        double[] scoringPositions = {
-            0.46, 1.07, 1.64, 2.2, 2.74, 1.81, 3.87, 4.42, 5.07 // y positions in m of 9 scoring positions
-        };
-        Translation2d robotPosition = getPose().getTranslation(); // current position
-
-        // calculates which position is closest
-        double[] distances = new double[9];
-        int minDistanceIndex = 0;
-        for (int i = 0; i < distances.length; i++) {
-            distances[i] = robotPosition.getDistance(new Translation2d(xTarget, scoringPositions[i]));
-            if (distances[i] < distances[minDistanceIndex]) {
-                minDistanceIndex = i;
-            }
-        }
-        SmartDashboard.putNumber("closest scoring position", minDistanceIndex);
-        SmartDashboard.putNumber("distanceToPosition", robotPosition.getDistance(new Translation2d(xTarget, scoringPositions[minDistanceIndex])));
-
-
         SmartDashboard.putNumber("gyro angle", gyro.getAngle());
         SwerveModulePosition[] swervePosition = {
             frontLeft.getPosition(),
@@ -171,34 +152,31 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
             backLeft.getPosition(),
             backRight.getPosition()
         };
-        
         poseEstimator.update(
             Rotation2d.fromDegrees(-gyro.getAngle()),
             swervePosition
         );
-
         odometry.update(
             Rotation2d.fromDegrees(-gyro.getAngle()),
             swervePosition
         );
-        
         // update with visions data from these cameras ids:
-        for (String i : new String[]{"0", "2", "4"}) {
-            if (NetworkTableWrapper.getDouble(i, "ntags") != 0 && NetworkTableWrapper.getDouble(i, "rx") < 20 && NetworkTableWrapper.getDouble(i, "ry") < 20) {
-                double distance = getPose().getTranslation().getDistance(new Translation2d(NetworkTableWrapper.getDouble(i, "rx"), NetworkTableWrapper.getDouble(i, "ry")));
+        Translation2d tag8 = new Translation2d(0, 5);
+        for (String id : cameraIds) {
+            double x = NetworkTableWrapper.getDouble(id, "rx");
+            double y = NetworkTableWrapper.getDouble(id, "ry");
+            double ntags = NetworkTableWrapper.getDouble(id, "ntags");
+            double theta = NetworkTableWrapper.getDouble(id, "theta");
+            if (ntags != 0 && x != cameraErrorCode) {
+                double distance = tag8.getDistance(new Translation2d(x, y));
+                SmartDashboard.putNumber("distance to tag", distance);
                 poseEstimator.addVisionMeasurement(
-                    new Pose2d(
-                        NetworkTableWrapper.getDouble(i, "rx"),
-                        NetworkTableWrapper.getDouble(i, "ry"),
-                        Rotation2d.fromRadians(NetworkTableWrapper.getDouble(i, "theta"))
-                    ),
+                    new Pose2d(x, y, Rotation2d.fromRadians(theta)),
                     Timer.getFPGATimestamp() + 0.01, // needs to be tested and calibrated
-                    VecBuilder.fill(0.8 * distance, 0.8 * distance, 0.8 * distance) // needs to be calibrated
+                    VecBuilder.fill(1 * distance, 1 * distance, 1 * distance) // needs to be calibrated
                 );
             }
-            SmartDashboard.putNumber(i + "Theta", NetworkTableWrapper.getDouble(i, "theta") * 180 / Math.PI);
         }
-
         // field
         // odoField.setRobotPose(odometry.getPoseMeters());
         // SmartDashboard.putData(odoField);
@@ -242,8 +220,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
      * @param pose The pose to which to set the odometry.
      */
     public void resetOdometry(Pose2d pose) {
+        setGyroAngle(pose.getRotation().getRadians());
         poseEstimator.resetPosition(
-                new Rotation2d(),
+                gyro.getRotation2d(),
                 new SwerveModulePosition[] {
                     frontLeft.getPosition(),
                     frontRight.getPosition(),
@@ -301,8 +280,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     }
 
     public void setGyroAngle(double angle) {
-        // gyro.setAngleAdjustment(angle * 180 / Math.PI);
-        gyro.setAngleAdjustment(getHeading());
+        gyro.setAngleAdjustment(angle * 180 / Math.PI);
     }
 
     public double getGyroAngle() {
@@ -312,10 +290,10 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
     /**
      * Returns the heading of the robot.
      *
-     * @return the robot's heading in degrees, from -180 to 180
+     * @return the robot's heading in radians
      */
     public double getHeading() {
-        return poseEstimator.getEstimatedPosition().getRotation().getDegrees();
+        return poseEstimator.getEstimatedPosition().getRotation().getRadians();
     }
 
     public SwerveModuleState[] getModuleStates() {
@@ -345,105 +323,10 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         return gyro.getRate() * (Constants.Drive.gyroReversed ? -1.0 : 1.0);
     }
 
-    /*
-    public Command closestScoringCommand() {
-        double xTarget = DriverStation.getAlliance().equals(Alliance.Red) ? 14.73 : 1.82;
-        double[] scoringPositions = {
-            0.46, 1.07, 1.64, 2.2, 2.74, 3.33, 3.87, 4.42, 5.07 // y positions in m of 9 scoring positions
-        };
-        Translation2d robotPosition = getPose().getTranslation(); // current position
-
-        // calculates which position is closest
-        double[] distances = new double[9];
-        int minDistanceIndex = 0;
-        for (int i = 0; i < distances.length; i++) {
-            distances[i] = robotPosition.getDistance(new Translation2d(xTarget, scoringPositions[i]));
-            if (distances[i] < distances[minDistanceIndex]) {
-                minDistanceIndex = i;
-            }
-        }
-        //minDistanceIndex = 5;
-        SmartDashboard.putNumber("closest scoring position", minDistanceIndex);
-
-        Pose2d targetPose = new Pose2d(new Translation2d(xTarget, scoringPositions[minDistanceIndex]), Rotation2d.fromDegrees(0)); // top node on red
-        Translation2d translationDifference = targetPose.getTranslation().minus(robotPosition); // difference between target and current
-        // calculates wheel angle needed to target from x and y components
-        Rotation2d translationRotation = new Rotation2d(translationDifference.getX(), translationDifference.getY());
-        Command driveCommand = followPathCommand(PathPlanner.generatePath(
-            new PathConstraints(0.5, 0.5),
-            new PathPoint(robotPosition, translationRotation, getPose().getRotation()), // starting pose
-            new PathPoint(targetPose.getTranslation(), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Red ? 0 : 180))), // ending pose
-            false);
-        return driveCommand;
-    } */
-
-    /*
-    public Command driveToPieceCommand() {
-        // double[] pieceData;
-        // if (NetworkTableWrapper.getArray("Detector", "Cone")[0] == 1) {
-        //     pieceData = NetworkTableWrapper.getArray("Detector", "Cone");
-        // } else {
-        //     pieceData = NetworkTableWrapper.getArray("Detector", "Cube");
-        // }
-        // Translation2d currentPosition = getPose().getTranslation();
-
-        // double xCoordinateOfRobot = currentPosition.getX();
-        // double yCoordinateOfRobot = currentPosition.getY();
-        // double rotationAngleOfRobot = getPose().getRotation().getRadians();
-        // GetGlobalCoordinates myGlobalCoordinates = new GetGlobalCoordinates(xCoordinateOfRobot, yCoordinateOfRobot, rotationAngleOfRobot, pieceData);
-        // double targetX = myGlobalCoordinates.globalX + (DriverStation.getAlliance() == Alliance.Blue ? -0.77 : 0.77);
-        // double targetY = myGlobalCoordinates.globalY;
-
-        // Rotation2d translationRotation = new Rotation2d(targetX, targetY);
-        // SmartDashboard.putNumber("target X", targetX);
-        // SmartDashboard.putNumber("target Y", targetY);
-        // Command driveCommand = followPathCommand(PathPlanner.generatePath(
-        //     new PathConstraints(0.5, 0.5),
-        //     new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation()),
-        //     new PathPoint(new Translation2d(targetX, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
-        //     // new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation())
-        //     ),
-        //     false);
-        // field.getObject("traj").setTrajectory(PathPlanner.generatePath(
-        //     new PathConstraints(0.5, 0.5),
-        //     new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation()),
-        //     new PathPoint(new Translation2d(targetX, targetY), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Blue ? 0 : 180))
-        //     // new PathPoint(getPose().getTranslation(), translationRotation, getPose().getRotation())
-        //     ));
-        // return driveCommand;
-        double xTarget = DriverStation.getAlliance().equals(Alliance.Red) ? 0.72 : 15.8;
-        double[] scoringPositions = {
-            6.15, 7.48 // y positions in m of 9 scoring positions
-        };
-        Translation2d robotPosition = getPose().getTranslation(); // current position
-
-        // calculates which position is closest
-        double[] distances = new double[2];
-        int minDistanceIndex = 0;
-        for (int i = 0; i < distances.length; i++) {
-            distances[i] = robotPosition.getDistance(new Translation2d(xTarget, scoringPositions[i]));
-            if (distances[i] < distances[minDistanceIndex]) {
-                minDistanceIndex = i;
-            }
-        }
-        //minDistanceIndex = 5;
-        SmartDashboard.putNumber("closest scoring position", minDistanceIndex);
-
-        Pose2d targetPose = new Pose2d(new Translation2d(xTarget, scoringPositions[minDistanceIndex]), Rotation2d.fromDegrees(0)); // top node on red
-        Translation2d translationDifference = targetPose.getTranslation().minus(robotPosition); // difference between target and current
-        // calculates wheel angle needed to target from x and y components
-        Rotation2d translationRotation = new Rotation2d(translationDifference.getX(), translationDifference.getY());
-        Command driveCommand = followPathCommand(PathPlanner.generatePath(
-            new PathConstraints(0.5, 0.5),
-            new PathPoint(robotPosition, translationRotation, getPose().getRotation()), // starting pose
-            new PathPoint(targetPose.getTranslation(), translationRotation, Rotation2d.fromDegrees(DriverStation.getAlliance() == Alliance.Red ? 0 : 180))), // ending pose
-            false);
-        return driveCommand;
-    } */
 
     public Command followPathCommand(PathPlannerPath path) {
         PIDController thetaController = new PIDController(
-            SmartDashboard.getNumber("drivetrain/thetaP", 0),
+            SmartDashboard.getNumber("drivetrain/thetaP", 0.5),
             SmartDashboard.getNumber("drivetrain/thetaI", 0),
             SmartDashboard.getNumber("drivetrain/thetaD", 0)
         ); // Rotation PID controller
@@ -458,8 +341,8 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
                 this::getChassisSpeeds, // SwerveDriveKinematics
                 this::driveRobotRelative,
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
-                    new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
+                    new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
+                    new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
                 Constants.Drive.maxSpeed, // Max module speed, in m/s
                 Constants.Drive.radius, // Drive base radius in meters. Distance from robot center to furthest module.,
                     new ReplanningConfig(true, false, 0.5, 0.2)), // Default path replanning config. See the API for the options here
@@ -487,11 +370,16 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive {
         return false;
     }
 
+    public Pathfinder getPathFinder(){
+        return pathFinder;
+    }
+
     public void updateObstacles(){
-        // NetworkTableWrapper.getDouble(i, "rx");
-        ArrayList<Pair<Translation2d, Translation2d>> obstacles = new ArrayList<Pair<Translation2d, Translation2d>>();
-        obstacles.add(new Pair(new Translation2d(1, -1), new Translation2d(2, 1)));
-        pathFinder.setDynamicObstacles(obstacles, this.getPose().getTranslation());
+        // // NetworkTableWrapper.getDouble(i, "rx");
+        // ArrayList<Pair<Translation2d, Translation2d>> obstacles = new ArrayList<Pair<Translation2d, Translation2d>>();
+        // obstacles.add(new Pair(new Translation2d(1, -1), new Translation2d(2, 1)));
+        // pathFinder.setDynamicObstacles(obstacles, this.getPose().getTranslation());
+        //Commented out until network tables are ready
     }
 
     private Command FollowPathWithEvents(FollowPathHolonomic followPathHolonomic) {
