@@ -44,20 +44,20 @@ public interface Constants {
     }
 
     interface Drive {
-        int frontLeftWheelID = 2;
-        int frontLeftTurnID = 1;
+        int frontLeftWheelID = 11;
+        int frontLeftTurnID = 12;
         double frontLeftAngularOffset = -Math.PI / 2;
 
-        int frontRightWheelID = 8;
-        int frontRightTurnID = 7;
+        int frontRightWheelID = 9;
+        int frontRightTurnID = 10;
         double frontRightAngularOffset = 0;
 
-        int backLeftWheelID = 4;
-        int backLeftTurnID = 3;
+        int backLeftWheelID = 13;
+        int backLeftTurnID = 14;
         double backLeftAngularOffset = Math.PI;
 
-        int backRightWheelID = 6;
-        int backRightTurnID = 5;
+        int backRightWheelID = 5;
+        int backRightTurnID = 6;
         double backRightAngularOffset = Math.PI / 2;
 
         double trackWidth = Units.inchesToMeters(24.5);// Distance between centers of right and left wheels on robot//TODO Set kTrackWidth to actual track width
@@ -67,10 +67,10 @@ public interface Constants {
                 new Translation2d(wheelBase / 2, -trackWidth / 2),
                 new Translation2d(-wheelBase / 2, trackWidth / 2),
                 new Translation2d(-wheelBase / 2, -trackWidth / 2));//Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
-        double maxSpeed = 1; // meters per second
+        double maxSpeed = 4; // meters per second
         double maxAcceleration = 5;
-        double maxAngularSpeed = Math.PI; // radians per second;
-        double maxAngularAcceleration = 2 * Math.PI; // radians per second squared
+        double maxAngularSpeed = 4 * Math.PI; // radians per second;
+        double maxAngularAcceleration = 4 * Math.PI; // radians per second squared
         boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
 
         double driveDeadBand = 0.025;
@@ -162,14 +162,14 @@ public interface Constants {
 
 
     interface Indexer {
-        int indexID = 10; //Placeholder
+        // int indexID = 10; //Placeholder
         double indexIntakeSpeed = 0.1;
         double indexRejectSpeed = -0.1;
 
     }
 
     public interface Acquisition {
-        int aqID = 9;
+        // int aqID = 9;
         double aqIntakeSpeed = 0.1;
         double aqRejectSpeed = -0.1;
     }

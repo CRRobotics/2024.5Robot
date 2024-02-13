@@ -28,8 +28,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.acquisition.Intake;
-import frc.robot.commands.acquisition.Reject;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
@@ -39,9 +37,7 @@ import frc.robot.commands.drivetrain.DriveToRing;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.drivetrain.TurnToAngle;
 import frc.robot.commands.drivetrain.TurnToSpeaker;
-import frc.robot.subsystems.Acquisition;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LED;
 import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
@@ -56,13 +52,8 @@ public class RobotContainer implements Constants.Field {
   public static LED led;
   private final SendableChooser<Command> autoChooser;
 
-  private final Acquisition aquisition;
-  private final Indexer indexer;
-
   public RobotContainer() {
     driveTrain = new DriveTrain();
-    aquisition = new Acquisition();
-    indexer = new Indexer();
     // grabber = new Grabber();
     driveStates = DriveStates.normal;
     driver = new XboxController(Constants.Controller.driveControllerPort);
@@ -94,12 +85,6 @@ public class RobotContainer implements Constants.Field {
     // // new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(
     //     new DriveToRing(driveTrain, grabber)
     // );
-    new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(
-      new Intake(aquisition, indexer)
-    );
-    new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(
-      new Reject(aquisition)
-    );
   }
 
   private static void addInputModes() {
