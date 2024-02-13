@@ -22,18 +22,6 @@
           "data": {
             "pathName": "Go Backward"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Go Forward and Turn"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Go Backward"
-          }
         }
       ]
     }
