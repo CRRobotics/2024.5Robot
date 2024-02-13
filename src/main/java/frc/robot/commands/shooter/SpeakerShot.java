@@ -28,7 +28,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     @Override
     public void initialize() {
         shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
-            ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), speakerBlueTarget) //TODO: make this work for either side
+            ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), speakerBlue) //TODO: make this work for either side
         );
         startTime = System.currentTimeMillis();
         shooter.aim(shootAngleSpeed.getAngle());
