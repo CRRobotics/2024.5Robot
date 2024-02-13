@@ -69,5 +69,5 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
         return false;
 
 
-}
+    }
 }
