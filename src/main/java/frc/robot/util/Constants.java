@@ -137,13 +137,19 @@ public interface Constants {
     }
     
     interface Shooter {
+        int leftShooterMotorID = 0;
+        int rightShooterMotorID = 0;
+        int pivotMotorID = 0;
+
         double kF = 0;
         double restAngle = 0;
+
         double reverseIndexSpeed = 0;
         double reverseTime = 0;
         double spinUpTime = 0;
         double shootTime = 0;
     }
+    
     interface Indexer {
         int indexID = 0;
         double indexIntakeSpeed = 0;
