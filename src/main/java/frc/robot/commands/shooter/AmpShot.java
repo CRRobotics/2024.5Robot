@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.AngleSpeed;
@@ -14,13 +15,15 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
     //eventually need other subsystems
     private Shooter shooter;
     private DriveTrain driveTrain;
+    private Indexer indexer;
 
     private long startTime;
     private AngleSpeed shootAngleSpeed;
 
-    public AmpShot(Shooter shooter, DriveTrain driveTrain) {
+    public AmpShot(Shooter shooter, DriveTrain driveTrain, Indexer indexer) {
         this.shooter = shooter;
         this.driveTrain = driveTrain;
+        this.indexer = indexer;
 
         //purposefully didn't add drivetrain as a requirement
         addRequirements(shooter);
@@ -29,7 +32,7 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
     @Override
     public void initialize() {
         shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
-            ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), new Translation2d(ampBlue)) //TODO: make this work for either side
+            ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), ampBlue) //TODO: make this work for either side
         );
         startTime = System.currentTimeMillis();
         shooter.aim(shootAngleSpeed.getAngle());
@@ -46,8 +49,7 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
 
         if (System.currentTimeMillis() >= startTime + spinUpTime) {
             shooter.setSpeed(shootAngleSpeed.getSpeed());
-            indexer.setIndexMotor(Constants.IndexerConstants.indexMotorSpeed);
-            indexer.intake()
+            indexer.intake();
         }
 
 
@@ -56,7 +58,7 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
     @Override
     public void end(boolean interrupted) {
         shooter.setSpeed(0);
-        indexer.setIndexMotor(0);
+        indexer.stop();
         // acquisition.stopAcquisitionMotor();
         shooter.aim(restAngle);
     }

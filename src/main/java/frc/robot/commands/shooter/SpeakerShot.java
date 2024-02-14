@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.AngleSpeed;
@@ -14,13 +15,15 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     //eventually need other subsystems
     private Shooter shooter;
     private DriveTrain driveTrain;
+    private Indexer indexer;
 
     private long startTime;
     private AngleSpeed shootAngleSpeed;
 
-    public SpeakerShot(Shooter shooter, DriveTrain driveTrain) {
+    public SpeakerShot(Shooter shooter, DriveTrain driveTrain, Indexer indexer) {
         this.shooter = shooter;
         this.driveTrain = driveTrain;
+        this.indexer = indexer;
 
         //purposefully didn't add drivetrain as a requirement
         addRequirements(shooter);
@@ -48,8 +51,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
 
         if (System.currentTimeMillis() >= startTime + spinUpTime) {
             shooter.setSpeed(shootAngleSpeed.getSpeed());
-            indexer.setIndexMotor(Constants.IndexerConstants.indexMotorSpeed);
-            indexer.intake()
+            indexer.intake();
         }
 
 
@@ -58,7 +60,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     @Override
     public void end(boolean interrupted) {
         shooter.setSpeed(0);
-        indexer.setIndexMotor(0);
+        indexer.stop();
         // acquisition.stopAcquisitionMotor();
         shooter.aim(restAngle);
     }
