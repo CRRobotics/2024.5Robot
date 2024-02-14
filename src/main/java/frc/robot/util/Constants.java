@@ -135,6 +135,20 @@ public interface Constants {
         Translation2d speakerRed = speakerBlue.minus(new Translation2d(fieldWidth, 0));
 
     }
+    
+    interface Shooter {
+        double kF = 0;
+        double restAngle = 0;
+        double reverseIndexSpeed = 0;
+        double reverseTime = 0;
+        double spinUpTime = 0;
+        double shootTime = 0;
+    }
+    interface Indexer {
+        int indexID = 0;
+        double indexIntakeSpeed = 0;
+        double indexRejectSpeed = 0;
+    }
 
     interface SwerveModule {
         double wheelDiameter = 0.0762; //meters
