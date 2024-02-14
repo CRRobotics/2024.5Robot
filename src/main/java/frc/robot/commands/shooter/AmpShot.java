@@ -71,6 +71,8 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
         indexer.stop();
         // acquisition.stopAcquisitionMotor();
         shooter.aim(restAngle);
+        if (interrupted)
+            followCommand.cancel();
     }
 
     @Override

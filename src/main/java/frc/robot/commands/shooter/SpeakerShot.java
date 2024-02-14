@@ -71,6 +71,8 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
         indexer.stop();
         // acquisition.stopAcquisitionMotor();
         shooter.aim(restAngle);
+        if (interrupted)
+            followCommand.cancel();
     }
 
     @Override
