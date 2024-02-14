@@ -23,12 +23,17 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.util.Constants;
 import frc.robot.util.NetworkTableWrapper;
 
+
 public class DriveToRing extends Command{
     private DriveTrain driveTrain;
     private boolean isFinished = false;
     private Command drive;
     private int i = 0;
 
+    /**
+     * Drives robot to ring using lime light sensor
+     * @param driveTrain
+     */
     public DriveToRing(DriveTrain driveTrain) {
         this.driveTrain = driveTrain;
         SmartDashboard.putNumber("piece/a", 0);
@@ -37,7 +42,9 @@ public class DriveToRing extends Command{
 
         @Override
         public void initialize(){
+            
 
+            
             double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
             if (pieceData.length == 0){
                 System.out.println("Empty Array");

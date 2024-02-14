@@ -1,8 +1,10 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LED;
@@ -71,8 +73,6 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
         indexer.stop();
         // acquisition.stopAcquisitionMotor();
         shooter.aim(restAngle);
-        if (interrupted)
-            followCommand.cancel();
     }
 
     @Override
