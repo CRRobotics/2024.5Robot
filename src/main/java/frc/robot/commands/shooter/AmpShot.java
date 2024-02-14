@@ -27,13 +27,23 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
 
         //purposefully didn't add drivetrain as a requirement
         addRequirements(shooter);
+        addRequirements(indexer);
     }
 
     @Override
     public void initialize() {
-        shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
-            ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), ampBlue) //TODO: make this work for either side
-        );
+        if (RobotContainer.getAlliance() == Alliance.Blue)
+        {
+            shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
+                ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), ampBlue) //TODO: make this work for either side DONE?
+            );
+        }
+        if (RobotContainer.getAlliance() == Alliance.Red)
+        {
+            shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
+                ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), ampRed) //TODO: make this work for either side DONE?
+            );
+        }
         startTime = System.currentTimeMillis();
         shooter.aim(shootAngleSpeed.getAngle());
         shooter.setSpeed(reverseIndexSpeed);
