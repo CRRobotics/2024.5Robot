@@ -13,6 +13,12 @@ import edu.wpi.first.math.util.Units;
 
 public interface Constants {
 
+    interface Acquisition {
+        int aqID = 0;
+        double aqIntakeSpeed = 0;
+        double aqRejectSpeed = 0;
+    }
+
 
     interface Auto {
         double maxSpeed = 2; // meters per second
