@@ -28,9 +28,11 @@ public class JoystickDrive extends Command implements Constants.Drive {
     SlewRateLimiter rotationLimiter;
     double previousTime;
 
+    //initalizes controller
     XboxController controller = new XboxController(0);
     private double speedAdjustedMaxSpeed;
 
+    
     public JoystickDrive(DriveTrain driveTrain) 
     {
         this.driveTrain = driveTrain;

@@ -7,6 +7,9 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.util.Constants;
 
+/**
+ * it is going to drive the robot to the speaker
+ */
 public class DriveToSpeaker extends DriveToPoint implements Constants.Field {
     public DriveToSpeaker(DriveTrain driveTrain, Pose2d target) {
         super(driveTrain, new Pose2d(RobotContainer.getAlliance().equals(Alliance.Blue) ? subwooferBlue : subwooferRed, new Rotation2d(Math.PI)));
