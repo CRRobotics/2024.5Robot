@@ -22,28 +22,40 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.acquisition.Intake;
+import frc.robot.commands.acquisition.Reject;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
 import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.JoystickDrive;
+import frc.robot.commands.shooter.TestShot;
+import frc.robot.subsystems.Acquisition;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LED;
+import frc.robot.subsystems.Shooter;
 import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
 import frc.robot.util.LocalADStarAK;
 
 public class RobotContainer {
   private final DriveTrain driveTrain;
+  private final Acquisition acq;
+  private final Indexer indexer;
   public static DriveStates driveStates;
   private final XboxController driver;
   public static SendableChooser<String> inputMode;
   public static LED led;
   private final SendableChooser<Command> autoChooser;
+  private final Shooter shooter;
 
   public RobotContainer() {
     driveTrain = new DriveTrain();
+    acq = new Acquisition();
+    indexer = new Indexer();
+    shooter = new Shooter();
     driveStates = DriveStates.normal;
     driver = new XboxController(Constants.Controller.driveControllerPort);
     configureBindings();
@@ -75,13 +87,16 @@ public class RobotContainer {
     new JoystickButton(driver, 6).whileTrue(new DriveSlow());
     new JoystickButton(driver, 5).whileTrue(new DriveFast());
     // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToRealativePoint(driveTrain));
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SequentialCommandGroup(
-      new DriveToRelative(driveTrain, new Transform2d(1, 0, new Rotation2d())),
-      new DriveToRelative(driveTrain, new Transform2d(1, 0, new Rotation2d()))
-    ));
+    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SequentialCommandGroup(
+    //  new DriveToRelative(driveTrain, new Transform2d(1, 0, new Rotation2d())),
+    //  new DriveToRelative(driveTrain, new Transform2d(1, 0, new Rotation2d()))
+    // ));
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new SequentialCommandGroup(
       new DriveToPoint(driveTrain, new Pose2d(3, 0, new Rotation2d()))
     ));
+    new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Intake(acq, indexer)); //Assign Button
+    new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer));
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new TestShot(shooter));
 
   }
 

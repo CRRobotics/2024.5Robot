@@ -13,7 +13,7 @@ public class Acquisition extends SubsystemBase implements Constants.Acquisition 
   CANSparkMax aqMotor;
 
   public Acquisition() {
-    aqMotor = new CANSparkMax(SubsystemConstants.PortConstants.aquisitionPort, MotorType.kBrushless);
+    aqMotor = new CANSparkMax(aqID, MotorType.kBrushless);
   }
 
   /**

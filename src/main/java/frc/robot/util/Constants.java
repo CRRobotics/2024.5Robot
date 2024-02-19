@@ -14,9 +14,9 @@ import edu.wpi.first.math.util.Units;
 public interface Constants {
 
     interface Acquisition {
-        int aqID = 0;
-        double aqIntakeSpeed = 0;
-        double aqRejectSpeed = 0;
+        int aqID = 13;
+        double aqIntakeSpeed = -0.3;
+        double aqRejectSpeed = 0.5;
     }
 
 
@@ -137,9 +137,9 @@ public interface Constants {
     }
     
     interface Shooter {
-        int leftShooterMotorID = 0;
-        int rightShooterMotorID = 0;
-        int pivotMotorID = 0;
+        int leftShooterMotorID = 14;
+        int rightShooterMotorID = 15;
+        int pivotMotorID = 11;
 
         double kF = 0;
         double restAngle = 0;
@@ -148,12 +148,14 @@ public interface Constants {
         double reverseTime = 0;
         double spinUpTime = 0;
         double shootTime = 0;
+
+        double shooterTestSpeed = 0.25;
     }
     
     interface Indexer {
-        int indexID = 0;
-        double indexIntakeSpeed = 0;
-        double indexRejectSpeed = 0;
+        int indexID = 12;
+        double indexIntakeSpeed = -0.3;
+        double indexRejectSpeed = 0.3;
     }
 
     interface SwerveModule {
@@ -190,8 +192,8 @@ public interface Constants {
         int turnCurrentLimit = 20; // amps
     }
 
-    interface Grabber {
-        int motorID = 18; //Placeholder
-        double grabSpeed = 0.1;
-    }
+    // interface Grabber {
+    //     int motorID = 18; //Placeholder
+    //     double grabSpeed = 0.1;
+    // }
 }

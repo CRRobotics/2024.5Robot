@@ -26,13 +26,13 @@ public class Intake extends Command {
     public void execute()
     {
         acq.intake();
-        //indexer.intake(); No physical indexer yet, TODO: uncomment when ready
+        indexer.intake(); 
     }
 
     @Override
     public void end(boolean interrupted) {
         acq.stop();
-        //indexer.stop(); No physical indexer yet, TODO: uncomment when ready
+        indexer.stop(); 
     }
 
     @Override

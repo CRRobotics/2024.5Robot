@@ -73,7 +73,8 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
      */
     public void setSpeed(double setpoint) {
         voltageController.Slot = 0;
-        leftShooterMotor.setControl(voltageController.withVelocity(setpoint));
+        // leftShooterMotor.setControl(voltageController.withVelocity(setpoint));
+        leftShooterMotor.set(setpoint);
         rightShooterMotor.setControl(new Follower(leftShooterMotorID, true));
     }
 
