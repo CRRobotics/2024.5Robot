@@ -1,4 +1,4 @@
-package main.java.frc.robot.subsystems;
+package frc.robot.subsystems;
 
 public interface SubsystemConstants {
     public interface PortConstants
@@ -9,6 +9,10 @@ public interface SubsystemConstants {
     public interface IndexerConstants
     {
         int IndexerSpeed = 1;
+    }
+    public static double IndexerConstants() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'IndexerConstants'");
     }
 
     
