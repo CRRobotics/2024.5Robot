@@ -30,6 +30,7 @@ import frc.robot.commands.drivetrain.DriveSlow;
 import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.JoystickDrive;
+import frc.robot.commands.shooter.TestPivot;
 import frc.robot.commands.shooter.TestShot;
 import frc.robot.subsystems.Acquisition;
 import frc.robot.subsystems.DriveTrain;
@@ -96,7 +97,7 @@ public class RobotContainer {
     ));
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Intake(acq, indexer)); //Assign Button
     new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer));
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new TestShot(shooter));
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new TestPivot(shooter));
 
   }
 
