@@ -150,6 +150,35 @@ public interface Constants {
         double shootTime = 0;
 
         double shooterTestSpeed = 0.25;
+
+        //for krakens
+        double talonControllerAcceleration = 0.25;
+        double voltageControllerVelocity = 0;
+        double slotConfigKP = 0.05;
+        double slotConfigKI = 0;
+        double slotConfigKD = 0;
+
+        //for neo
+        double sparkP = 0.05;
+        double sparkI = 0;
+        double sparkD = 0;
+        double sparkFF = 0;
+
+        //for neo smart motion
+        int slotID =0;
+        double smartMotionMaxVelocity = 120;
+        double smartMotionMinVelocity = 0;
+        double smartMotionMaxAccel = 1;
+        double smartMotionAllowedClosedLoopError = 0;
+
+        //for Amp and Loading position setpoint
+        //TODO: testing setpoints for amp and loading positions?
+        double ampSetPoint = 0;
+        double loadingSetPoint = 0;
+
+
+
+        
     }
     
     interface Indexer {

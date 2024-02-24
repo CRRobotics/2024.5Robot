@@ -51,7 +51,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         leftShooterMotor = new TalonFX(leftShooterMotorID);
         leftShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         talonController = new MotionMagicVelocityVoltage(leftShooterMotorID);
-        talonController.Acceleration = 0.25;
+        talonController.Acceleration = talonControllerAcceleration;
 
         rightShooterMotor = new TalonFX(rightShooterMotorID);
         rightShooterMotor.setNeutralMode(NeutralModeValue.Coast);
@@ -61,12 +61,12 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         
         // voltageController =  new VelocityVoltage(0, 0, false, kF,
         //     0, false, true, true);
-        voltageController = new VelocityVoltage(0);
+        voltageController = new VelocityVoltage(voltageControllerVelocity);
 
         slotConfig = new Slot0Configs();
-        slotConfig.kP = 0;
-        slotConfig.kI = 0;
-        slotConfig.kD = 0;
+        slotConfig.kP = slotConfigKP;
+        slotConfig.kI = slotConfigKI;
+        slotConfig.kD = slotConfigKD;
         leftShooterMotor.getConfigurator().apply(slotConfig);
         
         pivotMotor = new CANSparkMax(pivotMotorID, MotorType.kBrushless);
@@ -78,18 +78,18 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         pid = new PIDController(0, 0, 0);
         sparkPid = pivotMotor.getPIDController();
 
-        sparkPid.setP(0.05);
-        sparkPid.setI(0);
-        sparkPid.setD(0);
-        sparkPid.setFF(0);
+        sparkPid.setP(sparkP);
+        sparkPid.setI(sparkI);
+        sparkPid.setD(sparkD);
+        sparkPid.setFF(sparkFF);
 
-        int slotID = 0;
+        
 
-//good deceleration speed
-        sparkPid.setSmartMotionMaxVelocity(120, slotID);
-        sparkPid.setSmartMotionMinOutputVelocity(0, slotID);
-        sparkPid.setSmartMotionMaxAccel(1, slotID);
-        sparkPid.setSmartMotionAllowedClosedLoopError(0, slotID);
+        //good deceleration speed
+        sparkPid.setSmartMotionMaxVelocity(smartMotionMaxVelocity, slotID);
+        sparkPid.setSmartMotionMinOutputVelocity(smartMotionMinVelocity, slotID);
+        sparkPid.setSmartMotionMaxAccel(smartMotionMaxAccel, slotID);
+        sparkPid.setSmartMotionAllowedClosedLoopError(smartMotionAllowedClosedLoopError, slotID);
         sparkPid.setFeedbackDevice(pivotEncoder);
 
         // bottomSwitch = pivotMotor.getReverseLimitSwitch(Type.kNormallyOpen);
@@ -97,9 +97,9 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         // topSwitch = pivotMotor.getForwardLimitSwitch(Type.kNormallyOpen);
         // topSwitch.enableLimitSwitch(true);
 
-        SmartDashboard.putNumber("pivot/p", 0);
-        SmartDashboard.putNumber("pivot/i", 0);
-        SmartDashboard.putNumber("pivot/d", 0);
+        SmartDashboard.putNumber("pivot/p", sparkP);
+        SmartDashboard.putNumber("pivot/i", sparkI);
+        SmartDashboard.putNumber("pivot/d", sparkD);
         SmartDashboard.putNumber("pivot/setpoint", 0);
     }
 
