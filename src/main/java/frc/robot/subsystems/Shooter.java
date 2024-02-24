@@ -52,7 +52,6 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         leftShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         talonController = new MotionMagicVelocityVoltage(leftShooterMotorID);
         talonController.Acceleration = 0.25;
-        leftShooterMotor.setControl(talonController);
 
         rightShooterMotor = new TalonFX(rightShooterMotorID);
         rightShooterMotor.setNeutralMode(NeutralModeValue.Coast);
@@ -110,8 +109,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
      */
     public void setSpeed(double setpoint) {
         voltageController.Slot = 0;
-        leftShooterMotor.setControl(voltageController.withVelocity(setpoint));
-        leftShooterMotor.set(setpoint);
+        leftShooterMotor.setControl(talonController.withVelocity(setpoint));
         rightShooterMotor.setControl(new Follower(leftShooterMotorID, true));
     }
 
