@@ -35,6 +35,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     CANSparkMax pivotMotor;
     AbsoluteEncoder pivotEncoder;
     PIDController pid;
+    SparkPIDController sparkPid;
     SparkLimitSwitch bottomSwitch;
     SparkLimitSwitch topSwitch;
     SparkAbsoluteEncoder.Type pivotEncoderType;
@@ -66,6 +67,20 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
 
        
         pid = new PIDController(0, 0, 0);
+        sparkPid = pivotMotor.getPIDController();
+
+        sparkPid.setP(0.05);
+        sparkPid.setI(0);
+        sparkPid.setD(0);
+        sparkPid.setFF(0);
+
+        int slotID = 0;
+//good deceleration speed
+        sparkPid.setSmartMotionMaxVelocity(120, slotID);
+        sparkPid.setSmartMotionMinOutputVelocity(0, slotID);
+        sparkPid.setSmartMotionMaxAccel(1, slotID);
+        sparkPid.setSmartMotionAllowedClosedLoopError(0, slotID);
+        sparkPid.setFeedbackDevice(pivotEncoder);
 
         // bottomSwitch = pivotMotor.getReverseLimitSwitch(Type.kNormallyOpen);
         // bottomSwitch.enableLimitSwitch(true);
@@ -102,13 +117,20 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
      */
     public void aim(double setPoint) {
         System.out.println("aiming");
-        setPoint = SmartDashboard.getNumber("pivot/setpoint", 0);
+        //setPoint = SmartDashboard.getNumber("pivot/setpoint", 0);
+        setPoint = 1.5;
         setPoint /= 2 * Math.PI;
         //pid = new PIDController(SmartDashboard.getNumber("pivot/p", 0), SmartDashboard.getNumber("pivot/i", 0), SmartDashboard.getNumber("pivot/d", 0));
         pid = new PIDController(0.1,0,0);
         pivotMotor.set(pid.calculate(pivotEncoder.getPosition(), setPoint));
 
         //pivotMotor.getAbsoluteEncoder.getPosition();
+    }
+
+    public void testAim(double setPoint)
+    {
+        System.out.println(pivotEncoder.getPosition());
+        sparkPid.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
     }
 
     public void dumbPID()

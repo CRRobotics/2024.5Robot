@@ -23,7 +23,7 @@ public class TestPivot extends Command implements Constants.Shooter
     @Override
     public void execute()
     {
-        shooter.aim(1.5);
+        shooter.testAim(5.5);
         
     }
 
