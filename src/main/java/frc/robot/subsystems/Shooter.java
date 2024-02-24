@@ -4,6 +4,7 @@ import java.net.CacheRequest;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -18,6 +19,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkLimitSwitch.Type;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.NidecBrushless;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,7 +50,6 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         rightShooterMotor.setNeutralMode(NeutralModeValue.Coast);
 
 
-
         
         // voltageController =  new VelocityVoltage(0, 0, false, kF,
         //     0, false, true, true);
@@ -75,6 +76,9 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         sparkPid.setFF(0);
 
         int slotID = 0;
+
+        SlewRateLimiter rateLim = new SlewRateLimiter(0.5);
+
 //good deceleration speed
         sparkPid.setSmartMotionMaxVelocity(120, slotID);
         sparkPid.setSmartMotionMinOutputVelocity(0, slotID);
@@ -99,7 +103,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
      */
     public void setSpeed(double setpoint) {
         voltageController.Slot = 0;
-        // leftShooterMotor.setControl(voltageController.withVelocity(setpoint));
+        leftShooterMotor.setControl(voltageController.withVelocity(setpoint));
         leftShooterMotor.set(setpoint);
         rightShooterMotor.setControl(new Follower(leftShooterMotorID, true));
     }
