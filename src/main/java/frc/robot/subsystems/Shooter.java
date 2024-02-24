@@ -3,7 +3,9 @@ import java.net.CacheRequest;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -34,6 +36,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     TalonFX rightShooterMotor;
     VelocityVoltage voltageController;
     Slot0Configs slotConfig;
+    Slot0Configs talonSlotConfigs;
     CANSparkMax pivotMotor;
     AbsoluteEncoder pivotEncoder;
     PIDController pid;
@@ -41,13 +44,19 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     SparkLimitSwitch bottomSwitch;
     SparkLimitSwitch topSwitch;
     SparkAbsoluteEncoder.Type pivotEncoderType;
+    MotionMagicVelocityVoltage talonController;
 
     public Shooter() {
+        // Documentation for TalonFX: https://v6.docs.ctr-electronics.com/en/stable/docs/migration/migration-guide/index.html
         leftShooterMotor = new TalonFX(leftShooterMotorID);
         leftShooterMotor.setNeutralMode(NeutralModeValue.Coast);
+        talonController = new MotionMagicVelocityVoltage(leftShooterMotorID);
+        talonController.Acceleration = 0.25;
+        leftShooterMotor.setControl(talonController);
 
         rightShooterMotor = new TalonFX(rightShooterMotorID);
         rightShooterMotor.setNeutralMode(NeutralModeValue.Coast);
+
 
 
         
@@ -76,8 +85,6 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         sparkPid.setFF(0);
 
         int slotID = 0;
-
-        SlewRateLimiter rateLim = new SlewRateLimiter(0.5);
 
 //good deceleration speed
         sparkPid.setSmartMotionMaxVelocity(120, slotID);
