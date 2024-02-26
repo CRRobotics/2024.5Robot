@@ -4,6 +4,11 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 
+
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -11,7 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
-public interface Constants {
+public static interface Constants {
 
     interface Acquisition {
         int aqID = 13;
@@ -152,11 +157,17 @@ public interface Constants {
         double shooterTestSpeed = 0.25;
 
         //for krakens
+        Slot0Configs krakenSlotConfig = new Slot0Configs();
+
         double talonControllerAcceleration = 0.25;
         double voltageControllerVelocity = 0;
-        double slotConfigKP = 0.05;
-        double slotConfigKI = 0;
-        double slotConfigKD = 0;
+        static{
+        krakenSlotConfig.kP = 0.05;
+        krakenSlotConfig.kI = 0;
+        krakenSlotConfig.kD = 0;
+        }
+        
+
 
         //for neo
         double sparkP = 0.05;

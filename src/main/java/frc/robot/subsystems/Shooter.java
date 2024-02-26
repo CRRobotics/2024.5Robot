@@ -58,16 +58,15 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
 
 
 
+
         
         // voltageController =  new VelocityVoltage(0, 0, false, kF,
         //     0, false, true, true);
         voltageController = new VelocityVoltage(voltageControllerVelocity);
 
-        slotConfig = new Slot0Configs();
-        slotConfig.kP = slotConfigKP;
-        slotConfig.kI = slotConfigKI;
-        slotConfig.kD = slotConfigKD;
-        leftShooterMotor.getConfigurator().apply(slotConfig);
+
+        
+        leftShooterMotor.getConfigurator().apply(krakenSlotConfig);
         
         pivotMotor = new CANSparkMax(pivotMotorID, MotorType.kBrushless);
 
