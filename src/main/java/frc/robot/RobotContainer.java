@@ -128,7 +128,7 @@ public class RobotContainer {
     SmartDashboard.putData(tickSpeedChooser);
   }
 
-}
+
   public Command getDriveCommand() {
     Command driveCommand;
     switch (inputMode.getSelected()) {
