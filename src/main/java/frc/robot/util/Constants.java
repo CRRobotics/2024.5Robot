@@ -16,7 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
-public static interface Constants {
+public interface Constants {
 
     interface Acquisition {
         int aqID = 13;
@@ -157,15 +157,9 @@ public static interface Constants {
         double shooterTestSpeed = 0.25;
 
         //for krakens
-        Slot0Configs krakenSlotConfig = new Slot0Configs();
 
         double talonControllerAcceleration = 0.25;
         double voltageControllerVelocity = 0;
-        static{
-        krakenSlotConfig.kP = 0.05;
-        krakenSlotConfig.kI = 0;
-        krakenSlotConfig.kD = 0;
-        }
         
 
 

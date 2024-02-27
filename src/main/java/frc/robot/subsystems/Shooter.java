@@ -37,6 +37,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     VelocityVoltage voltageController;
     Slot0Configs slotConfig;
     Slot0Configs talonSlotConfigs;
+    Slot0Configs krakenSlotConfig;
     CANSparkMax pivotMotor;
     AbsoluteEncoder pivotEncoder;
     PIDController pid;
@@ -63,7 +64,10 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         // voltageController =  new VelocityVoltage(0, 0, false, kF,
         //     0, false, true, true);
         voltageController = new VelocityVoltage(voltageControllerVelocity);
-
+        krakenSlotConfig = new Slot0Configs();
+        krakenSlotConfig.kP = 0.05;
+        krakenSlotConfig.kI = 0;
+        krakenSlotConfig.kD = 0;
 
         
         leftShooterMotor.getConfigurator().apply(krakenSlotConfig);
