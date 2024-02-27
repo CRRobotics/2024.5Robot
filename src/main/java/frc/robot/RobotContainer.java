@@ -7,28 +7,20 @@ package frc.robot;
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.acquisition.Intake;
 import frc.robot.commands.acquisition.Reject;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
-import frc.robot.commands.drivetrain.DriveToPoint;
-import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.shooter.TestPivot;
 import frc.robot.commands.shooter.TestShot;
@@ -39,7 +31,6 @@ import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
-import frc.robot.util.LocalADStarAK;
 
 public class RobotContainer {
   private final DriveTrain driveTrain;

@@ -46,6 +46,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     SparkLimitSwitch topSwitch;
     SparkAbsoluteEncoder.Type pivotEncoderType;
     MotionMagicVelocityVoltage talonController;
+    public double shooterVelocity;
 
     public Shooter() {
         // Documentation for TalonFX: https://v6.docs.ctr-electronics.com/en/stable/docs/migration/migration-guide/index.html
@@ -104,10 +105,14 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         SmartDashboard.putNumber("pivot/i", sparkI);
         SmartDashboard.putNumber("pivot/d", sparkD);
         SmartDashboard.putNumber("pivot/setpoint", 0);
+
+        shooterVelocity = 0;
+        // SmartDashboard.putNumber("shooter/velocity", shooterVelocity);
+        SmartDashboard.putNumber("shooter/velocity", leftShooterMotor.getVelocity().getValue());
     }
 
-    public double getSpeed(){
-        return leftShooterMotor.getVelocity().getValue();
+    public void getSpeed(){
+        shooterVelocity = leftShooterMotor.getVelocity().getValue();
     }
 
     /**
