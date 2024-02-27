@@ -226,9 +226,15 @@ public interface Constants {
         int turnCurrentLimit = 20; // amps
     }
 
-    // interface Grabber {
-    //     int motorID = 18; //Placeholder
-    //     double grabSpeed = 0.1;
-    // }
-    
+    interface Winch {
+        double kP = 0;
+        double kI = 0;
+        double kD = 0;
+
+        int leftID = 0; //To be assigned
+        int rightID = 0; //To be assigned
+
+        Double extendSpeed = 0.6;
+        Double retractSpeed = -0.6;
+    }
 }
