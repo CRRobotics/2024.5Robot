@@ -139,6 +139,11 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         //pivotMotor.getAbsoluteEncoder.getPosition();
     }
 
+    // public double angleFromVisions()
+    // {
+        
+    // }
+
     public void testAim(double setPoint)
     {
         System.out.println(pivotEncoder.getPosition());
