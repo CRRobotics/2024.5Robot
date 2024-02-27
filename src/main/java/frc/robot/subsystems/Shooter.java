@@ -106,6 +106,10 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         SmartDashboard.putNumber("pivot/setpoint", 0);
     }
 
+    public double getSpeed(){
+        return leftShooterMotor.getVelocity().getValue();
+    }
+
     /**
      * Runs the shooter at a speed
      * @param setpoint The speed to run the shooter at

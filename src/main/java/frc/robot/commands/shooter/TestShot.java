@@ -1,5 +1,6 @@
 package frc.robot.commands.shooter;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.Constants;
@@ -23,8 +24,8 @@ public class TestShot extends Command implements Constants.Shooter, Constants.Fi
     @Override
     public void execute()
     {
-        shooter.setSpeed(0);
-        
+        shooter.setSpeed(0.5);
+        SmartDashboard.putNumber("shooter/velocity",shooter.getSpeed());
     }
 
     @Override
