@@ -113,21 +113,22 @@ public class RobotContainer {
   public static SendableChooser<String> colorTable = new SendableChooser<>();
   public static SendableChooser<Integer> tickSpeedChooser = new SendableChooser<>();
 
-    static{
-        colorTable.addOption("red", "red");
-        colorTable.addOption("blue", "blue");
-        colorTable.addOption("rainbow", "rainbow");
+  static {
+    colorTable.addOption("red", "red");
+    colorTable.addOption("blue", "blue");
+    colorTable.addOption("rainbow", "rainbow");
 
-        colorTable.setDefaultOption("orange", "orange");
-        tickSpeedChooser.setDefaultOption("one", 2);
-        tickSpeedChooser.addOption("one", 1);
-        tickSpeedChooser.addOption("five", 5);
-        tickSpeedChooser.addOption("ten", 10);
+    colorTable.setDefaultOption("orange", "orange");
+    tickSpeedChooser.setDefaultOption("one", 2);
+    tickSpeedChooser.addOption("one", 1);
+    tickSpeedChooser.addOption("five", 5);
+    tickSpeedChooser.addOption("ten", 10);
 
-        SmartDashboard.putData(colorTable);
-        SmartDashboard.putData(tickSpeedChooser);
-    
-    }
+    SmartDashboard.putData(colorTable);
+    SmartDashboard.putData(tickSpeedChooser);
+  }
+
+}
   public Command getDriveCommand() {
     Command driveCommand;
     switch (inputMode.getSelected()) {
