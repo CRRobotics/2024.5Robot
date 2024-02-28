@@ -3,16 +3,17 @@ package frc.robot.util;
 import java.util.TreeMap;
 
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.util.AngleSpeed;
 
 
 class AngleFromDistance {
     private static double firstNDeriv(double distance)
     {
-        double floor = Robot.treeMap.floorKey(distance);
-        double ceiling = Robot.treeMap.ceilingKey(distance);
+        double floor = RobotContainer.treeMap.floorKey(distance);
+        double ceiling = RobotContainer.treeMap.ceilingKey(distance);
         double dX = ceiling - floor;
-        double dTheta = Robot.treeMap.get(ceiling).getAngle() - Robot.treeMap.get(ceiling).getAngle();
+        double dTheta = RobotContainer.treeMap.get(ceiling).getAngle() - RobotContainer.treeMap.get(ceiling).getAngle();
         
         return dTheta/dX;
     }
@@ -77,14 +78,14 @@ class AngleFromDistance {
     
     public static AngleSpeed interpolateAngleSpeedLinear(double distance)
     {
-        if(Robot.treeMap.firstKey() > distance)
-            return Robot.treeMap.firstEntry().getValue();
-        else if(Robot.treeMap.lastKey() < distance)
-            return Robot.treeMap.lastEntry().getValue();
+        if(RobotContainer.treeMap.firstKey() > distance)
+            return RobotContainer.treeMap.firstEntry().getValue();
+        else if(RobotContainer.treeMap.lastKey() < distance)
+            return RobotContainer.treeMap.lastEntry().getValue();
 
         double dThetaOverDX = firstNDeriv(distance);
-        double x = distance - Robot.treeMap.floorKey(distance);
-        double theta = x * dThetaOverDX + Robot.treeMap.get(Robot.treeMap.floorKey(distance)).getAngle();
+        double x = distance - RobotContainer.treeMap.floorKey(distance);
+        double theta = x * dThetaOverDX + RobotContainer.treeMap.get(RobotContainer.treeMap.floorKey(distance)).getAngle();
         // dtheta/dx * x + initial theta gives the theta value between floor and ceiling at distance (linear interpolation)
         return new AngleSpeed(theta, interpolateSpeedLinear(distance));
     }

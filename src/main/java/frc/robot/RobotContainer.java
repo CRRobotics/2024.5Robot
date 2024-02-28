@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.util.Optional;
+import java.util.TreeMap;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -29,6 +30,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
+import frc.robot.util.AngleSpeed;
 import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
 
@@ -59,7 +61,14 @@ public class RobotContainer {
 
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
   }
+  public static TreeMap<Double, AngleSpeed> treeMap;
 
+  static
+  {
+    treeMap = new TreeMap<Double, AngleSpeed>();
+    //treeMap.put(null, null);
+    
+  }
   public static Alliance getAlliance() {
     Optional<Alliance> ally = DriverStation.getAlliance();
     if (ally.isPresent()) {
