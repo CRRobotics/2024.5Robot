@@ -7,48 +7,91 @@ import frc.robot.util.AngleSpeed;
 
 
 class AngleFromDistance {
-    // public static double firstNDeriv(double distance)
-    // {
-    //     double floor = Robot.treeMap.floorKey(distance);
-    //     double ceiling = Robot.treeMap.ceilingKey(distance);
-    //     double dX = ceiling - floor;
-    //     double dTheta = Robot.treeMap.get(ceiling).getAngle() - Robot.treeMap.get(ceiling).getAngle();
+    private static double firstNDeriv(double distance)
+    {
+        double floor = Robot.treeMap.floorKey(distance);
+        double ceiling = Robot.treeMap.ceilingKey(distance);
+        double dX = ceiling - floor;
+        double dTheta = Robot.treeMap.get(ceiling).getAngle() - Robot.treeMap.get(ceiling).getAngle();
         
-    //     return dTheta/dX;
-    // }
+        return dTheta/dX;
+    }
+
     /**
     public static int secondNDeriv(double distance)
     {
         boolean floorFloor = false;
-        boolean ceilingCeiling = true;
-        if(Robot.treeMap.floorKey(Robot.treeMap.floorKey(distance) - .0001) != null)
-            floorFloor = true;
-        if(Robot.treeMap.ceilingKey(Robot.treeMap.ceilingKey(distance) + .0001) != null)
-            ceilingCeiling = true;
-        if(Robot.treeMap.get(Robot.treeMap.floorKey(distance)) + Robot.treeMap.get(Robot.treeMap.ceilingKey(distance)))
+        double bottomKey;
+        boolean ceilingCeiling = false;
+        double highestKey;
+        double deltaX;
+        double secondDeriv;
+        double nDeriv1;
+        double nDeriv2;
+        double nDeriv3;
         
+        if(Robot.treeMap.floorKey(Robot.treeMap.floorKey(distance) - .0001) != null)
+        {
+            bottomKey = Robot.treeMap.floorKey(Robot.treeMap.floorKey(distance) - .0001);
+            floorFloor = true;
+            deltaX = distance - bottomKey;
+            nDeriv1 = firstNDeriv(Robot.treeMap.floorKey(distance) - .0001);
+        }
+        if(Robot.treeMap.ceilingKey(Robot.treeMap.ceilingKey(distance) + .0001) != null)
+        {
+            ceilingCeiling = true;
+            nDeriv3 = firstNDeriv(Robot.treeMap.ceilingKey(distance) + .0001);
+            highestKey = Robot.treeMap.ceilingKey(Robot.treeMap.ceilingKey(distance) + .0001);
+        }
+        if(!floorFloor)
+        {
+            deltaX = Robot.treeMap.floorKey(distance);
+        }
+        nDeriv2 = firstNDeriv(distance);
+        if(floorFloor && ceilingCeiling)
+        {
+            secondDeriv = (highestKey - bottomKey);
+        }
+        else if(floorFloor)
+        {
+            nDeriv1 + nDeriv2 
+        }
+        else if(ceilingCeiling)
+        {}
+        else
+        {
+            System.out.println("THE 2nd DERIVATIVE DOESNT EXIST BETWEEN THESE POINTS");
+            return 0;
 
+        } 
+        if(Robot.treeMap.get(Robot.treeMap.floorKey(distance)).getAngle() + Robot.treeMap.get(Robot.treeMap.ceilingKey(distance)).getAngle() /)
+        
+    }
+    private static double linearizeSlopes(double deltaX, double distance)
+    {
+        
+        return 0;
     }
     */
 
     
-    // public static AngleSpeed interpolateAngleLinear(double distance)
-    // {
-    //     if(Robot.treeMap.firstKey() > distance)
-    //         return Robot.treeMap.firstEntry().getValue();
-    //     else if(Robot.treeMap.lastKey() < distance)
-    //         return Robot.treeMap.lastEntry().getValue();
+    public static AngleSpeed interpolateAngleSpeedLinear(double distance)
+    {
+        if(Robot.treeMap.firstKey() > distance)
+            return Robot.treeMap.firstEntry().getValue();
+        else if(Robot.treeMap.lastKey() < distance)
+            return Robot.treeMap.lastEntry().getValue();
 
-    //     double dThetaOverDX = firstNDeriv(distance);
-    //     double x = distance - Robot.treeMap.floorKey(distance);
-    //     double theta = x * dThetaOverDX + Robot.treeMap.get(Robot.treeMap.floorKey(distance)).getAngle();
-    //     // dtheta/dx * x + initial theta gives the theta value between floor and ceiling at distance (linear interpolation)
-    //     return new AngleSpeed(theta, interpolateSpeedLinear(distance));
-    // }
-    // public static double interpolateSpeedLinear(double distance)
-    // {
-    //     return 0;
-    //     //unfinished method stub   
-    // }
+        double dThetaOverDX = firstNDeriv(distance);
+        double x = distance - Robot.treeMap.floorKey(distance);
+        double theta = x * dThetaOverDX + Robot.treeMap.get(Robot.treeMap.floorKey(distance)).getAngle();
+        // dtheta/dx * x + initial theta gives the theta value between floor and ceiling at distance (linear interpolation)
+        return new AngleSpeed(theta, interpolateSpeedLinear(distance));
+    }
+    public static double interpolateSpeedLinear(double distance)
+    {
+        return 0;
+        //unfinished method stub   
+    }
     
 }
