@@ -4,14 +4,16 @@
 
 package frc.robot;
 
+import java.util.TreeMap;
+
 import org.littletonrobotics.junction.LoggedRobot;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.util.AngleSpeed;
 
 public class Robot extends LoggedRobot {
   private Command autoCommand;
@@ -64,9 +66,15 @@ public class Robot extends LoggedRobot {
     }
   }
 
-  @Override
-  public void teleopPeriodic() {
+  public static TreeMap<Double, AngleSpeed> treeMap = new TreeMap<Double, AngleSpeed>();
+
+  static
+  {
+    treeMap.put(null, null);
+    
   }
+  @Override
+  public void teleopPeriodic() {}
 
   @Override
   public void teleopExit() {}
