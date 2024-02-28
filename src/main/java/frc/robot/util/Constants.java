@@ -158,8 +158,8 @@ public interface Constants {
 
         //for krakens
 
-        double talonControllerAcceleration = 0.25;
-        double voltageControllerVelocity = 0;
+        double talonControllerAcceleration = 10;
+        double voltageControllerVelocity = 10;
         
 
 

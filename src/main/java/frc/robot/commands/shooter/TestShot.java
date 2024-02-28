@@ -25,7 +25,7 @@ public class TestShot extends Command implements Constants.Shooter, Constants.Fi
     @Override
     public void execute()
     {
-        shooter.setSpeed(0.5);
+        shooter.setSpeed(10);
     }
 
     @Override

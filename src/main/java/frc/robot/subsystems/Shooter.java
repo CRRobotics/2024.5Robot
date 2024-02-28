@@ -117,7 +117,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
 
     /**
      * Runs the shooter at a speed
-     * @param setpoint The speed to run the shooter at
+     * @param setpoint The speed to run the shooter at in rps
      */
     public void setSpeed(double setpoint) {
         voltageController.Slot = 0;
