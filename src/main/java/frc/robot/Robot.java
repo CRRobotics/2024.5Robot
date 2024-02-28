@@ -70,7 +70,7 @@ public class Robot extends LoggedRobot {
 
   static
   {
-    treeMap.put(null, null);
+    //treeMap.put(null, null);
     
   }
   @Override

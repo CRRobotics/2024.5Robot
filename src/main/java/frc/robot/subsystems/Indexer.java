@@ -6,32 +6,33 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 
 public class Indexer extends SubsystemBase implements Constants.Indexer {
-    CANSparkMax indexer;
+    CANSparkMax indexerMotor;
     
 
     public Indexer() {
-        indexer = new CANSparkMax(indexID, MotorType.kBrushless);
+        indexerMotor = new CANSparkMax(indexID, MotorType.kBrushless);
     }
 
     /**
    * Intakes the cargo (not at a set speed yet)
    */
   public void intake() {
-    indexer.set(indexIntakeSpeed);
+    indexerMotor.set(indexIntakeSpeed);
+    System.out.println("running intake motors, speed: "+ indexIntakeSpeed);
   }
 
   /**
    * Stops the acquisition
    */
   public void stop() {
-    indexer.set(0);
+    indexerMotor.set(0);
   }
 
   /**
    * Ejects the cargo back out (not at a set speed yet)
    */
   public void reject() {
-    indexer.set(indexRejectSpeed);
+    indexerMotor.set(indexRejectSpeed);
   }
 
   public void windUp() {
