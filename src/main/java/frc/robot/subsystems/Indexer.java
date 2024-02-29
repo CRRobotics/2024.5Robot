@@ -20,14 +20,17 @@ public class Indexer extends SubsystemBase implements Constants.Indexer {
     /**
    * Intakes the cargo (not at a set speed yet)
    */
-  public void intake() {
+  public boolean intake() {
     if (!seesRing()){
-        indexerMotor.set(indexIntakeSpeed);
+      indexerMotor.set(indexIntakeSpeed);
+      System.out.println("running intake motors, speed: "+ indexIntakeSpeed);
+      return false;
     } else {
         indexerMotor.set(0);
+        return true;
     }
-    System.out.println("running intake motors, speed: "+ indexIntakeSpeed);
   }
+
 
   /**
    * Stops the acquisition

@@ -147,7 +147,8 @@ public interface Constants {
         int pivotMotorID = 11;
 
         double kF = 0;
-        double restAngle = 2.25;
+        double restAngle = 4.3;
+        double interfaceAngle = 4.5; //fixs
 
         double reverseIndexSpeed = 0;
         double reverseTime = 1000;
