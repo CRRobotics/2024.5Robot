@@ -3,14 +3,15 @@ package frc.robot.commands.acquisition;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Acquisition;
 import frc.robot.util.Constants;
+import frc.robot.util.Constants.Aqusition;
 
 /**
- * Spins the Acquisition in such a way that the game piece leaves the possession of the robot
+ * Spins the Acquisition in such a way that the game piece comes into the possesion of the robot
  */
-public class Reject extends Command implements Constants.Acquisition{
+public class FastIntake extends Command implements Constants.Acquisition {
     Acquisition acq;
 
-    public Reject(Acquisition acq)
+    public FastIntake(Acquisition acq)
     {
         this.acq = acq;
         addRequirements(acq);
@@ -24,7 +25,7 @@ public class Reject extends Command implements Constants.Acquisition{
     @Override
     public void execute()
     {
-        acq.setSpeeds(aqRejectSpeed, aqRejectSpeed);
+        acq.setSpeeds(aqIntakeSpeed, aqIntakeSpeed);
     }
 
     @Override
