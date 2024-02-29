@@ -144,11 +144,12 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     public void aim(double setPoint) {
         System.out.println("aiming");
         //setPoint = SmartDashboard.getNumber("pivot/setpoint", 0);
-        setPoint = 1.5;
-        setPoint /= 2 * Math.PI;
+        // setPoint = 1.5;
+        // setPoint /= 2 * Math.PI;
         //pid = new PIDController(SmartDashboard.getNumber("pivot/p", 0), SmartDashboard.getNumber("pivot/i", 0), SmartDashboard.getNumber("pivot/d", 0));
-        pid = new PIDController(0.1,0,0);
-        pivotMotor.set(pid.calculate(pivotEncoder.getPosition(), setPoint));
+        // pid = new PIDController(0.1,0,0);
+        // pivotMotor.set(pid.calculate(pivotEncoder.getPosition(), setPoint));
+        sparkPid.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
 
         //pivotMotor.getAbsoluteEncoder.getPosition();
     }

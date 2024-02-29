@@ -48,30 +48,22 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
         }
         startTime = System.currentTimeMillis();
         shooter.aim(shootAngleSpeed.getAngle());
-        shooter.setSpeed(reverseIndexSpeed);
-        indexer.reject();
+        shooter.setSpeed(shootAngleSpeed.getSpeed());
     }
 
     @Override
     public void execute() {
         if (System.currentTimeMillis() >= startTime + reverseTime) {
-            indexer.stop();
-            shooter.setSpeed(shootAngleSpeed.getSpeed());
-        }
-
-        if (System.currentTimeMillis() >= startTime + spinUpTime) {
-            shooter.setSpeed(shootAngleSpeed.getSpeed());
             indexer.intake();
+        } else if (System.currentTimeMillis() >= startTime + 500) {
+            indexer.reject();
         }
-
-
     }
 
     @Override
     public void end(boolean interrupted) {
         shooter.setSpeed(0);
         indexer.stop();
-        // acquisition.stopAcquisitionMotor();
         shooter.aim(restAngle);
     }
 

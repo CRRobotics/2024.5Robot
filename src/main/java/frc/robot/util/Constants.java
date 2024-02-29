@@ -147,12 +147,12 @@ public interface Constants {
         int pivotMotorID = 11;
 
         double kF = 0;
-        double restAngle = 0;
+        double restAngle = 2.25;
 
         double reverseIndexSpeed = 0;
-        double reverseTime = 0;
+        double reverseTime = 1000;
         double spinUpTime = 0;
-        double shootTime = 0;
+        double shootTime = 10000;
 
         double shooterTestSpeed = 0.25;
 
