@@ -4,20 +4,28 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Indexer extends SubsystemBase implements Constants.Indexer {
     CANSparkMax indexerMotor;
+    AnalogInput ringSensor;
     
 
     public Indexer() {
         indexerMotor = new CANSparkMax(indexID, MotorType.kBrushless);
+        ringSensor = new AnalogInput(0);
     }
 
     /**
    * Intakes the cargo (not at a set speed yet)
    */
   public void intake() {
-    indexerMotor.set(indexIntakeSpeed);
+    if (!seesRing()){
+        indexerMotor.set(indexIntakeSpeed);
+    } else {
+        indexerMotor.set(0);
+    }
     System.out.println("running intake motors, speed: "+ indexIntakeSpeed);
   }
 
@@ -37,5 +45,9 @@ public class Indexer extends SubsystemBase implements Constants.Indexer {
 
   public void windUp() {
     
+  }
+
+  public boolean seesRing(){
+    return (ringSensor.getValue() > 100);
   }
 }
