@@ -160,9 +160,13 @@ public interface Constants {
 
         double talonControllerAcceleration = 120;
         double voltageControllerVelocity = 10;
+
+        double krakenP = 0.05;
+        double krakenI = 0.0;
+        double krakenD = 0.0;
         
-
-
+        double beltRatio = 3.0 / 2.0;
+        
         //for neo
         double sparkP = 0.05;
         double sparkI = 0;
@@ -179,11 +183,7 @@ public interface Constants {
         //for Amp and Loading position setpoint
         //TODO: testing setpoints for amp and loading positions?
         double ampSetPoint = 0;
-        double loadingSetPoint = 0;
-
-
-
-        
+        double loadingSetPoint = 0;        
     }
     
     interface Indexer {

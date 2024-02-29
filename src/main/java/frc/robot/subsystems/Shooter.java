@@ -66,9 +66,9 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         //     0, false, true, true);
         voltageController = new VelocityVoltage(voltageControllerVelocity);
         krakenSlotConfig = new Slot0Configs();
-        krakenSlotConfig.kP = 0.05;
-        krakenSlotConfig.kI = 0;
-        krakenSlotConfig.kD = 0;
+        krakenSlotConfig.kP = krakenP;
+        krakenSlotConfig.kI = krakenI;
+        krakenSlotConfig.kD = krakenD;
 
         
         leftShooterMotor.getConfigurator().apply(krakenSlotConfig);
@@ -104,9 +104,10 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         SmartDashboard.putNumber("pivot/p", sparkP);
         SmartDashboard.putNumber("pivot/i", sparkI);
         SmartDashboard.putNumber("pivot/d", sparkD);
-        SmartDashboard.putNumber("shooter KP", 0.05);
-        SmartDashboard.putNumber("shooter KI", 0);
-        SmartDashboard.putNumber("shooter KD", 0);
+        SmartDashboard.putNumber("shooter KP", krakenP);
+        SmartDashboard.putNumber("shooter KI", krakenI);
+        SmartDashboard.putNumber("shooter KD", krakenD);
+
         SmartDashboard.putNumber("pivot/setpoint", 0);
 
         shooterVelocity = 0;
@@ -115,7 +116,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     }
 
     public double getSpeed(){
-        return leftShooterMotor.getVelocity().getValue() * 3.0/2.0;
+        return leftShooterMotor.getVelocity().getValue() * beltRatio;
     }
 
     /**
@@ -123,7 +124,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
      * @param setpoint The speed to run the shooter at in rps
      */
     public void setSpeed(double setpoint) {
-        setpoint *= 3.0/2.0;
+        setpoint *= beltRatio;
         voltageController.Slot = 0;
         leftShooterMotor.setControl(talonController.withVelocity(setpoint));
         rightShooterMotor.setControl(new Follower(leftShooterMotorID, true));
