@@ -12,19 +12,19 @@ public class TestPivot extends Command implements Constants.Shooter
     public TestPivot(Shooter shooter)
     {
         this.shooter = shooter;
+        SmartDashboard.putNumber("pivot setpoint", 5.5);
     }
 
     @Override
     public void initialize()
     {
-
     }
 
     //positive direction spins clockwise
     @Override
     public void execute()
     {
-        shooter.testAim(5.5);
+        shooter.testAim(SmartDashboard.getNumber("pivot setpoint", 5.5));
     }
 
     @Override
