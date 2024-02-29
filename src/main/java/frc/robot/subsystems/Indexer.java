@@ -5,34 +5,37 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 
-/**
- * Simulates the acquisition subsystem
- */
-public class Acquisition extends SubsystemBase implements Constants.Acquisition {
-  CANSparkMax aqMotor;
+public class Indexer extends SubsystemBase implements Constants.Indexer {
+    CANSparkMax indexerMotor;
+    
 
-  public Acquisition() {
-    aqMotor = new CANSparkMax(aqID, MotorType.kBrushless);
-  }
+    public Indexer() {
+        indexerMotor = new CANSparkMax(indexID, MotorType.kBrushless);
+    }
 
-  /**
+    /**
    * Intakes the cargo (not at a set speed yet)
    */
   public void intake() {
-    aqMotor.set(aqIntakeSpeed);
+    indexerMotor.set(indexIntakeSpeed);
+    System.out.println("running intake motors, speed: "+ indexIntakeSpeed);
   }
 
   /**
    * Stops the acquisition
    */
   public void stop() {
-    aqMotor.set(0);
+    indexerMotor.set(0);
   }
 
   /**
    * Ejects the cargo back out (not at a set speed yet)
    */
   public void reject() {
-    aqMotor.set(aqRejectSpeed);
+    indexerMotor.set(indexRejectSpeed);
+  }
+
+  public void windUp() {
+    
   }
 }
