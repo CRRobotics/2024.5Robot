@@ -66,13 +66,7 @@ public class Robot extends LoggedRobot {
     }
   }
 
-  public static TreeMap<Double, AngleSpeed> treeMap = new TreeMap<Double, AngleSpeed>();
-
-  static
-  {
-    //treeMap.put(null, null);
-    
-  }
+  
   @Override
   public void teleopPeriodic() {}
 
