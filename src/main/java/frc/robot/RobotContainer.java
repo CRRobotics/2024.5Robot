@@ -95,7 +95,7 @@ public class RobotContainer {
     //new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new SequentialCommandGroup(
     //  new DriveToPoint(driveTrain, new Pose2d(3, 0, new Rotation2d()))
     //));
-    new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Intake(acq, indexer)); //Assign Button
+    new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Intake(acq, indexer, shooter)); //Assign Button
     new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer));
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new TestPivot(shooter));
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new TestShot(shooter));
