@@ -12,6 +12,7 @@ import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.AngleSpeed;
 import frc.robot.util.Constants;
+import frc.robot.util.DistanceXY;
 import frc.robot.util.ValueFromDistance;
 
 public class SpeakerShot extends Command implements Constants.Field, Constants.Shooter, Constants.Indexer {
@@ -19,13 +20,15 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     private Shooter shooter;
     private DriveTrain driveTrain;
     private Indexer indexer;
-
+    private DistanceXY distanceXY;
     private long startTime;
     private AngleSpeed shootAngleSpeed;
 
-    public SpeakerShot(Shooter shooter, DriveTrain driveTrain, Indexer indexer) {
+    public SpeakerShot(Shooter shooter, DriveTrain driveTrain, Indexer indexer, DistanceXY distanceXY) {
         this.shooter = shooter;
         this.driveTrain = driveTrain;
+        this.distanceXY = distanceXY;
+        shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(distanceXY.getDistanceToSpeaker());
         this.indexer = indexer;
 
         //purposefully didn't add drivetrain as a requirement

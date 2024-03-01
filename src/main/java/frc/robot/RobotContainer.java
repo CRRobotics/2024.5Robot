@@ -36,6 +36,7 @@ import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.AngleSpeed;
 import frc.robot.util.Constants;
+import frc.robot.util.DistanceXY;
 import frc.robot.util.DriveStates;
 import frc.robot.util.ShooterState;
 
@@ -51,6 +52,7 @@ public class RobotContainer {
   public static LED led;
   private final SendableChooser<Command> autoChooser;
   private final Shooter shooter;
+  private static DistanceXY distanceXY;
 
   public RobotContainer() {
     driveTrain = new DriveTrain();
@@ -69,6 +71,7 @@ public class RobotContainer {
     led = new LED(60);
     shooterState = ShooterState.notSpinning;
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
+    distanceXY = new DistanceXY(driveTrain, getAlliance());
   }
 
   
@@ -103,7 +106,7 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kA.value).onTrue(new TestPivot(shooter));
     new JoystickButton(driver, XboxController.Button.kStart.value).onTrue(new AmpShot(shooter, driveTrain, indexer));
     //test AmpShot tomorrow
-    new JoystickButton(driver, XboxController.Button.kBack.value).onTrue(new SpeakerShot(shooter, driveTrain, indexer));
+    new JoystickButton(driver, XboxController.Button.kBack.value).onTrue(new SpeakerShot(shooter, driveTrain, indexer, distanceXY));
     new JoystickButton(driver, XboxController.Button.kRightBumper.value).onTrue(new WindUp(ShooterState.maxSpeed, shooter));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value).onTrue(new WindUp(ShooterState.notSpinning, shooter));
     // ABOVE BINDINGS MUTATE SHOOTER STATE ENUM IN THE WINDUP METHOD
