@@ -31,6 +31,10 @@ public class Indexer extends SubsystemBase implements Constants.Indexer {
     }
   }
 
+  public void setSpeed(double speed) {
+    indexerMotor.set(speed);
+  }
+
 
   /**
    * Stops the acquisition

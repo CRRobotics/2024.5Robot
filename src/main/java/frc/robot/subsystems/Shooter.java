@@ -17,6 +17,7 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkLimitSwitch.Type;
 
@@ -74,6 +75,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         leftShooterMotor.getConfigurator().apply(krakenSlotConfig);
         
         pivotMotor = new CANSparkMax(pivotMotorID, MotorType.kBrushless);
+        pivotMotor.setIdleMode(IdleMode.kBrake);
 
         pivotEncoderType = SparkAbsoluteEncoder.Type.kDutyCycle;
         pivotEncoder = pivotMotor.getAbsoluteEncoder(pivotEncoderType);
@@ -117,6 +119,10 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
 
     public double getSpeed(){
         return leftShooterMotor.getVelocity().getValue() * beltRatio;
+    }
+
+    public boolean isInterfaced() {
+        return (Math.abs(pivotEncoder.getPosition() - Constants.Shooter.interfaceAngle) < 0.1);
     }
 
     /**

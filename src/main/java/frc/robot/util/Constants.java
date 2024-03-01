@@ -148,10 +148,10 @@ public interface Constants {
 
         double kF = 0;
         double restAngle = 4.3;
-        double interfaceAngle = 4.5; //fixs
+        double interfaceAngle = 4.4; //fixs
 
         double reverseIndexSpeed = 0;
-        double reverseTime = 1000;
+        double reverseTime = 300;
         double spinUpTime = 0;
         double shootTime = 10000;
 
@@ -189,7 +189,7 @@ public interface Constants {
     
     interface Indexer {
         int indexID = 12;
-        double indexIntakeSpeed = -0.3;
+        double indexIntakeSpeed = -0.6;
         double indexRejectSpeed = 0.3;
     }
 

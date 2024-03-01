@@ -2,6 +2,7 @@ package frc.robot.commands.shooter;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -34,28 +35,30 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
 
     @Override
     public void initialize() {
-        if (RobotContainer.getAlliance() == Alliance.Blue)
-        {
-            shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
-                ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), speakerBlue) //TODO: make this work for either side DONE?
-            );
-        }
-        if (RobotContainer.getAlliance() == Alliance.Red)
-        {
-            shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
-                ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), speakerRed) //TODO: make this work for either side DONE?
-            );
-        }
+        // if (RobotContainer.getAlliance() == Alliance.Blue)
+        // {
+        //     shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
+        //         ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), speakerBlue) //TODO: make this work for either side DONE?
+        //     );
+        // }
+        // if (RobotContainer.getAlliance() == Alliance.Red)
+        // {
+        //     shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
+        //         ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), speakerRed) //TODO: make this work for either side DONE?
+        //     );
+        // }
         startTime = System.currentTimeMillis();
-        shooter.aim(shootAngleSpeed.getAngle());
-        shooter.setSpeed(shootAngleSpeed.getSpeed());
+        // shooter.aim(shootAngleSpeed.getAngle());
+        // shooter.setSpeed(shootAngleSpeed.getSpeed());
+        shooter.aim(SmartDashboard.getNumber("pivot setpoint", 4.3));
+        shooter.setSpeed(SmartDashboard.getNumber("velocity setpoint", 0));
     }
 
     @Override
     public void execute() {
-        if (System.currentTimeMillis() >= startTime + reverseTime) {
-            indexer.intake();
-        } else if (System.currentTimeMillis() >= startTime + 500) {
+        if (System.currentTimeMillis() >= startTime + reverseTime + 3000) {
+            indexer.setSpeed(-0.6);
+        } else if (System.currentTimeMillis() >= startTime + 3000) {
             indexer.reject();
         }
     }

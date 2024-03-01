@@ -22,7 +22,9 @@ import frc.robot.commands.acquisition.Reject;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
+import frc.robot.commands.drivetrain.DriveToRing;
 import frc.robot.commands.drivetrain.JoystickDrive;
+import frc.robot.commands.shooter.SpeakerShot;
 import frc.robot.commands.shooter.TestPivot;
 import frc.robot.commands.shooter.TestShot;
 import frc.robot.subsystems.Acquisition;
@@ -97,8 +99,9 @@ public class RobotContainer {
     //));
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Intake(acq, indexer, shooter)); //Assign Button
     new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer));
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new TestPivot(shooter));
-    new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new TestShot(shooter));
+    new JoystickButton(driver, XboxController.Button.kA.value).onTrue(new TestPivot(shooter));
+    // new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new SpeakerShot(shooter, driveTrain, indexer));
+    new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain));
 
   }
 

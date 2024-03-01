@@ -28,8 +28,8 @@ public class Intake extends Command {
 
     @Override
     public void execute()
-    {
-        if(!indexer.intake()) {
+    { 
+        if(!indexer.intake() && shooter.isInterfaced()) {
             acq.intake();
         }
     }

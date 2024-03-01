@@ -13,7 +13,7 @@ public class TestShot extends Command implements Constants.Shooter, Constants.Fi
     public TestShot(Shooter shooter)
     {
         this.shooter = shooter;
-
+        SmartDashboard.putNumber("velocity setpoint", 0);
     }
     
     @Override
@@ -25,7 +25,7 @@ public class TestShot extends Command implements Constants.Shooter, Constants.Fi
     @Override
     public void execute()
     {
-        shooter.setSpeed(50);
+        shooter.setSpeed(SmartDashboard.getNumber("velocity setpoint", 0));
     }
 
     @Override
