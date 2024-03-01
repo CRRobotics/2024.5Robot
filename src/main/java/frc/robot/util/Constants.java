@@ -238,6 +238,19 @@ public interface Constants {
         int rightID = 0;
         double extendSpeed = 0;
         double retractSpeed = 0;
+
+        double winchP = 0;;
+        double winchI = 0;
+        double winchD = 0;
+        double winchFF = 0;
+
+        //for PID
+        int slotID = 1;
+        double MaxVelocity = 120;
+        double MinVelocity = 0;
+        double MaxAccel = 1;
+        double AllowedClosedLoopError = 0;
+
     }
     
 }
