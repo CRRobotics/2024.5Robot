@@ -12,7 +12,7 @@ public class TestPivot extends Command implements Constants.Shooter
     public TestPivot(Shooter shooter)
     {
         this.shooter = shooter;
-        SmartDashboard.putNumber("pivot setpoint", 5.5);
+        SmartDashboard.putNumber("test pivot setpoint", 5.5);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class TestPivot extends Command implements Constants.Shooter
     @Override
     public void execute()
     {
-        shooter.testAim(SmartDashboard.getNumber("pivot setpoint", 5.5));
+        shooter.testAim(SmartDashboard.getNumber("test pivot setpoint", 5.5));
     }
 
     @Override

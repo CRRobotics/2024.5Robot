@@ -35,12 +35,14 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.util.AngleSpeed;
 import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
+import frc.robot.commands.shooter.ShooterState;;
 
 public class RobotContainer {
   private final DriveTrain driveTrain;
   private final Acquisition acq;
   private final Indexer indexer;
   public static DriveStates driveStates;
+  public static ShooterState shooterState;
   private final XboxController driver;
   public static SendableChooser<String> inputMode;
   public static SendableChooser<String> shootMode;
@@ -63,7 +65,7 @@ public class RobotContainer {
     addInputModes();
     addShootModes();
     led = new LED(60);
-
+    shooterState = ShooterState.notSpinning;
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
   }
 
