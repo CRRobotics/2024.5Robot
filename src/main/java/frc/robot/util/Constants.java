@@ -177,7 +177,7 @@ public interface Constants {
         double sparkFF = 0;
 
         //for neo smart motion
-        int slotID =0;
+        int slotID = 0;
         double smartMotionMaxVelocity = 120;
         double smartMotionMinVelocity = 0;
         double smartMotionMaxAccel = 1;
@@ -185,7 +185,9 @@ public interface Constants {
 
         //for Amp and Loading position setpoint
         //TODO: testing setpoints for amp and loading positions?
-        double ampSetPoint = 0;
+        double ampSetPoint = 6.0;//tune
+        double ampShotSpeed = 30;//tune
+        // UNFINISHED CONSTANTS PLEASE TUNE ABOVE 2
         double loadingSetPoint = 0;
     }
     

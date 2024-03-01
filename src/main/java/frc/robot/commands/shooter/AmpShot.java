@@ -2,6 +2,7 @@ package frc.robot.commands.shooter;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -34,18 +35,23 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
 
     @Override
     public void initialize() {
-        if (RobotContainer.getAlliance() == Alliance.Blue)
-        {
-            shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
-                ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), ampBlue) //TODO: make this work for either side DONE?
-            );
+        
+        if(RobotContainer.shootMode.equals("visions")){
+            if (RobotContainer.getAlliance() == Alliance.Blue)
+            {
+                shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
+                    ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), ampBlue) //TODO: make this work for either side DONE?
+                );
+            }
+            if (RobotContainer.getAlliance() == Alliance.Red)
+            {
+                shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
+                    ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), ampRed) //TODO: make this work for either side DONE?
+                );
+            }
         }
-        if (RobotContainer.getAlliance() == Alliance.Red)
-        {
-            shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
-                ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), ampRed) //TODO: make this work for either side DONE?
-            );
-        }
+        else
+        shootAngleSpeed = new AngleSpeed(Constants.Shooter.ampSetPoint, Constants.Shooter.ampShotSpeed);
         startTime = System.currentTimeMillis();
         shooter.aim(shootAngleSpeed.getAngle());
         shooter.setSpeed(reverseIndexSpeed);
