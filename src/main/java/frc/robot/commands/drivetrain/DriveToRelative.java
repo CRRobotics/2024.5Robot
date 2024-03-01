@@ -66,7 +66,7 @@ public class DriveToRelative extends Command {
         double theta = -Math.atan2(transformation.getY(), transformation.getX()) + driveTrain.getPose().getRotation().getRadians();
         //This if statement check whether or not a rotation needs to be made by the robot.
         if (calculateRotation) {
-            transformation = new Transform2d(transformation.getTranslation(), new Rotation2d(theta + Math.PI));
+            transformation = new Transform2d(transformation.getTranslation(), new Rotation2d(theta));
         }
         //This is just pose if the robot(position using x and y, and angle of robot)
         Pose2d initPose = new Pose2d(driveTrain.getPose().getTranslation(), transformation.getRotation());

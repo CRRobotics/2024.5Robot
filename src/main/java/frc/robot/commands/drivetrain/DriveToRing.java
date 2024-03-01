@@ -54,7 +54,7 @@ public class DriveToRing extends Command{
             // Double[] pieceData = {SmartDashboard.getNumber("piece/a", 0), SmartDashboard.getNumber("piece/b", 0)};
             //converts units from inches to centimeters
             Translation2d closestPiece = new Translation2d(
-                -pieceData[1] * 0.0254 + 0.13,
+                pieceData[1] * 0.0254 + 0.13,
                 -(pieceData[0]) * 0.0254
             );
 
@@ -79,7 +79,7 @@ public class DriveToRing extends Command{
                 // Double[] pieceData = {SmartDashboard.getNumber("piece/a", 0), SmartDashboard.getNumber("piece/b", 0)};
 
                 Translation2d closestPiece = new Translation2d(
-                    -pieceData[1] * 0.0254 + 0.13,
+                    pieceData[1] * 0.0254 + 0.13,
                     -(pieceData[0]) * 0.0254
                 );
 
