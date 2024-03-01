@@ -12,8 +12,8 @@ import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.AngleSpeed;
 import frc.robot.util.Constants;
+import frc.robot.util.ShooterState;
 import frc.robot.util.ValueFromDistance;
-import frc.robot.commands.shooter.ShooterState;
 
 public class AmpShot extends Command implements Constants.Field, Constants.Shooter, Constants.Indexer {
     //eventually need other subsystems
@@ -77,21 +77,10 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
 
     @Override
     public void end(boolean interrupted) {
-       // shooter.setSpeed(
-            switch(RobotContainer.shooterState)
-            {
-                case maxSpeed: shooter.setSpeed(Constants.Shooter.shooterDefaultMaxSpeed); // change tis later? 
-                break;
-                case ampSpeed: shooter.setSpeed(Constants.Shooter.ampShotSpeed);
-                System.out.println("WARNING! ENUM SET TO SHOOTER AMP SPEED CHECK AMPSHOT.JAVA LINE 88 if not an issue go about yur day.");
-                break;
-                case notSpinning: shooter.setSpeed(0);
-                break;
-            } 
-      //  );
         indexer.stop();
         // acquisition.stopAcquisitionMotor();
         shooter.aim(interfaceAngle); // i set this to interface angle because thats where it should go next.
+        andThen(new WindUp(ShooterState.maxSpeed, shooter));
     }
 
     @Override

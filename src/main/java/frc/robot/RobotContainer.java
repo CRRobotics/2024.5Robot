@@ -27,6 +27,7 @@ import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.shooter.SpeakerShot;
 import frc.robot.commands.shooter.TestPivot;
 import frc.robot.commands.shooter.TestShot;
+import frc.robot.commands.shooter.WindUp;
 import frc.robot.subsystems.Acquisition;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Indexer;
@@ -35,7 +36,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.util.AngleSpeed;
 import frc.robot.util.Constants;
 import frc.robot.util.DriveStates;
-import frc.robot.commands.shooter.ShooterState;;
+import frc.robot.util.ShooterState;
 
 public class RobotContainer {
   private final DriveTrain driveTrain;
@@ -99,7 +100,9 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Intake(acq, indexer, shooter)); //Assign Button
     new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer));
     new JoystickButton(driver, XboxController.Button.kA.value).onTrue(new TestPivot(shooter));
-    // new JoystickButton(driver, XboxController.Button.kRightBumper.value).onTrue();
+    new JoystickButton(driver, XboxController.Button.kRightBumper.value).onTrue(new WindUp(ShooterState.maxSpeed, shooter));
+    new JoystickButton(driver, XboxController.Button.kLeftBumper.value).onTrue(new WindUp(ShooterState.notSpinning, shooter));
+    // ABOVE BINDINGS MUTATE SHOOTER STATE ENUM IN THE WINDUP METHOD
     // new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new SpeakerShot(shooter, driveTrain, indexer));
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain));
 

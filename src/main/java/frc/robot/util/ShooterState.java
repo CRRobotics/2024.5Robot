@@ -1,4 +1,4 @@
-package frc.robot.commands.shooter;
+package frc.robot.util;
 
 public enum ShooterState {
     maxSpeed,
