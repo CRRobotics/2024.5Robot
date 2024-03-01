@@ -43,6 +43,7 @@ public class RobotContainer {
   public static DriveStates driveStates;
   private final XboxController driver;
   public static SendableChooser<String> inputMode;
+  public static SendableChooser<String> shootMode;
   public static LED led;
   private final SendableChooser<Command> autoChooser;
   private final Shooter shooter;
@@ -58,19 +59,15 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
     inputMode = new SendableChooser<>();
+    shootMode = new SendableChooser<>();
     addInputModes();
+    addShootModes();
     led = new LED(60);
 
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
   }
-  public static TreeMap<Double, AngleSpeed> treeMap;
 
-  static
-  {
-    treeMap = new TreeMap<Double, AngleSpeed>();
-    //treeMap.put(null, null);
-    
-  }
+  
   public static Alliance getAlliance() {
     Optional<Alliance> ally = DriverStation.getAlliance();
     if (ally.isPresent()) {
@@ -100,6 +97,7 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Intake(acq, indexer, shooter)); //Assign Button
     new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer));
     new JoystickButton(driver, XboxController.Button.kA.value).onTrue(new TestPivot(shooter));
+    // new JoystickButton(driver, XboxController.Button.kRightBumper.value).onTrue();
     // new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new SpeakerShot(shooter, driveTrain, indexer));
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain));
 
@@ -109,6 +107,15 @@ public class RobotContainer {
     inputMode.setDefaultOption("controller", "controller");
     inputMode.addOption("ddr", "ddr");
     SmartDashboard.putData("Input Mode", inputMode);
+  }
+
+  private static void addShootModes()
+  {
+    //switch the two once we iron out visions!!!!!!!!
+
+    shootMode.setDefaultOption("test", "test");
+    shootMode.addOption("visions", "visions");
+    // switch the two once we iron out visions!!!!!!!!
   }
 
   public Command getAutonomousCommand() {

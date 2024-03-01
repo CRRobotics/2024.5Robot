@@ -122,7 +122,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     }
 
     public boolean isInterfaced() {
-        return (Math.abs(pivotEncoder.getPosition() - Constants.Shooter.interfaceAngle) < 0.1);
+        return (Math.abs(pivotEncoder.getPosition() - Constants.Shooter.interfaceAngle) < Constants.Shooter.interfaceError); // error is .08 down from .1
     }
 
     /**

@@ -149,6 +149,8 @@ public interface Constants {
         double kF = 0;
         double restAngle = 4.3;
         double interfaceAngle = 4.4; //fixs
+        double interfaceError = .08;        
+
 
         double reverseIndexSpeed = 0;
         double reverseTime = 300;
@@ -184,7 +186,7 @@ public interface Constants {
         //for Amp and Loading position setpoint
         //TODO: testing setpoints for amp and loading positions?
         double ampSetPoint = 0;
-        double loadingSetPoint = 0;        
+        double loadingSetPoint = 0;
     }
     
     interface Indexer {
