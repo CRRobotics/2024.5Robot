@@ -13,6 +13,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.util.AngleSpeed;
 import frc.robot.util.Constants;
 import frc.robot.util.ValueFromDistance;
+import frc.robot.commands.shooter.ShooterState;
 
 public class AmpShot extends Command implements Constants.Field, Constants.Shooter, Constants.Indexer {
     //eventually need other subsystems
@@ -35,26 +36,29 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
 
     @Override
     public void initialize() {
-        
-        if(RobotContainer.shootMode.equals("visions")){
-            if (RobotContainer.getAlliance() == Alliance.Blue)
-            {
-                shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
-                    ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), ampBlue) //TODO: make this work for either side DONE?
-                );
-            }
-            if (RobotContainer.getAlliance() == Alliance.Red)
-            {
-                shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
-                    ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), ampRed) //TODO: make this work for either side DONE?
-                );
-            }
-        }
-        else
-        shootAngleSpeed = new AngleSpeed(Constants.Shooter.ampSetPoint, Constants.Shooter.ampShotSpeed);
+        // commented this section out... because why 
+        //are we using this for AmpShot... not just a setpoints.
+
+
+        // if(RobotContainer.shootMode.equals("visions")){
+        //     if (RobotContainer.getAlliance() == Alliance.Blue)
+        //     {
+        //         shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
+        //             ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), ampBlue) //TODO: make this work for either side DONE?
+        //         );
+        //     }
+        //     if (RobotContainer.getAlliance() == Alliance.Red)
+        //     {
+        //         shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
+        //             ValueFromDistance.getDistanceToTarget(driveTrain.getPose(), ampRed) //TODO: make this work for either side DONE?
+        //         );
+        //     }
+        // }
+        // else
+        // added new constants 2/29/24 please update in futue
         startTime = System.currentTimeMillis();
-        shooter.aim(shootAngleSpeed.getAngle());
-        shooter.setSpeed(reverseIndexSpeed);
+        shooter.aim(Constants.Shooter.ampSetPoint);
+        shooter.setSpeed(Constants.Shooter.ampShotSpeed);
         indexer.reject();
     }
 
@@ -62,23 +66,32 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
     public void execute() {
         if (System.currentTimeMillis() >= startTime + reverseTime) {
             indexer.stop();
-            shooter.setSpeed(shootAngleSpeed.getSpeed());
         }
 
-        if (System.currentTimeMillis() >= startTime + spinUpTime) {
-            shooter.setSpeed(shootAngleSpeed.getSpeed());
+        if (Math.abs(shooter.getSpeed() - Constants.Shooter.ampShotSpeed) < 5) { //5 is arbitraty plaese fiure out if its okay
+        //    shooter.setSpeed(shootAngleSpeed.getSpeed());
+        // above line likely unecessary
             indexer.intake();
         }
-
-
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setSpeed(0);
+       // shooter.setSpeed(
+            switch(RobotContainer.shooterState)
+            {
+                case maxSpeed: shooter.setSpeed(Constants.Shooter.shooterDefaultMaxSpeed); // change tis later? 
+                break;
+                case ampSpeed: shooter.setSpeed(Constants.Shooter.ampShotSpeed);
+                System.out.println("WARNING! ENUM SET TO SHOOTER AMP SPEED CHECK AMPSHOT.JAVA LINE 88 if not an issue go about yur day.");
+                break;
+                case notSpinning: shooter.setSpeed(0);
+                break;
+            } 
+      //  );
         indexer.stop();
         // acquisition.stopAcquisitionMotor();
-        shooter.aim(restAngle);
+        shooter.aim(interfaceAngle); // i set this to interface angle because thats where it should go next.
     }
 
     @Override

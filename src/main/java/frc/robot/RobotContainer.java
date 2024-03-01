@@ -45,7 +45,7 @@ public class RobotContainer {
   public static ShooterState shooterState;
   private final XboxController driver;
   public static SendableChooser<String> inputMode;
-  public static SendableChooser<String> shootMode;
+  public static SendableChooser<String> testOrVisionsShooter;
   public static LED led;
   private final SendableChooser<Command> autoChooser;
   private final Shooter shooter;
@@ -61,7 +61,7 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
     inputMode = new SendableChooser<>();
-    shootMode = new SendableChooser<>();
+    testOrVisionsShooter = new SendableChooser<>();
     addInputModes();
     addShootModes();
     led = new LED(60);
@@ -115,8 +115,8 @@ public class RobotContainer {
   {
     //switch the two once we iron out visions!!!!!!!!
 
-    shootMode.setDefaultOption("test", "test");
-    shootMode.addOption("visions", "visions");
+    testOrVisionsShooter.setDefaultOption("test", "test");
+    testOrVisionsShooter.addOption("visions", "visions");
     // switch the two once we iron out visions!!!!!!!!
   }
 

@@ -188,6 +188,8 @@ public interface Constants {
         double ampSetPoint = 6.0;//tune
         double ampShotSpeed = 30;//tune
         // UNFINISHED CONSTANTS PLEASE TUNE ABOVE 2
+
+        double shooterDefaultMaxSpeed = 160;
         double loadingSetPoint = 0;
     }
     
