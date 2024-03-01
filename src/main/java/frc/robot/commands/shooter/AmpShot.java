@@ -22,7 +22,6 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
     private Indexer indexer;
 
     private long startTime;
-    private AngleSpeed shootAngleSpeed;
 
     public AmpShot(Shooter shooter, DriveTrain driveTrain, Indexer indexer) {
         this.shooter = shooter;
