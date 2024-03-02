@@ -191,12 +191,14 @@ public interface Constants {
 
         double shooterDefaultMaxSpeed = 160;
         double loadingSetPoint = 0;
+        double limeLightWarningZone = 4.5; //TODO: find the angle of the limelight 
     }
     
     interface Indexer {
         int indexID = 12;
         double indexIntakeSpeed = -0.6;
         double indexRejectSpeed = 0.3;
+        double indexShootSpeed = -.8;
     }
 
     interface SwerveModule {

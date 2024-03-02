@@ -120,6 +120,10 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     public double getSpeed(){
         return leftShooterMotor.getVelocity().getValue() * beltRatio;
     }
+    public double getAngle()
+    {
+        return pivotEncoder.getPosition();
+    }
 
     public boolean isInterfaced() {
         return (Math.abs(pivotEncoder.getPosition() - Constants.Shooter.interfaceAngle) < Constants.Shooter.interfaceError); // error is .08 down from .1

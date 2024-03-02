@@ -69,7 +69,7 @@ public class RobotContainer {
     addInputModes();
     addShootModes();
     led = new LED(60);
-    shooterState = ShooterState.notSpinning;
+    setShooterState(ShooterState.notSpinning);
     driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
     distanceXY = new DistanceXY(driveTrain, getAlliance());
   }
@@ -171,5 +171,11 @@ public class RobotContainer {
   public void resetOdometry() {
     driveTrain.resetOdometry(new Pose2d());
     driveTrain.zeroHeading();
+  }
+  public static ShooterState getShooterState() {
+      return shooterState;
+  }
+  public static void setShooterState(ShooterState shooterState) {
+      RobotContainer.shooterState = shooterState;
   }
 }
