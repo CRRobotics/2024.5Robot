@@ -79,16 +79,35 @@ public class Winch extends SubsystemBase implements Constants.Winch
     public void setSpeed(double speed)
     {
         leftClimbMotor.set(speed);
-        rightClimbMotor.set(speed);
+        rightClimbMotor.follow(leftClimbMotor);
+    }
+
+
+    
+    public void getPosition()
+    {
+        System.out.println(winchEncoder.getPosition());
     }
 
     /**
      * Extends the winch to a setpoint
      * @param setpoint The setpoint to extend the winch to
      */
-    public void setSpeed2(double speed)
+    public void setPostion(double setpoint)
     {
-       winchPid.setReference(speed, CANSparkMax.ControlType.kSmartMotion);
+       winchPid.setReference(setpoint, CANSparkMax.ControlType.kSmartMotion);
        rightClimbMotor.follow(leftClimbMotor);
+       this.getPosition();
     }
+
+
+
+    @Override
+    public void periodic()
+    {
+        winchPid.setP(SmartDashboard.getNumber("winchP", 0));
+        winchPid.setI(SmartDashboard.getNumber("winchI", 0));
+        winchPid.setD(SmartDashboard.getNumber("winchD", 0));
+    }
+
 }
