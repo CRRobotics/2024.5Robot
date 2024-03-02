@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.commands.drivetrain.TurnToSpeaker;
@@ -27,6 +28,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     private boolean outdex;
     private AngleSpeed shootAngleSpeed;
     private long outdexStartTime;
+    private boolean finished;
 
     public SpeakerShot(Shooter shooter, DriveTrain driveTrain, Indexer indexer, DistanceXY distanceXY) {
         this.shooter = shooter;
@@ -35,6 +37,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
         shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(distanceXY.getDistanceToSpeaker());
         this.indexer = indexer;
         outdex = false;
+        finished = false;
 
         //purposefully didn't add drivetrain as a requirement
         addRequirements(shooter);
@@ -78,21 +81,28 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
             if (Math.abs(shooter.getSpeed() - SmartDashboard.getNumber("velocity setpoint", 0)) < 10) 
             {
             
-                if (shooter.getAngle() > Constants.Shooter.limeLightWarningZone || shooter.getAngle() == SmartDashboard.getNumber("pivot setpoint", 4.3)) {
+                if (shooter.getAngle() > Constants.Shooter.limeLightWarningZone || Math.abs(shooter.getAngle() - SmartDashboard.getNumber("pivot setpoint", 4.3)) < .08) //.08 radians is quite close but idk
+                {
                     if(!outdex)
                     {
                         outdexStartTime = System.currentTimeMillis();
                         outdex = true;
-                    }
-                    if (System.currentTimeMillis() <= outdexStartTime + reverseTime) {
                         indexer.reject();
+                        
+                        if (System.currentTimeMillis() <= outdexStartTime + reverseTime) {
+                            indexer.setSpeed(0);
+                            outdex = true;
+                        }
                     }
-                    else
-                    {
+                    if (Math.abs(shooter.getAngle() - SmartDashboard.getNumber("pivot setpoint", 4.3)) < .08) {
                         indexer.setSpeed(Constants.Indexer.indexShootSpeed);
+                        new WaitCommand(.3);
+                        finished = true;
                     }
+                    
                 }
-            }    
+            }
+                
         
         }
         else
@@ -100,24 +110,31 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
             if (Math.abs(shooter.getSpeed() - shootAngleSpeed.getSpeed()) < 10) 
             {
             
-                if (shooter.getAngle() > Constants.Shooter.limeLightWarningZone || shooter.getAngle() == shootAngleSpeed.getAngle()) {
+                if (shooter.getAngle() > Constants.Shooter.limeLightWarningZone || Math.abs(shooter.getAngle() - shootAngleSpeed.getAngle()) < .08) //.08 radians is quite close but idk
+                {
                     if(!outdex)
                     {
                         outdexStartTime = System.currentTimeMillis();
                         outdex = true;
-                    }
-                    if (System.currentTimeMillis() <= outdexStartTime + reverseTime) {
                         indexer.reject();
+                        
+                        if (System.currentTimeMillis() <= outdexStartTime + reverseTime) {
+                            indexer.setSpeed(0);
+                            outdex = true;
+                        }
                     }
-                    else
-                    {
+                    if (Math.abs(shooter.getAngle() - shootAngleSpeed.getAngle()) < .08) {
                         indexer.setSpeed(Constants.Indexer.indexShootSpeed);
+                        new WaitCommand(.3);
+                        finished = true;
                     }
+                    
                 }
-                
             }
-
+                
+        
         }
+        
         
         
         /**
@@ -141,7 +158,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
 
     @Override
     public boolean isFinished() {
-        if (System.currentTimeMillis() > startTime + shootTime)
+        if (finished)
             return true;
         //TODO: cancel when button pressed
         return false;
