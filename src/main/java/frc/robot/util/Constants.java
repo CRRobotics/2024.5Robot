@@ -236,8 +236,8 @@ public interface Constants {
     }
 
     interface Winch {
-        int leftID = 0;
-        int rightID = 0;
+        int leftID = 9;
+        int rightID = 10;
         double extendSpeed = 0;
         double retractSpeed = 0;
 

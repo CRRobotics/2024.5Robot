@@ -30,7 +30,8 @@ public class Winch extends SubsystemBase implements Constants.Winch
     CANSparkMax leftClimbMotor;
     CANSparkMax rightClimbMotor;
     SparkPIDController winchPid;
-    SparkAbsoluteEncoder winchEncoder;
+    SparkAbsoluteEncoder leftWinchEncoder;
+    SparkAbsoluteEncoder rightWinchEncoder;
     SparkAbsoluteEncoder.Type winchEncoderType;
     
     /**
@@ -62,13 +63,14 @@ public class Winch extends SubsystemBase implements Constants.Winch
         winchPid.setFF(winchFF);
 
         winchEncoderType = SparkAbsoluteEncoder.Type.kDutyCycle;
-        winchEncoder = leftClimbMotor.getAbsoluteEncoder(winchEncoderType);
+        leftWinchEncoder = leftClimbMotor.getAbsoluteEncoder(winchEncoderType);
+        rightWinchEncoder = rightClimbMotor.getAbsoluteEncoder(winchEncoderType);
 
         winchPid.setSmartMotionMaxVelocity(MaxVelocity, slotID);
         winchPid.setSmartMotionMinOutputVelocity(MinVelocity, slotID);
         winchPid.setSmartMotionMaxAccel(MaxAccel, slotID);
         winchPid.setSmartMotionAllowedClosedLoopError(AllowedClosedLoopError, slotID);
-        winchPid.setFeedbackDevice(winchEncoder);
+        winchPid.setFeedbackDevice(rightWinchEncoder);
     
     }
 
@@ -79,14 +81,15 @@ public class Winch extends SubsystemBase implements Constants.Winch
     public void setSpeed(double speed)
     {
         leftClimbMotor.set(speed);
-        rightClimbMotor.follow(leftClimbMotor);
+        rightClimbMotor.follow(leftClimbMotor, true);
     }
 
 
     
     public void getPosition()
     {
-        System.out.println(winchEncoder.getPosition());
+        System.out.println("left:" + leftWinchEncoder.getPosition());
+        System.out.println("right:" + rightWinchEncoder.getPosition());
     }
 
     /**

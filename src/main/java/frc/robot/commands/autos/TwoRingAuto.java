@@ -1,5 +1,7 @@
 package frc.robot.commands.autos;
 
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -17,9 +19,12 @@ public class TwoRingAuto extends SequentialCommandGroup{
     Indexer indexer; 
     Shooter shooter; 
     Pose2d pose; 
-    DriveTrain drivetrain; 
+    DriveTrain drivetrain;
+    List<Pose2d> poseList; 
 
-    public TwoRingAuto(Acquisition acq, Indexer indexer, Shooter shooter, DriveTrain drivetrain, Pose2d ringPose1, Pose2d ringPose2, Pose2d shotPose, DistanceXY distanceXY)
+    //poseList needs to be (ringPose1, shotPose1, ringPose2, shotPose2)
+
+    public TwoRingAuto(Acquisition acq, Indexer indexer, Shooter shooter, DriveTrain drivetrain, List<Pose2d> poseList, DistanceXY distanceXY)
     {
         addCommands(
 
@@ -27,14 +32,14 @@ public class TwoRingAuto extends SequentialCommandGroup{
             new ParallelRaceGroup
             (
                 new Intake(acq, indexer, shooter),
-                new DriveToPoint(drivetrain, ringPose1)
+                new DriveToPoint(drivetrain, poseList.get(0))
             ),
-            new DriveToPoint(drivetrain, shotPose),
+            new DriveToPoint(drivetrain, poseList.get(1)),
             new SpeakerShot(shooter, drivetrain, indexer, distanceXY),
             new ParallelRaceGroup
             (
                 new Intake(acq, indexer, shooter),
-                new DriveToPoint(drivetrain, ringPose2)
+                new DriveToPoint(drivetrain, poseList.get(2))
             ),
             new SpeakerShot(shooter, drivetrain, indexer, distanceXY)
         );

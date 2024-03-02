@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.acquisition.Intake;
 import frc.robot.commands.acquisition.Reject;
+import frc.robot.commands.climb.TestWinch;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
@@ -34,6 +35,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Winch;
 import frc.robot.util.AngleSpeed;
 import frc.robot.util.Constants;
 import frc.robot.util.DistanceXY;
@@ -53,12 +55,14 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
   private final Shooter shooter;
   private static DistanceXY distanceXY;
+  private final Winch winch;
 
   public RobotContainer() {
     driveTrain = new DriveTrain();
     acq = new Acquisition();
     indexer = new Indexer();
     shooter = new Shooter();
+    winch = new Winch();
     driveStates = DriveStates.normal;
     driver = new XboxController(Constants.Controller.driveControllerPort);
     configureBindings();
@@ -103,10 +107,10 @@ public class RobotContainer {
     //));
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Intake(acq, indexer, shooter)); //Assign Button
     new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer));
-    new JoystickButton(driver, XboxController.Button.kA.value).onTrue(new TestPivot(shooter));
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new TestWinch(winch));
     new JoystickButton(driver, XboxController.Button.kStart.value).onTrue(new AmpShot(shooter, driveTrain, indexer));
     //test AmpShot tomorrow
-    new JoystickButton(driver, XboxController.Button.kBack.value).onTrue(new SpeakerShot(shooter, driveTrain, indexer, distanceXY));
+    // new JoystickButton(driver, XboxController.Button.kBack.value).onTrue(new SpeakerShot(shooter, driveTrain, indexer, distanceXY));
     new JoystickButton(driver, XboxController.Button.kRightBumper.value).onTrue(new WindUp(ShooterState.maxSpeed, shooter));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value).onTrue(new WindUp(ShooterState.notSpinning, shooter));
     // ABOVE BINDINGS MUTATE SHOOTER STATE ENUM IN THE WINDUP METHOD
