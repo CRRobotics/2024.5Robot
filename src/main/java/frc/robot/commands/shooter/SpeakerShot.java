@@ -94,9 +94,10 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
                     }
                     if (Math.abs(shooter.getAngle() - SmartDashboard.getNumber("pivot setpoint", 4.3)) < .08) {
                         indexer.setSpeed(Constants.Indexer.indexShootSpeed);
+                        new WaitCommand(.3);
+                        finished = true;
                     }
-                    {
-                    }
+                    
                 }
             }
                 
