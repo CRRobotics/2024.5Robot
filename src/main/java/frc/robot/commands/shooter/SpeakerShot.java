@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import frc.robot.commands.drivetrain.TurnToSpeaker;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LED;
@@ -42,6 +43,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
 
     @Override
     public void initialize() {
+        new TurnToSpeaker(driveTrain);
         // if (RobotContainer.getAlliance() == Alliance.Blue)
         // {
         //     shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
