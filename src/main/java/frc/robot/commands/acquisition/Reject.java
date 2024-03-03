@@ -1,17 +1,17 @@
 package frc.robot.commands.acquisition;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Acquisition;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Indexer;
 
 /**
  * Spins the Acquisition in such a way that the game piece leaves the possession of the robot
  */
 public class Reject extends Command {
-    Acquisition acq;
+    Intake acq;
     Indexer indexer;
 
-    public Reject(Acquisition acq, Indexer indexer)
+    public Reject(Intake acq, Indexer indexer)
     {
         this.acq = acq;
         this.indexer = indexer;

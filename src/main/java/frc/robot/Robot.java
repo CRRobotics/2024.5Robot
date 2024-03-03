@@ -4,21 +4,18 @@
 
 package frc.robot;
 
-import java.util.TreeMap;
-
 import org.littletonrobotics.junction.LoggedRobot;
 
-import com.pathplanner.lib.path.PathPlannerPath;
-
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.util.AngleSpeed;
 
+/**
+ * Command scheduler runs one of these methods depending on the robot's state.
+ * Put next to nothing in here, put everything in the RobotContainer.
+ */
 public class Robot extends LoggedRobot {
   private Command autoCommand;
   private Command driveCommand;
-
   private RobotContainer robotContainer;
 
   @Override

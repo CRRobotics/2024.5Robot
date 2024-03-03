@@ -55,7 +55,8 @@ public interface Constants {
     }
 
     interface Controller {
-        int driveControllerPort = 0;
+        int driverControllerPort = 0;
+        int operatorControllerPort = 1;
     }
 
     interface Drive {

@@ -36,7 +36,7 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
     @Override
     public void initialize() {
         // commented this section out... because why 
-        //are we using this for AmpShot... not just a setpoints.
+        // are we using this for AmpShot... not just a setpoints.
 
 
         // if(RobotContainer.shootMode.equals("visions")){

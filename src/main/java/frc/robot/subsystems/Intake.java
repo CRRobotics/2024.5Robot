@@ -8,17 +8,17 @@ import frc.robot.util.Constants;
 /**
  * Simulates the acquisition subsystem
  */
-public class Acquisition extends SubsystemBase implements Constants.Acquisition {
+public class Intake extends SubsystemBase implements Constants.Acquisition {
   CANSparkMax aqMotor;
 
-  public Acquisition() {
+  public Intake() {
     aqMotor = new CANSparkMax(aqID, MotorType.kBrushless);
   }
 
   /**
    * Intakes the cargo (not at a set speed yet)
    */
-  public void intake() {
+  public void collect() {
     aqMotor.set(aqIntakeSpeed);
   }
 
