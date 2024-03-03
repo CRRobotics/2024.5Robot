@@ -15,7 +15,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.util.Constants;
 
-public class TurnToAngle extends Command implements Constants.Drive, Constants.Auto.TurnToAngle {
+public class TurnToAngle extends Command implements Constants.DriveTrain, Constants.Auto.TurnToAngle {
   private DriveTrain driveTrain;
   private double setpoint;
   private boolean clockwise;

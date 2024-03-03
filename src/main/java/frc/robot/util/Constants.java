@@ -18,12 +18,177 @@ import edu.wpi.first.math.util.Units;
 
 public interface Constants {
 
-    interface Acquisition {
-        int aqID = 13;
-        double aqIntakeSpeed = -0.3;
-        double aqRejectSpeed = 0.5;
+    //SUBSYSTEMS
+    
+    interface DriveTrain {
+        int frontLeftWheelID = 2;
+        int frontLeftTurnID = 1;
+        double frontLeftAngularOffset = -Math.PI / 2;
+
+        int frontRightWheelID = 8;
+        int frontRightTurnID = 7;
+        double frontRightAngularOffset = 0;
+
+        int backLeftWheelID = 4;
+        int backLeftTurnID = 3;
+        double backLeftAngularOffset = Math.PI;
+
+        int backRightWheelID = 6;
+        int backRightTurnID = 5;
+        double backRightAngularOffset = Math.PI / 2;
+
+        /** Distance between centers of right and left wheels on robot.
+         * <p>//TODO: Set kTrackWidth to actual track width */
+        double trackWidth = Units.inchesToMeters(26.5);
+        /** Distance between front and back wheels on robot.
+         * <p>//TODO: Set kWheelBase to actual wheel base */
+        double wheelBase = Units.inchesToMeters(26.5);
+        SwerveDriveKinematics driveKinematics = new SwerveDriveKinematics(
+            new Translation2d(wheelBase / 2, trackWidth / 2),
+            new Translation2d(wheelBase / 2, -trackWidth / 2),
+            new Translation2d(-wheelBase / 2, trackWidth / 2),
+            new Translation2d(-wheelBase / 2, -trackWidth / 2));
+        /** Swerve Max Speed in m/s.
+         * <p>(copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java) */
+        double maxSpeed = 0.5;
+        double maxAcceleration = 1;
+        /** radians per second */
+        double maxAngularSpeed = Math.PI;
+        /** radians per second squared */
+        double maxAngularAcceleration = 2 * Math.PI;
+        /** possibly determines whether gyro is reversed */
+        boolean gyroReversed = true;
+
+        double driveDeadBand = 0.025;
+
+        /** radians per second */
+        double magnitudeSlewRate = 2.4;
+        /** radians per second (1 = 100%) */
+        double kDirectionSlewRate = 1.8;
+        /** percent per second (1 = 100%) */
+        double rotationSlewRate = 2.0;
+        /** radius in meters (of what I have no idea) */
+        double radius = 0.4318;
+
+        PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAcceleration);
+
+        double fastSpeedMultiplier = 1.4;
+        double slowSpeedMultiplier = 0.25;
+
+        String[] cameraIds = new String[]{"0", "2", "4", "6", "8", "10"};
+        int cameraErrorCode = 63900;
+
+        interface PoseEstimator {
+            double stateTrans = 0.1;
+            double stateTheta = 0.1;
+            double visionTrans = 0.5;
+            double visionTheta = 0.5;
+        }
     }
 
+    interface Indexer {
+        int indexID = 12;
+        /** units? */
+        double indexIntakeSpeed = -0.6;
+        /** units? */
+        double indexRejectSpeed = 0.3;
+        /** units? */
+        double indexShootSpeed = -.8;
+    }
+    
+    interface Intake {
+        int intakeID = 13;
+        /** units? */
+        double intakeCollectSpeed = -0.3;
+        /** units? */
+        double intakeRejectSpeed = 0.5;
+    }
+
+    interface Shooter {
+        // FLYWHEELS (Krakens)
+        int leftShooterMotorID = 14;
+        int rightShooterMotorID = 15;
+
+        /** Belt between krakens and shooter flywheels */
+        double beltRatio = 3.0 / 2.0;
+        
+        double reverseTime = 300;
+        double spinUpTime = 0;
+        double shootTime = 10000;
+
+        double krakenP = 0.05;
+        double krakenI = 0.0;
+        double krakenD = 0.0;
+        /** Krakens */
+        double talonControllerAcceleration = 120;
+        /** Krakens */
+        double voltageControllerVelocity = 10;
+
+
+
+
+        // AZIMUTH (Neos)
+        int pivotMotorID = 11;
+
+        double restAngle = 4.3;
+        /** angle at which intake feeds indexer nicely */
+        double interfaceAngle = 4.4;
+        /** tolerence for interface angle */
+        double interfaceError = .08;
+        /** Angle area where the LimeLight could interfiere with the note in the indexer if the note isnt all the way inside
+         * <p>TODO: Find the perfect value */
+        double limeLightWarningZone = 4.5;
+
+        /** Angle setpoint for the amp
+         * <p>TODO: Tune this shi */
+        double ampSetPoint = 6.0;// TODO: TUNE THIS
+        /** Angle setpoint for the amp
+         * <p>TODO: Tune this shi */
+        double ampShotSpeed = 30;// TODO: TUNE THIS
+
+        /** Speed used when <code>WindUp.java</code> just wants to shoot as hard as possible */
+        double shooterDefaultMaxSpeed = 160;
+
+
+        // Systems controll parameters
+        double sparkP = 0.05;
+        double sparkI = 0;
+        double sparkD = 0;
+        double sparkFF = 0;
+
+        /** slotID for Neo SmartMotion */
+        int slotID = 0;
+        /** For the azimuth neos */
+        double smartMotionMaxVelocity = 120;
+        /** For the azimuth neos */
+        double smartMotionMinVelocity = 0;
+        /** For the azimuth neos */
+        double smartMotionMaxAccel = 1;
+        /** For the azimuth neos */
+        double smartMotionAllowedClosedLoopError = 0;
+    }
+    
+    interface Winch {
+        int leftID = 9;
+        int rightID = 10;
+        double extendSpeed = 0;
+        double retractSpeed = 0;
+
+        double winchP = 0;;
+        double winchI = 0;
+        double winchD = 0;
+        double winchFF = 0;
+
+        //for PID
+        int slotID = 1;
+        double MaxVelocity = 120;
+        double MinVelocity = 0;
+        double MaxAccel = 1;
+        double AllowedClosedLoopError = 0;
+
+    }
+
+    // OTHER STUFF
 
     interface Auto {
         double maxSpeed = 2; // meters per second
@@ -58,60 +223,7 @@ public interface Constants {
         int driverControllerPort = 0;
         int operatorControllerPort = 1;
     }
-
-    interface Drive {
-        int frontLeftWheelID = 2;
-        int frontLeftTurnID = 1;
-        double frontLeftAngularOffset = -Math.PI / 2;
-
-        int frontRightWheelID = 8;
-        int frontRightTurnID = 7;
-        double frontRightAngularOffset = 0;
-
-        int backLeftWheelID = 4;
-        int backLeftTurnID = 3;
-        double backLeftAngularOffset = Math.PI;
-
-        int backRightWheelID = 6;
-        int backRightTurnID = 5;
-        double backRightAngularOffset = Math.PI / 2;
-
-        double trackWidth = Units.inchesToMeters(26.5);// Distance between centers of right and left wheels on robot//TODO Set kTrackWidth to actual track width
-        double wheelBase = Units.inchesToMeters(26.5);// Distance between front and back wheels on robot //TODO Set kWheelBase to actual wheel base
-        SwerveDriveKinematics driveKinematics = new SwerveDriveKinematics(
-                new Translation2d(wheelBase / 2, trackWidth / 2),
-                new Translation2d(wheelBase / 2, -trackWidth / 2),
-                new Translation2d(-wheelBase / 2, trackWidth / 2),
-                new Translation2d(-wheelBase / 2, -trackWidth / 2));//Swerve Max Speed (copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java)
-        double maxSpeed = 0.5; // meters per second
-        double maxAcceleration = 1;
-        double maxAngularSpeed = Math.PI; // radians per second;
-        double maxAngularAcceleration = 2 * Math.PI; // radians per second squared
-        boolean gyroReversed = true; //Determines whether the gyro is reversed (I think)
-
-        double driveDeadBand = 0.025;
-
-        double magnitudeSlewRate = 2.4; //rads per second
-        double kDirectionSlewRate = 1.8; // percent per second (1 = 100%)
-        double rotationSlewRate = 2.0; // percent per second (1 = 100%)
-        double radius = 0.4318; //Radius in meters
-
-        PathConstraints constraints = new PathConstraints(maxSpeed, maxAcceleration, maxAngularSpeed, maxAcceleration);
-
-        double fastSpeedMultiplier = 1.4;
-        double slowSpeedMultiplier = 0.25;
-
-        String[] cameraIds = new String[]{"0", "2", "4", "6", "8", "10"};
-        int cameraErrorCode = 63900;
-
-        interface PoseEstimator {
-            double stateTrans = 0.1;
-            double stateTheta = 0.1;
-            double visionTrans = 0.5;
-            double visionTheta = 0.5;
-        }
-    }
-
+    
     interface Field {
         double fieldWidth = 16.54;
 
@@ -142,66 +254,9 @@ public interface Constants {
 
     }
     
-    interface Shooter {
-        int leftShooterMotorID = 14;
-        int rightShooterMotorID = 15;
-        int pivotMotorID = 11;
-
-        double kF = 0;
-        double restAngle = 4.3;
-        double interfaceAngle = 4.4; //fixs
-        double interfaceError = .08;        
-
-
-        double reverseIndexSpeed = 0;
-        double reverseTime = 300;
-        double spinUpTime = 0;
-        double shootTime = 10000;
-
-        double shooterTestSpeed = 0.25;
-
-        //for krakens
-
-        double talonControllerAcceleration = 120;
-        double voltageControllerVelocity = 10;
-
-        double krakenP = 0.05;
-        double krakenI = 0.0;
-        double krakenD = 0.0;
-        
-        double beltRatio = 3.0 / 2.0;
-        
-        //for neo
-        double sparkP = 0.05;
-        double sparkI = 0;
-        double sparkD = 0;
-        double sparkFF = 0;
-
-        //for neo smart motion
-        int slotID = 0;
-        double smartMotionMaxVelocity = 120;
-        double smartMotionMinVelocity = 0;
-        double smartMotionMaxAccel = 1;
-        double smartMotionAllowedClosedLoopError = 0;
-
-        //for Amp and Loading position setpoint
-        //TODO: testing setpoints for amp and loading positions?
-        double ampSetPoint = 6.0;//tune
-        double ampShotSpeed = 30;//tune
-        // UNFINISHED CONSTANTS PLEASE TUNE ABOVE 2
-
-        double shooterDefaultMaxSpeed = 160;
-        double loadingSetPoint = 0;
-        double limeLightWarningZone = 4.5; //TODO: find the angle of the limelight 
-    }
-    
-    interface Indexer {
-        int indexID = 12;
-        double indexIntakeSpeed = -0.6;
-        double indexRejectSpeed = 0.3;
-        double indexShootSpeed = -.8;
-    }
-
+    /**
+     * Just used in <code>SwerveModule.java</code>
+     */
     interface SwerveModule {
         double wheelDiameter = 0.0762; //meters
         double wheelCircumference = Math.PI * wheelDiameter; // meters
@@ -235,25 +290,4 @@ public interface Constants {
         IdleMode turnIdleMode = IdleMode.kBrake;
         int turnCurrentLimit = 20; // amps
     }
-
-    interface Winch {
-        int leftID = 9;
-        int rightID = 10;
-        double extendSpeed = 0;
-        double retractSpeed = 0;
-
-        double winchP = 0;;
-        double winchI = 0;
-        double winchD = 0;
-        double winchFF = 0;
-
-        //for PID
-        int slotID = 1;
-        double MaxVelocity = 120;
-        double MinVelocity = 0;
-        double MaxAccel = 1;
-        double AllowedClosedLoopError = 0;
-
-    }
-    
 }

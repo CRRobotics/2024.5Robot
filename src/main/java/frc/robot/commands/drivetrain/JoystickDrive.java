@@ -19,7 +19,7 @@ import frc.robot.subsystems.DriveTrain;
 /**
  * Runs the drivetrain
  */
-public class JoystickDrive extends Command implements Constants.Drive {
+public class JoystickDrive extends Command implements Constants.DriveTrain {
     DriveTrain driveTrain;
     double currentRotation;
     double currentTranslationDir;

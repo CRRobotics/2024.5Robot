@@ -54,8 +54,12 @@ public class RobotContainer {
   public static LED led = new LED(0); // TODO: Implement LED subsystem
 
   // STATES
+  /** Speed modes */
   public static DriveStates driveStates;
+  /** Manages the speed of the shooter */
   public static ShooterState shooterState;
+  /** I think this is supposed to just always have the distance to the speaker, not sure
+   *  why its not implemented though, might be @deprecated TODO: Delete or implement */
   private static DistanceXY distanceXY;
 
   // FINAL IO
@@ -64,6 +68,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   // STATIC IO
+  /** Between DDR pad and controller input */
   public static SendableChooser<String> inputMode;
   public static SendableChooser<String> testOrVisionsShooter;
 
@@ -92,14 +97,14 @@ public class RobotContainer {
   }
 
   /**
-   * Configures the button bindings for the robot. This method is called by the constructor.
+   * Binds specific commands to specific buttons and axis on the driver and operator controllers.
    */
   private void configureBindings() {
     // DRIVER BINDINGS
     new JoystickButton(driver, XboxController.Button.kRightBumper.value).whileTrue(new DriveSlow());
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new DriveFast());
 
-    // TODO: Change these to the operator controller (really just completely redesign the input scheme tbh)
+    // TODO: Move these to the operator controller (as part of re-designing the input system for competition though)
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new TestWinch(winch));
     // new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain));
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
@@ -169,13 +174,18 @@ public class RobotContainer {
     return null;
   }
 
+  /**
+   * Resets the odometry of the robot.
+   */
   public void resetOdometry() {
     driveTrain.resetOdometry(new Pose2d());
     driveTrain.zeroHeading();
   }
+
   public static ShooterState getShooterState() {
       return shooterState;
   }
+  
   public static void setShooterState(ShooterState shooterState) {
       RobotContainer.shooterState = shooterState;
   }

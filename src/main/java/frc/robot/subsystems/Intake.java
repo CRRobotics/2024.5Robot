@@ -6,33 +6,33 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 
 /**
- * Simulates the acquisition subsystem
+ * Acquisition subsystem
  */
-public class Intake extends SubsystemBase implements Constants.Acquisition {
-  CANSparkMax aqMotor;
+public class Intake extends SubsystemBase implements Constants.Intake {
+  CANSparkMax intakeMotor;
 
   public Intake() {
-    aqMotor = new CANSparkMax(aqID, MotorType.kBrushless);
+    intakeMotor = new CANSparkMax(intakeID, MotorType.kBrushless);
   }
 
   /**
    * Intakes the cargo (not at a set speed yet)
    */
   public void collect() {
-    aqMotor.set(aqIntakeSpeed);
+    intakeMotor.set(intakeCollectSpeed);
   }
 
   /**
    * Stops the acquisition
    */
   public void stop() {
-    aqMotor.set(0);
+    intakeMotor.set(0);
   }
 
   /**
    * Ejects the cargo back out (not at a set speed yet)
    */
   public void reject() {
-    aqMotor.set(aqRejectSpeed);
+    intakeMotor.set(intakeRejectSpeed);
   }
 }

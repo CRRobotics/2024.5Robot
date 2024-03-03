@@ -78,7 +78,7 @@ public class DriveToRelative extends Command {
             new Pose2d(initPose.getX() + translation.getX(), initPose.getY() + translation.getY(), initPose.getRotation())
         );
         //This makes a path using the bezier curve from abvove and other constants.
-        PathPlannerPath path = new PathPlannerPath(list, Constants.Drive.constraints, new GoalEndState(0, transformation.getRotation()));
+        PathPlannerPath path = new PathPlannerPath(list, Constants.DriveTrain.constraints, new GoalEndState(0, transformation.getRotation()));
         path.preventFlipping = true;
         // followCommand = AutoBuilder.followPath(path);
         followCommand = AutoBuilder.followPath(path);

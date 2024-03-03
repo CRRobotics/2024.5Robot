@@ -12,7 +12,7 @@ import frc.robot.subsystems.DriveTrain;
 /**
  * Allows the DDR control system to drive
  */
-public class DDRDrive extends Command implements Constants.Drive {
+public class DDRDrive extends Command implements Constants.DriveTrain {
     DriveTrain driveTrain;
     GenericHID controller = new GenericHID(0);
 

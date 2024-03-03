@@ -1,26 +1,18 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
-
-import java.util.ArrayList;
-
-import java.util.stream.IntStream;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
-//import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 import com.pathplanner.lib.auto.AutoBuilder;
-
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -33,47 +25,51 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-// import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.NetworkTableWrapper;
 import frc.robot.util.SwerveModule;
-public class DriveTrain extends SubsystemBase implements Constants.Drive, Constants.Drive.PoseEstimator {
-    // Create MAXSwerveModules
-    public final SwerveModule frontLeft = new SwerveModule( // chimera 11& 12
-            Constants.Drive.frontLeftWheelID,
-            Constants.Drive.frontLeftTurnID,
-            Constants.Drive.frontLeftAngularOffset);
 
-    public final SwerveModule frontRight = new SwerveModule( // manticore 9&10
-            Constants.Drive.frontRightWheelID,
-            Constants.Drive.frontRightTurnID,
-            Constants.Drive.frontRightAngularOffset);
 
-    public final SwerveModule backLeft = new SwerveModule( //phoenix 13&14
-            Constants.Drive.backLeftWheelID,
-            Constants.Drive.backLeftTurnID,
-            Constants.Drive.backLeftAngularOffset);
+public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, Constants.DriveTrain.PoseEstimator {
+    // SWERVE MODULES   spare module: // Cerberus 7&8
+    public final SwerveModule frontLeft = new SwerveModule( // Chimera 11&12
+        Constants.DriveTrain.frontLeftWheelID,
+        Constants.DriveTrain.frontLeftTurnID,
+        Constants.DriveTrain.frontLeftAngularOffset
+    );
+    public final SwerveModule frontRight = new SwerveModule( // Manticore 9&10
+        Constants.DriveTrain.frontRightWheelID,
+        Constants.DriveTrain.frontRightTurnID,
+        Constants.DriveTrain.frontRightAngularOffset
+    );
+    public final SwerveModule backLeft = new SwerveModule( // Phoenix 13&14
+        Constants.DriveTrain.backLeftWheelID,
+        Constants.DriveTrain.backLeftTurnID,
+        Constants.DriveTrain.backLeftAngularOffset
+    );
+    public final SwerveModule backRight = new SwerveModule( // Leviathan 5&6
+        Constants.DriveTrain.backRightWheelID,
+        Constants.DriveTrain.backRightTurnID,
+        Constants.DriveTrain.backRightAngularOffset
+    );
 
-    public final SwerveModule backRight = new SwerveModule( //Leviathan 5&6
-            Constants.Drive.backRightWheelID,
-            Constants.Drive.backRightTurnID,
-            Constants.Drive.backRightAngularOffset);
-// Cerberus 7&8
-    // The gyro sensor
+    // KINEMATICS
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
     private Pathfinder pathFinder;
+
+    private Field2d field = new Field2d();
+    // private Field2d odoField = new Field2d();
     
-    
+    // Odometry to keep track of the robot's movement history
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-        Constants.Drive.driveKinematics,
+        Constants.DriveTrain.driveKinematics,
         Rotation2d.fromDegrees(gyro.getAngle()),
         new SwerveModulePosition[] {
                 frontLeft.getPosition(),
@@ -83,9 +79,9 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive, Consta
         }
     );
     
-    // Kalman filter for tracking robot pose
+    // Kalman filter for mixing odometry and vision data into final pose estimate
     SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
-        Constants.Drive.driveKinematics, // kinematics
+        Constants.DriveTrain.driveKinematics, // kinematics
         Rotation2d.fromDegrees(-gyro.getAngle()), // initial angle
         new SwerveModulePosition[] { // initial module positions
             frontLeft.getPosition(),
@@ -98,10 +94,10 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive, Consta
         VecBuilder.fill(visionTrans, visionTrans, visionTheta) // visions standard deviation for x, y, theta
     );
 
-    private Field2d field = new Field2d();
-    // private Field2d odoField = new Field2d();
 
-    /** Creates a new DriveSubsystem. */
+    /**
+     * Creates a new <code>DriveTrain</code> subsystem
+     */
     public DriveTrain() {
         // resetOdometry(new Pose2d(1.6, 4.4, Rotation2d.fromRadians(2.8)));
         zeroHeading();
@@ -250,7 +246,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive, Consta
     public void setModuleStates(SwerveModuleState[] desiredStates)
     {
         SmartDashboard.putNumber("drive/wheel angle", desiredStates[0].angle.getDegrees());
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Drive.maxSpeed);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.DriveTrain.maxSpeed);
         frontLeft.setDesiredState(desiredStates[0]);
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
@@ -320,7 +316,7 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive, Consta
      * @return The turn rate of the robot, in degrees per second
      */
     public double getTurnRate() {
-        return gyro.getRate() * (Constants.Drive.gyroReversed ? -1.0 : 1.0);
+        return gyro.getRate() * (Constants.DriveTrain.gyroReversed ? -1.0 : 1.0);
     }
 
 
@@ -343,8 +339,8 @@ public class DriveTrain extends SubsystemBase implements Constants.Drive, Consta
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                     new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
                     new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
-                Constants.Drive.maxSpeed, // Max module speed, in m/s
-                Constants.Drive.radius, // Drive base radius in meters. Distance from robot center to furthest module.,
+                Constants.DriveTrain.maxSpeed, // Max module speed, in m/s
+                Constants.DriveTrain.radius, // Drive base radius in meters. Distance from robot center to furthest module.,
                     new ReplanningConfig(true, false, 0.5, 0.2)), // Default path replanning config. See the API for the options here
                 this::flipPath,
                 this // Reference to this subsystem to set requirements

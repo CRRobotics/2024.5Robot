@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * Command scheduler runs one of these methods depending on the robot's state.
- * Put next to nothing in here, put everything in the RobotContainer.
+ * Put next to nothing in here, put everything in the <code>RobotContainer.java</code>.
  */
 public class Robot extends LoggedRobot {
   private Command autoCommand;
