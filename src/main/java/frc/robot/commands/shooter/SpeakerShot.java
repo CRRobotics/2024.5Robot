@@ -25,11 +25,13 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     private Indexer indexer;
     private DistanceXY distanceXY;
     private long startTime;
-    private boolean outdex;
     private AngleSpeed shootAngleSpeed;
     private long outdexStartTime;
-    private boolean stopped;
     private long indexStartTime;
+    private long shootStartTime;
+    private boolean case1;
+    private boolean case2;
+    private boolean case3;
     private boolean finished;
 
     public SpeakerShot(Shooter shooter, DriveTrain driveTrain, Indexer indexer, DistanceXY distanceXY) {
@@ -46,9 +48,10 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
 
     @Override
     public void initialize() {
-        outdex = false;
+        case1 = false;
+        case2 = false;
+        case3 = false;
         finished = false;
-        stopped = false;
         // remove this line later
         shootAngleSpeed = new AngleSpeed(SmartDashboard.getNumber("pivot setpoint", 4.3), SmartDashboard.getNumber("velocity setpoint", 0));
         // new TurnToSpeaker(driveTrain);
@@ -81,39 +84,31 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
 
     @Override
     public void execute() {
-    System.out.println("2loop1");
-    if (Math.abs(shooter.getSpeed() - shootAngleSpeed.getSpeed()) < 10) 
-    {
-        System.out.println("2loop2");
-    
+
+        
         if (shooter.getAngle() > Constants.Shooter.limeLightWarningZone || Math.abs(shooter.getAngle() - shootAngleSpeed.getAngle()) < .08) //.08 radians is quite close but idk
         {
-            System.out.println("2loop3");
-            if(!outdex)
+            if(!case1)
             {
-                System.out.println("2loop4");
                 outdexStartTime = System.currentTimeMillis();
-                outdex = true;
+                case1 = true;
                 indexer.reject();
-                
-                
             }
-            else if (System.currentTimeMillis() >= outdexStartTime + reverseTime && !stopped) {
+            else if (!case2 && System.currentTimeMillis() >= outdexStartTime + reverseTime) {
                 indexer.setSpeed(0);
-                indexStartTime = System.currentTimeMillis();
-                stopped = true;
-                    
-                System.out.println("2loop5");
+                case2 = true;
             }
-            else if (Math.abs(shooter.getAngle() - shootAngleSpeed.getAngle()) < .08 && System.currentTimeMillis() >= indexStartTime + 3000 ) {
-                
-                
+            else if (case2 && Math.abs(shooter.getAngle() - shootAngleSpeed.getAngle()) < .08) {
                 indexer.setSpeed(Constants.Indexer.indexShootSpeed);
+                shootStartTime = System.currentTimeMillis();
+                case3 = true;
+            }
+            else if(case3 && System.currentTimeMillis() > shootStartTime + 3000)
+            {
                 finished = true;
-                System.out.println("2loop6");
             }
             
-        }
+        
     }
         
         
@@ -134,7 +129,6 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setSpeed(0);
         indexer.stop();
         shooter.aim(interfaceAngle);
     }
