@@ -252,7 +252,11 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
         backLeft.setDesiredState(desiredStates[2]);
         backRight.setDesiredState(desiredStates[3]);
     }
-
+    /**
+     * Sets the swerve module speed
+     * 
+     * @param speed The speed at which the motors are set to
+     */
     public void setMotorSpeeds(double speed) {
         setModuleStates(new SwerveModuleState[]{
             new SwerveModuleState(speed, new Rotation2d(0)),
@@ -262,7 +266,9 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
         });
     }
 
-    /** Resets the drive encoders to currently read a position of 0. */
+    /** 
+     * Resets the drive encoders to currently read a position of 0. 
+     */
     public void resetEncoders() {
         frontLeft.resetEncoders();
         frontRight.resetEncoders();
@@ -270,15 +276,25 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
         backRight.resetEncoders();
     }
 
-    /** Zeroes the heading of the robot. */
+    /** 
+     * Zeroes the heading of the robot. 
+     */
     public void zeroHeading() {
         gyro.reset();
     }
-
+    /**
+     * Sets the gyro angle adjustment to the specified angle in radians.
+     * 
+     * @param angle The angle in radians.
+    */
     public void setGyroAngle(double angle) {
         gyro.setAngleAdjustment(angle * 180 / Math.PI);
     }
-
+    /**
+     * Returns the current gyro angle in radians.
+     * 
+     * @return The current gyro angle in radians.
+     */
     public double getGyroAngle() {
         return -gyro.getAngle() * Math.PI / 180;
     }
@@ -291,7 +307,11 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
     public double getHeading() {
         return poseEstimator.getEstimatedPosition().getRotation().getRadians();
     }
-
+    /**
+     * Returns swer module states
+     * 
+     * @return state of each of the swerve modules
+     */
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = {
             frontLeft.getState(),
@@ -301,15 +321,21 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
         };
         return states;
     }
-
+    /**
+     * 
+     * @return current pitch value reported by the gyroscope
+     */
     public double getPitch() {
         return gyro.getPitch();
     }
-
+    /**
+     * 
+     * @return current roll value reported by the gyroscope
+     */
     public double getRoll() {
         return gyro.getRoll();
     }
-
+    
     /**
      * Returns the turn rate of the robot from the gyroscope.
      *
@@ -319,45 +345,67 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
         return gyro.getRate() * (Constants.DriveTrain.gyroReversed ? -1.0 : 1.0);
     }
 
+/**
+ * Creates a command to follow a path using a combination of rotation and translation controls.
+ * 
+ * @param path The path to follow.
+ * @return A command to follow the specified path.
+ */
+public Command followPathCommand(PathPlannerPath path) {
+    // Rotation PID controller
+    PIDController thetaController = new PIDController(
+        SmartDashboard.getNumber("drivetrain/thetaP", 0.5),
+        SmartDashboard.getNumber("drivetrain/thetaI", 0),
+        SmartDashboard.getNumber("drivetrain/thetaD", 0)
+    );
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    thetaController.setTolerance(0.025);
 
-    public Command followPathCommand(PathPlannerPath path) {
-        PIDController thetaController = new PIDController(
-            SmartDashboard.getNumber("drivetrain/thetaP", 0.5),
-            SmartDashboard.getNumber("drivetrain/thetaI", 0),
-            SmartDashboard.getNumber("drivetrain/thetaD", 0)
-        ); // Rotation PID controller
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-        thetaController.setTolerance(0.025);
-        SmartDashboard.putNumber("theta position tolerance", thetaController.getPositionTolerance());
-        SmartDashboard.putNumber("theta velocity tolerance", thetaController.getVelocityTolerance());
-        // field.getObject("traj").setTrajectory(traj);
-        return new FollowPathHolonomic(
-                path, 
-                this::getPose, // Pose supplier
-                this::getChassisSpeeds, // SwerveDriveKinematics
-                this::driveRobotRelative,
-                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
-                    new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
+    // Display PID tolerances on SmartDashboard
+    SmartDashboard.putNumber("theta position tolerance", thetaController.getPositionTolerance());
+    SmartDashboard.putNumber("theta velocity tolerance", thetaController.getVelocityTolerance());
+
+    // Create and return FollowPathHolonomic command
+    return new FollowPathHolonomic(
+            path, 
+            this::getPose, // Pose supplier
+            this::getChassisSpeeds, // SwerveDriveKinematics
+            this::driveRobotRelative,
+            new HolonomicPathFollowerConfig(
+                new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
+                new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
                 Constants.DriveTrain.maxSpeed, // Max module speed, in m/s
                 Constants.DriveTrain.radius, // Drive base radius in meters. Distance from robot center to furthest module.,
-                    new ReplanningConfig(true, false, 0.5, 0.2)), // Default path replanning config. See the API for the options here
-                this::flipPath,
-                this // Reference to this subsystem to set requirements
-        );
-    }
+                new ReplanningConfig(true, false, 0.5, 0.2)), // Default path replanning config. See the API for the options here
+            this::flipPath,
+            this // Reference to this subsystem to set requirements
+    );
+}
 
+    /**
+     * Converts the state of each swerve module to chassis speeds.
+     * 
+     * @return the chasss speeds of the robopt
+     */
     public ChassisSpeeds getChassisSpeeds(){
         return driveKinematics.toChassisSpeeds(frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
     }
-
+    /**
+     * Drives the robot relative to its current position using the given robot-relative chassis speeds.
+     * 
+     * @param robotRelativeSpeeds The robot-relative chassis speeds.
+     */
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
         ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
         SwerveModuleState[] targetStates = driveKinematics.toSwerveModuleStates(targetSpeeds);
         this.setModuleStates(targetStates);
         this.updateObstacles();
       }
-
+    /**
+     * Determines if the path should be flipped based on the current alliance color
+     * 
+     * @return True if the path should be flipped (alliance color is red), false otherwise.
+     */
     public boolean flipPath(){
         var alliance = DriverStation.getAlliance();
         if (alliance.isPresent()) {
@@ -365,11 +413,19 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
         }
         return false;
     }
-
+    /**
+     * Gets the Pathfinder used for path planning.
+     * 
+     * @return The Pathfinder instance.
+    */
     public Pathfinder getPathFinder(){
         return pathFinder;
     }
-
+    /**
+     * Updates the list of obstacles for path planning.
+     * 
+     * This method is currently commented out and not used until network tables are ready
+     */
     public void updateObstacles(){
         // // NetworkTableWrapper.getDouble(i, "rx");
         // ArrayList<Pair<Translation2d, Translation2d>> obstacles = new ArrayList<Pair<Translation2d, Translation2d>>();
