@@ -110,7 +110,7 @@ public interface Constants {
         int rightShooterMotorID = 15;
 
         /** Belt between krakens and shooter flywheels */
-        double beltRatio = 3.0 / 2.0;
+        double beltRatio = 160.0 / 50.0;
         
         double reverseTime = 300;
         double spinUpTime = 0;

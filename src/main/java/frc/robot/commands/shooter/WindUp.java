@@ -10,16 +10,18 @@ import frc.robot.util.ShooterState;
 public class WindUp extends Command {
     
     private Shooter shooter;
+    ShooterState shooterState;
     public WindUp(ShooterState shooterState, Shooter shooter)
     {
         RobotContainer.shooterState = shooterState;
         this.shooter = shooter;
         addRequirements(shooter);
+        this.shooterState = shooterState;
     }
 
     @Override
     public void initialize() {
-        switch (RobotContainer.shooterState) {
+        switch (shooterState) {
             case maxSpeed: 
                 shooter.setSpeed(Constants.Shooter.shooterDefaultMaxSpeed);
                 break;

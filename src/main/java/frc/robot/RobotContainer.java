@@ -29,6 +29,7 @@ import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.DriveToRing;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.shooter.AmpShot;
+import frc.robot.commands.shooter.SpeakerShot;
 import frc.robot.commands.shooter.WindUp;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.DriveTrain;
@@ -79,7 +80,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // SUBSYTEM PIV INITIALIZATION
-    led = new LED(60);
+    // led = new LED(60);
     // STATE INITIALIZATION
     driveStates = DriveStates.normal;
     distanceXY = new DistanceXY(driveTrain, getAlliance());
@@ -101,18 +102,18 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // DRIVER BINDINGS
-    new JoystickButton(driver, XboxController.Button.kRightBumper.value).whileTrue(new DriveSlow());
-    new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new DriveFast());
+    //new JoystickButton(driver, XboxController.Button.kRightBumper.value).whileTrue(new DriveSlow());
+    //new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new DriveFast());
 
     // TODO: Move these to the operator controller (as part of re-designing the input system for competition though)
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new TestWinch(winch));
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, driveTrain, indexer, distanceXY));
     // new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain));
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
     new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer));
     new JoystickButton(driver, XboxController.Button.kStart.value).onTrue(new AmpShot(shooter, driveTrain, indexer));
     // BELOW BINDINGS MUTATE SHOOTER STATE ENUM IN THE WINDUP METHOD
-    new JoystickButton(driver, XboxController.Axis.kRightTrigger.value).onTrue(new WindUp(ShooterState.maxSpeed, shooter));
-    new JoystickButton(driver, XboxController.Axis.kRightTrigger.value).onFalse(new WindUp(ShooterState.notSpinning, shooter));
+    new JoystickButton(driver, XboxController.Button.kRightBumper.value).onTrue(new WindUp(ShooterState.maxSpeed, shooter));
+    new JoystickButton(driver, XboxController.Button.kLeftBumper.value).onTrue(new WindUp(ShooterState.notSpinning, shooter));
     // OPERATOR BINDINGS
   }
   
@@ -123,6 +124,11 @@ public class RobotContainer {
     inputMode.setDefaultOption("controller", "controller");
     inputMode.addOption("ddr", "ddr");
     SmartDashboard.putData("Input Mode", inputMode);
+    
+    
+    SmartDashboard.putNumber("pivot setpoint", 4.3);
+        
+    SmartDashboard.putNumber("velocity setpoint", 160);
   }
 
   /**

@@ -28,16 +28,16 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     private boolean outdex;
     private AngleSpeed shootAngleSpeed;
     private long outdexStartTime;
+    private boolean stopped;
+    private long indexStartTime;
     private boolean finished;
 
     public SpeakerShot(Shooter shooter, DriveTrain driveTrain, Indexer indexer, DistanceXY distanceXY) {
         this.shooter = shooter;
         this.driveTrain = driveTrain;
         this.distanceXY = distanceXY;
-        shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(distanceXY.getDistanceToSpeaker());
+        // shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(distanceXY.getDistanceToSpeaker());
         this.indexer = indexer;
-        outdex = false;
-        finished = false;
 
         //purposefully didn't add drivetrain as a requirement
         addRequirements(shooter);
@@ -46,7 +46,12 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
 
     @Override
     public void initialize() {
-        new TurnToSpeaker(driveTrain);
+        outdex = false;
+        finished = false;
+        stopped = false;
+        // remove this line later
+        shootAngleSpeed = new AngleSpeed(SmartDashboard.getNumber("pivot setpoint", 4.3), SmartDashboard.getNumber("velocity setpoint", 0));
+        // new TurnToSpeaker(driveTrain);
         // if (RobotContainer.getAlliance() == Alliance.Blue)
         // {
         //     shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(
@@ -78,18 +83,23 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     public void execute() {
         if(RobotContainer.inputMode.getSelected().equals("test"))
         {
+            System.out.println("1loop1");
             if (Math.abs(shooter.getSpeed() - SmartDashboard.getNumber("velocity setpoint", 0)) < 10) 
             {
+                System.out.println("1loop2");
             
                 if (shooter.getAngle() > Constants.Shooter.limeLightWarningZone || Math.abs(shooter.getAngle() - SmartDashboard.getNumber("pivot setpoint", 4.3)) < .08) //.08 radians is quite close but idk
                 {
+                    System.out.println("1loop3");
                     if(!outdex)
                     {
+                        System.out.println("1loop4");
                         outdexStartTime = System.currentTimeMillis();
                         outdex = true;
                         indexer.reject();
                         
-                        if (System.currentTimeMillis() <= outdexStartTime + reverseTime) {
+                        if (System.currentTimeMillis() >= outdexStartTime + reverseTime) {
+                            System.out.println("1loop5");
                             indexer.setSpeed(0);
                             outdex = true;
                         }
@@ -98,6 +108,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
                         indexer.setSpeed(Constants.Indexer.indexShootSpeed);
                         new WaitCommand(.3);
                         finished = true;
+                        System.out.println("1loop6");
                     }
                     
                 }
@@ -107,26 +118,36 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
         }
         else
         {
+            System.out.println("2loop1");
             if (Math.abs(shooter.getSpeed() - shootAngleSpeed.getSpeed()) < 10) 
             {
+                System.out.println("2loop2");
             
                 if (shooter.getAngle() > Constants.Shooter.limeLightWarningZone || Math.abs(shooter.getAngle() - shootAngleSpeed.getAngle()) < .08) //.08 radians is quite close but idk
                 {
+                    System.out.println("2loop3");
                     if(!outdex)
                     {
+                        System.out.println("2loop4");
                         outdexStartTime = System.currentTimeMillis();
                         outdex = true;
                         indexer.reject();
                         
-                        if (System.currentTimeMillis() <= outdexStartTime + reverseTime) {
-                            indexer.setSpeed(0);
-                            outdex = true;
-                        }
+                        
                     }
-                    if (Math.abs(shooter.getAngle() - shootAngleSpeed.getAngle()) < .08) {
+                    if (System.currentTimeMillis() >= outdexStartTime + reverseTime && !stopped) {
+                        indexer.setSpeed(0);
+                        indexStartTime = System.currentTimeMillis();
+                        stopped = true;
+                            
+                        System.out.println("2loop5");
+                    }
+                    if (Math.abs(shooter.getAngle() - shootAngleSpeed.getAngle()) < .08 && System.currentTimeMillis() >= indexStartTime + 3000 ) {
+                        
+                        
                         indexer.setSpeed(Constants.Indexer.indexShootSpeed);
-                        new WaitCommand(.3);
                         finished = true;
+                        System.out.println("2loop6");
                     }
                     
                 }
