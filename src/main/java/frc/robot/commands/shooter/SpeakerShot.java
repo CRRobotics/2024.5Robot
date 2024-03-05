@@ -70,7 +70,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
         startTime = System.currentTimeMillis();
         // shooter.aim(shootAngleSpeed.getAngle());
         // shooter.setSpeed(shootAngleSpeed.getSpeed());
-        if(RobotContainer.inputMode.getSelected().equals("test")){
+        if(RobotContainer.inputMode.getSelected().equals("test")){//TODO: I WANT VISIONS!!!!!
             shooter.aim(SmartDashboard.getNumber("pivot setpoint", 4.3));
             shooter.setSpeed(SmartDashboard.getNumber("velocity setpoint", 0));
         }
