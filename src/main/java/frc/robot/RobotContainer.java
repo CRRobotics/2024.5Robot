@@ -111,6 +111,7 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
     new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer));
     new JoystickButton(driver, XboxController.Button.kStart.value).onTrue(new AmpShot(shooter, driveTrain, indexer));
+    new JoystickButton(driver, XboxController.Button.kBack.value).whileTrue(new TestWinch(winch));
     // BELOW BINDINGS MUTATE SHOOTER STATE ENUM IN THE WINDUP METHOD
     new JoystickButton(driver, XboxController.Button.kRightBumper.value).onTrue(new WindUp(ShooterState.maxSpeed, shooter));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value).onTrue(new WindUp(ShooterState.notSpinning, shooter));
@@ -125,7 +126,7 @@ public class RobotContainer {
     inputMode.addOption("ddr", "ddr");
     SmartDashboard.putData("Input Mode", inputMode);
     
-    
+
     SmartDashboard.putNumber("pivot setpoint", 4.3);
         
     SmartDashboard.putNumber("velocity setpoint", 160);
