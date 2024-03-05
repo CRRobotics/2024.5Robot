@@ -84,6 +84,14 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
 
     @Override
     public void execute() {
+
+        /**
+         * Be careful about the stringent requirements on the first if statement, 
+         * if for some reason this is true initially but then becomes false you could get undesirable behavior such as the indexer continually spitting out the note.
+         * The shooting wheels should be spun down at the end of shooting to conserve battery and not have them run when it is not needed, 
+         * the controller can be in charge of making sure they are up to speed in advance of shooting.
+         * The final else if will likely not be reached since the one before it will stay true since case2 is still true and the pivot angle should remain within .08 of the set angle
+         */
         if (shooter.getAngle() > Constants.Shooter.limeLightWarningZone || Math.abs(shooter.getAngle() - shootAngleSpeed.getAngle()) < .08) //.08 radians is quite close but idk
         {
             if(!case1)
