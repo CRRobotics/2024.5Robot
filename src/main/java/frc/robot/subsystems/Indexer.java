@@ -8,18 +8,18 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Indexer extends SubsystemBase implements Constants.Indexer {
-    CANSparkMax indexerMotor;
-    AnalogInput ringSensor;
+  CANSparkMax indexerMotor;
+  AnalogInput ringSensor;
     
 
-    public Indexer() {
-        indexerMotor = new CANSparkMax(indexID, MotorType.kBrushless);
-        ringSensor = new AnalogInput(0);
-    }
+  public Indexer() {
+      indexerMotor = new CANSparkMax(indexID, MotorType.kBrushless);
+      ringSensor = new AnalogInput(0);
+  }
 
-    /**
-   * Intakes the cargo (not at a set speed yet)
-   */
+  /**
+  * Intakes the note
+  */
   public boolean intake() {
     if (!seesRing()){
       indexerMotor.set(indexIntakeSpeed);
@@ -31,6 +31,10 @@ public class Indexer extends SubsystemBase implements Constants.Indexer {
     }
   }
 
+  /**
+   * Sets index motor speed in percentage
+   * @param speed
+   */
   public void setSpeed(double speed) {
     indexerMotor.set(speed);
   }
@@ -44,16 +48,16 @@ public class Indexer extends SubsystemBase implements Constants.Indexer {
   }
 
   /**
-   * Ejects the cargo back out (not at a set speed yet)
+   * Ejects the note back out
    */
   public void reject() {
     indexerMotor.set(indexRejectSpeed);
   }
 
-  public void windUp() {
-    
-  }
-
+  /**
+   * Tells information about the note
+   * @return if the robot can see a note
+   */
   public boolean seesRing(){
     return (ringSensor.getValue() > 100);
   }

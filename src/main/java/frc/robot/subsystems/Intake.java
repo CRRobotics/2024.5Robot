@@ -16,7 +16,7 @@ public class Intake extends SubsystemBase implements Constants.Intake {
   }
 
   /**
-   * Intakes the cargo (not at a set speed yet)
+   * Intakes the note
    */
   public void collect() {
     intakeMotor.set(intakeCollectSpeed);
@@ -30,7 +30,7 @@ public class Intake extends SubsystemBase implements Constants.Intake {
   }
 
   /**
-   * Ejects the cargo back out (not at a set speed yet)
+   * Ejects the note
    */
   public void reject() {
     intakeMotor.set(intakeRejectSpeed);
