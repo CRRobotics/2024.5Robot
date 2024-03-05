@@ -92,6 +92,10 @@ public class Winch extends SubsystemBase implements Constants.Winch
         System.out.println("right:" + rightWinchEncoder.getPosition());
     }
 
+    public double getCurrentDifference() {
+        return leftClimbMotor.getOutputCurrent() - rightClimbMotor.getOutputCurrent();
+    }
+
     /**
      * Extends the winch to a setpoint
      * @param setpoint The setpoint to extend the winch to

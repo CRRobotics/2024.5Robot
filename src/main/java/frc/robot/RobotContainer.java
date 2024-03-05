@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.acquisition.Collect;
 import frc.robot.commands.acquisition.Reject;
+import frc.robot.commands.climb.Climb;
 import frc.robot.commands.climb.TestWinch;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
@@ -106,12 +107,12 @@ public class RobotContainer {
     //new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new DriveFast());
 
     // TODO: Move these to the operator controller (as part of re-designing the input system for competition though)
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, driveTrain, indexer, distanceXY));
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, driveTrain, indexer, distanceXY).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     // new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain));
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
     new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer));
     new JoystickButton(driver, XboxController.Button.kStart.value).onTrue(new AmpShot(shooter, driveTrain, indexer));
-    new JoystickButton(driver, XboxController.Button.kBack.value).whileTrue(new TestWinch(winch));
+    new JoystickButton(driver, XboxController.Button.kBack.value).whileTrue(new Climb(winch, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     // BELOW BINDINGS MUTATE SHOOTER STATE ENUM IN THE WINDUP METHOD
     new JoystickButton(driver, XboxController.Button.kRightBumper.value).onTrue(new WindUp(ShooterState.maxSpeed, shooter));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value).onTrue(new WindUp(ShooterState.notSpinning, shooter));

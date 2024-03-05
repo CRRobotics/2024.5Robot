@@ -62,7 +62,6 @@ public class Robot extends LoggedRobot {
       driveCommand.schedule();
     }
   }
-
   
   @Override
   public void teleopPeriodic() {}

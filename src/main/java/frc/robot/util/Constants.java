@@ -171,8 +171,13 @@ public interface Constants {
     interface Winch {
         int leftID = 9;
         int rightID = 10;
-        double extendSpeed = 0;
-        double retractSpeed = 0;
+
+        double extendSpeed = 0.15;
+        double retractSpeed = 0.4;
+        double extendTime = 300;
+        // double retractTime = 600;
+
+        double currentDifferenceThreshold = 0.5;
 
         double winchP = 0;;
         double winchI = 0;
