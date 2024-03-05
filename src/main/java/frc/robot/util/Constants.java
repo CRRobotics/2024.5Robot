@@ -116,14 +116,16 @@ public interface Constants {
         double spinUpTime = 0;
         double shootTime = 10000;
 
-        double krakenP = 0.05;
+        double krakenP = 0.07;
         double krakenI = 0.0;
         double krakenD = 0.0;
         /** Krakens */
-        double talonControllerAcceleration = 120;
+        double talonControllerAcceleration = 130;
         /** Krakens */
-        double voltageControllerVelocity = 10;
+        double voltageControllerVelocity = 18;
 
+        /** Speed used when <code>WindUp.java</code> just wants to shoot as hard as possible */
+        double shooterDefaultMaxSpeed = 330;
 
 
 
@@ -137,7 +139,7 @@ public interface Constants {
         double interfaceError = .08;
         /** Angle area where the LimeLight could interfiere with the note in the indexer if the note isnt all the way inside
          * <p>TODO: Find the perfect value */
-        double limeLightWarningZone = 4.5;
+        double limeLightWarningZone = 4.9;
 
         /** Angle setpoint for the amp
          * <p>TODO: Tune this shi */
@@ -145,9 +147,6 @@ public interface Constants {
         /** Angle setpoint for the amp
          * <p>TODO: Tune this shi */
         double ampShotSpeed = 30;// TODO: TUNE THIS
-
-        /** Speed used when <code>WindUp.java</code> just wants to shoot as hard as possible */
-        double shooterDefaultMaxSpeed = 160;
 
 
         // Systems controll parameters

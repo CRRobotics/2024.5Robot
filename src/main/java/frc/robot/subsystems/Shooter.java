@@ -188,22 +188,4 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         SmartDashboard.putNumber("shooter/velocity", getSpeed());
         SmartDashboard.putNumber("pivot value", pivotEncoder.getPosition());
     }
-
-    public void dumbPID()
-    {
-        System.out.println(pivotEncoder.getPosition());
-        double setPoint = 1.5; 
-        if(pivotEncoder.getPosition() > setPoint)
-        {
-            pivotMotor.set(0.1);
-        }
-        if (pivotEncoder.getPosition() < setPoint)
-        { 
-            pivotMotor.set(-0.1);
-        }
-        else
-        {
-            pivotMotor.set(0);
-        }
-    }
 }
