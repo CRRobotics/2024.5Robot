@@ -137,6 +137,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     public void end(boolean interrupted) {
         indexer.stop();
         shooter.aim(interfaceAngle);
+        shooter.setSpeed(0);
     }
 
     @Override
