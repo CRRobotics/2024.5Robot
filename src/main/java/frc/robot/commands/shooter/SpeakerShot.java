@@ -84,8 +84,6 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
 
     @Override
     public void execute() {
-
-        
         if (shooter.getAngle() > Constants.Shooter.limeLightWarningZone || Math.abs(shooter.getAngle() - shootAngleSpeed.getAngle()) < .08) //.08 radians is quite close but idk
         {
             if(!case1)
@@ -131,6 +129,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     public void end(boolean interrupted) {
         indexer.stop();
         shooter.aim(interfaceAngle);
+        shooter.setSpeed(0);
     }
 
     @Override
