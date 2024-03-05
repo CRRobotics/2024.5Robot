@@ -45,16 +45,16 @@ public class DriveToRing extends Command{
             
 
             //Using limelight to get rings' position
-            double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
-            if (pieceData.length == 0){
-                System.out.println("Empty Array");
-            }
+            // double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
+            // if (pieceData.length == 0){
+            //     System.out.println("Empty Array");
+            // }
             //used to troubleshoot
-            System.out.println(pieceData[0] + ", " + pieceData[1]);
-            // Double[] pieceData = {SmartDashboard.getNumber("piece/a", 0), SmartDashboard.getNumber("piece/b", 0)};
+            // System.out.println(pieceData[0] + ", " + pieceData[1]);
+            Double[] pieceData = {SmartDashboard.getNumber("piece/a", 0), SmartDashboard.getNumber("piece/b", 0)};
             //converts units from inches to centimeters
             Translation2d closestPiece = new Translation2d(
-                pieceData[1] * 0.0254 + 0.13,
+                pieceData[1] * 0.0254 - 0.13,
                 -(pieceData[0]) * 0.0254
             );
 
@@ -71,15 +71,15 @@ public class DriveToRing extends Command{
         public void execute() {
             i++;
             if (i % 40 == 0) {
-                double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
-                if (pieceData.length == 0){
-                    System.out.println("Empty Array");
-                }
-                System.out.println(pieceData[0] + ", " + pieceData[1]);
-                // Double[] pieceData = {SmartDashboard.getNumber("piece/a", 0), SmartDashboard.getNumber("piece/b", 0)};
+                // double[] pieceData = NetworkTableWrapper.getArray("limelight","llpython");
+                // if (pieceData.length == 0){
+                //     System.out.println("Empty Array");
+                // }
+                // System.out.println(pieceData[0] + ", " + pieceData[1]);
+                Double[] pieceData = {SmartDashboard.getNumber("piece/a", 0), SmartDashboard.getNumber("piece/b", 0)};
 
                 Translation2d closestPiece = new Translation2d(
-                    pieceData[1] * 0.0254 + 0.13,
+                    pieceData[1] * 0.0254 - 0.13,
                     -(pieceData[0]) * 0.0254
                 );
 

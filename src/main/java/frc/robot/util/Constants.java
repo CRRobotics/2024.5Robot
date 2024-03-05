@@ -53,7 +53,7 @@ public interface Constants {
         double maxSpeed = 0.5;
         double maxAcceleration = 1;
         /** radians per second */
-        double maxAngularSpeed = Math.PI;
+        double maxAngularSpeed = 2 * Math.PI;
         /** radians per second squared */
         double maxAngularAcceleration = 2 * Math.PI;
         /** possibly determines whether gyro is reversed */
