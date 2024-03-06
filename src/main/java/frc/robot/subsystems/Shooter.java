@@ -33,8 +33,8 @@ import frc.robot.util.Constants;
  * Simulates the launcher subsystem
  */
 public class Shooter extends SubsystemBase implements Constants.Shooter {
-    TalonFX leftShooterMotor;
-    TalonFX rightShooterMotor;
+    private static TalonFX leftShooterMotor;
+    private static TalonFX rightShooterMotor;
     VelocityVoltage voltageController;
     Slot0Configs slotConfig;
     Slot0Configs talonSlotConfigs;
@@ -109,10 +109,11 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         SmartDashboard.putNumber("shooter KP", krakenP);
         SmartDashboard.putNumber("shooter KI", krakenI);
         SmartDashboard.putNumber("shooter KD", krakenD);
+        SmartDashboard.putNumber("pivot/setpoint", 0);
+        
         SmartDashboard.putNumber("shooter/left current", leftShooterMotor.getTorqueCurrent().getValueAsDouble());
         SmartDashboard.putNumber("shooter/right current", rightShooterMotor.getTorqueCurrent().getValueAsDouble());
 
-        SmartDashboard.putNumber("pivot/setpoint", 0);
 
         shooterVelocity = 0;
         // SmartDashboard.putNumber("shooter/velocity", shooterVelocity);
@@ -120,7 +121,12 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     }
 
     public double getSpeed(){
+        
+        SmartDashboard.putNumber("shooter/left current", leftShooterMotor.getTorqueCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("shooter/right current", rightShooterMotor.getTorqueCurrent().getValueAsDouble());
+
         return leftShooterMotor.getVelocity().getValue() * beltRatio;
+
     }
     public double getAngle()
     {

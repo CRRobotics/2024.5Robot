@@ -50,10 +50,10 @@ public interface Constants {
             new Translation2d(-wheelBase / 2, -trackWidth / 2));
         /** Swerve Max Speed in m/s.
          * <p>(copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java) */
-        double maxSpeed = 0.5;
-        double maxAcceleration = 1;
+        double maxSpeed = 1.5;
+        double maxAcceleration = 1.25;
         /** radians per second */
-        double maxAngularSpeed = Math.PI;
+        double maxAngularSpeed = 2 * Math.PI;
         /** radians per second squared */
         double maxAngularAcceleration = 2 * Math.PI;
         /** possibly determines whether gyro is reversed */
@@ -116,11 +116,11 @@ public interface Constants {
         double spinUpTime = 0;
         double shootTime = 10000;
 
-        double krakenP = 0.07;
+        double krakenP = 0.09;
         double krakenI = 0.0;
         double krakenD = 0.0;
         /** Krakens */
-        double talonControllerAcceleration = 180;
+        double talonControllerAcceleration = 240;
         /** Krakens */
         double voltageControllerVelocity = 12;
 
