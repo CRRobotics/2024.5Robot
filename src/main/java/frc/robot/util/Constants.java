@@ -120,12 +120,12 @@ public interface Constants {
         double krakenI = 0.0;
         double krakenD = 0.0;
         /** Krakens */
-        double talonControllerAcceleration = 130;
+        double talonControllerAcceleration = 180;
         /** Krakens */
-        double voltageControllerVelocity = 18;
+        double voltageControllerVelocity = 12;
 
         /** Speed used when <code>WindUp.java</code> just wants to shoot as hard as possible */
-        double shooterDefaultMaxSpeed = 330;
+        double shooterDefaultMaxSpeed = 390;
 
 
 
