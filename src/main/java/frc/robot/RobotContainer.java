@@ -110,7 +110,7 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, driveTrain, indexer, distanceXY).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain));
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
-    new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer));
+    new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer, shooter));
     new JoystickButton(driver, XboxController.Button.kStart.value).onTrue(new AmpShot(shooter, driveTrain, indexer));
     new JoystickButton(driver, XboxController.Button.kBack.value).whileTrue(new Climb(winch, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     // BELOW BINDINGS MUTATE SHOOTER STATE ENUM IN THE WINDUP METHOD
