@@ -93,7 +93,7 @@ public interface Constants {
         /** units? */
         double indexRejectSpeed = 0.3;
         /** units? */
-        double indexShootSpeed = -.8;
+        double indexShootSpeed = -1;
     }
     
     interface Intake {
