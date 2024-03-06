@@ -93,6 +93,8 @@ public class Winch extends SubsystemBase implements Constants.Winch
     }
 
     public double getCurrentDifference() {
+        SmartDashboard.putNumber("winch/leftCurrent", leftClimbMotor.getOutputCurrent());
+        SmartDashboard.putNumber("winch/rightCurrent", rightClimbMotor.getOutputCurrent());
         return leftClimbMotor.getOutputCurrent() - rightClimbMotor.getOutputCurrent();
     }
 

@@ -43,12 +43,7 @@ public class Climb extends Command implements Constants.Winch
     }
 
     /*
-     * TODO:
-     * - Freeze all other subsystems when climibing
-     *   - Use a timer to make a cancellable period within which it can be cancelled, but after which you are locked in
-     *   - Be sure to reset timers in this case (but keep track of how long it was running for)
-     * - Make cancellable if the driver misclicked
-     * - Add ability to automatically stop the winch if only one hook catches
+     * Moves the winch, changing speeds after a set time, and stopping if it detects a significant current difference
      */
     @Override
     public void execute() {
