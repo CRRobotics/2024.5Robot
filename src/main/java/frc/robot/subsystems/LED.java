@@ -21,6 +21,44 @@ public class LED extends SubsystemBase {
     int tickSpeed;
     int state;
     // state is a variable to determine whether red green and blue should be increasing or decreasing.
+    
+    @Override
+    public void periodic() {
+        // switch (RobotContainer.colorTable.getSelected()) {
+        //     case "red":
+        //     ColorWrapRGB(255, 0, 0);
+        //     break;
+        //     case "orange":
+        //     ColorWrapRGB(255, 165, 0);
+        //     break;
+        //     case "rainbow":
+        //     tick();
+        //     break;
+        //     default:
+        //     ColorWrapRGB(0, 0, 0);
+        //     break;
+            
+        // }
+        // led.setData(ledBuffer);
+    }
+
+    // public static SendableChooser<String> colorTable = new SendableChooser<>();
+    // public static SendableChooser<Integer> tickSpeedChooser = new SendableChooser<>();
+
+    // static {
+    //   colorTable.addOption("red", "red");
+    //   colorTable.addOption("blue", "blue");
+    //   colorTable.addOption("rainbow", "rainbow");
+
+    //   colorTable.setDefaultOption("orange", "orange");
+    //   tickSpeedChooser.setDefaultOption("one", 2);
+    //   tickSpeedChooser.addOption("one", 1);
+    //   tickSpeedChooser.addOption("five", 5);
+    //   tickSpeedChooser.addOption("ten", 10);
+
+    //   SmartDashboard.putData(colorTable);
+    //   SmartDashboard.putData(tickSpeedChooser);
+    // }
 
     public LED(int length) {
         led = new AddressableLED(0);
@@ -61,32 +99,10 @@ public class LED extends SubsystemBase {
         h++;
     }
 
-    public void tick() {
-        for(int i = 0; i < RobotContainer.tickSpeedChooser.getSelected(); i++)
-        {
-            betterRainbow();
-        }
-    }
-
-//funny
-    
-    @Override
-    public void periodic() {
-        // switch (RobotContainer.colorTable.getSelected()) {
-        //     case "red":
-        //     ColorWrapRGB(255, 0, 0);
-        //     break;
-        //     case "orange":
-        //     ColorWrapRGB(255, 165, 0);
-        //     break;
-        //     case "rainbow":
-        //     tick();
-        //     break;
-        //     default:
-        //     ColorWrapRGB(0, 0, 0);
-        //     break;
-            
-        // }
-        // led.setData(ledBuffer);
-    }
+    // public void tick() {
+    //     for(int i = 0; i < RobotContainer.tickSpeedChooser.getSelected(); i++)
+    //     {
+    //         betterRainbow();
+    //     }
+    // }
 }
