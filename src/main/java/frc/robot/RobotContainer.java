@@ -197,26 +197,4 @@ public class RobotContainer {
   public static void setShooterState(ShooterState shooterState) {
       RobotContainer.shooterState = shooterState;
   }
-
-  /**
-   * LED stuff, tossed to the bottom because LED stuff should really go in it's own subsystem
-   * TODO: Move this stuff to LED subsystem (and also add the rest of the implementation)
-   */
-  public static SendableChooser<String> colorTable = new SendableChooser<>();
-  public static SendableChooser<Integer> tickSpeedChooser = new SendableChooser<>();
-
-  static {
-    colorTable.addOption("red", "red");
-    colorTable.addOption("blue", "blue");
-    colorTable.addOption("rainbow", "rainbow");
-
-    colorTable.setDefaultOption("orange", "orange");
-    tickSpeedChooser.setDefaultOption("one", 2);
-    tickSpeedChooser.addOption("one", 1);
-    tickSpeedChooser.addOption("five", 5);
-    tickSpeedChooser.addOption("ten", 10);
-
-    SmartDashboard.putData(colorTable);
-    SmartDashboard.putData(tickSpeedChooser);
-  }
 }
