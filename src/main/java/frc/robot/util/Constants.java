@@ -135,6 +135,8 @@ public interface Constants {
         double restAngle = 4.3;
         /** angle at which intake feeds indexer nicely */
         double interfaceAngle = 4.4;
+        /** angle at which indexer can push the note back into the intake nicely */
+        double rejectInterfaceAngle = 4.43;
         /** tolerence for interface angle */
         double interfaceError = .08;
         /** Angle area where the LimeLight could interfiere with the note in the indexer if the note isnt all the way inside

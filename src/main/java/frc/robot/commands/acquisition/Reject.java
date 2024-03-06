@@ -23,7 +23,7 @@ public class Reject extends Command {
 
     @Override
     public void initialize() {
-        shooter.aim(Constants.Shooter.interfaceAngle);
+        shooter.aim(Constants.Shooter.rejectInterfaceAngle);
     }
 
     @Override
