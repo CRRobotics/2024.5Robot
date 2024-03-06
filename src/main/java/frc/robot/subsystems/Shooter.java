@@ -109,6 +109,8 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         SmartDashboard.putNumber("shooter KP", krakenP);
         SmartDashboard.putNumber("shooter KI", krakenI);
         SmartDashboard.putNumber("shooter KD", krakenD);
+        SmartDashboard.putNumber("shooter/left current", leftShooterMotor.getTorqueCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("shooter/right current", rightShooterMotor.getTorqueCurrent().getValueAsDouble());
 
         SmartDashboard.putNumber("pivot/setpoint", 0);
 
