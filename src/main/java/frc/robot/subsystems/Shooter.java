@@ -139,12 +139,16 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
 
     /**
      * Runs the shooter at a speed
-     * @param setpoint The speed to run the shooter at in rps
+     * @param setpoint The speed to run the shooter wheels at in rps
      */
     public void setSpeed(double setpoint) {
-        setpoint *= beltRatio;
+        //setpoint is the Rotation Per Second (RPS) of the shooter wheels
+        //MotorRPS * MotorPulleyTeethNum = ShooterWheelRPS * ShooterWheelPulleyTeethNum
+        //MotorRPM = ShooterWheelRPM * (ShooterWheelPulleyTeethNum/MotorPulleyTeethNum)
+        double motorRPS = setpoint * beltRatio;
+
         voltageController.Slot = 0;
-        leftShooterMotor.setControl(talonController.withVelocity(setpoint));
+        leftShooterMotor.setControl(talonController.withVelocity(motorRPS));
         rightShooterMotor.setControl(new Follower(leftShooterMotorID, true));
     }
 
