@@ -94,7 +94,7 @@ public interface Constants {
         /** units? */
         double indexRejectSpeed = 0.3;
         /** units? */
-        double indexShootSpeed = -1;
+        double indexShootSpeed = -4;
     }
     
     interface Intake {
@@ -115,7 +115,7 @@ public interface Constants {
         double flywheelPulleyTeethNum = 24;
         double beltRatio = flywheelPulleyTeethNum / krakenePulleyTeethNum;
         
-        double reverseTime = 330;
+        double reverseTime = 335;
         double spinUpTime = 0;
         double shootTime = 10000;
 
@@ -123,13 +123,13 @@ public interface Constants {
         double krakenI = 0.0;
         double krakenD = 0.0;
         /** Krakens */
-        double talonControllerAcceleration = 240;
+        double talonControllerAcceleration = 380;
         /** Krakens */
         double voltageControllerVelocity = 12;
-        // feed forward for kraken
+        /** feed forward for kraken*/ 
         double kV = .12;
         /** Speed used when <code>WindUp.java</code> just wants to shoot as hard as possible */
-        double shooterDefaultMaxSpeed = 390;
+        double shooterDefaultMaxSpeed = 420;
 
 
 
@@ -177,12 +177,12 @@ public interface Constants {
         int leftID = 9;
         int rightID = 10;
 
-        double extendSpeed = 0.15;
-        double retractSpeed = 0.4;
+        double extendSpeed = 0.6;
+        double retractSpeed = 0.9;
         double extendTime = 300;
         // double retractTime = 600;
 
-        double currentDifferenceThreshold = 0.5; //TODO: Tune value
+        double currentDifferenceThreshold = 7; //TODO: Tune value
 
         double winchP = 0;;
         double winchI = 0;

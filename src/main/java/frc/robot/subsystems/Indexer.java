@@ -15,6 +15,7 @@ public class Indexer extends SubsystemBase implements Constants.Indexer {
   public Indexer() {
       indexerMotor = new CANSparkMax(indexID, MotorType.kBrushless);
       ringSensor = new AnalogInput(0);
+      indexerMotor.setVoltage(12);
   }
 
   /**
