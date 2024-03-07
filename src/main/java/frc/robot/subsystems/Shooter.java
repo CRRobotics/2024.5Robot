@@ -70,6 +70,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         krakenSlotConfig.kP = krakenP;
         krakenSlotConfig.kI = krakenI;
         krakenSlotConfig.kD = krakenD;
+        krakenSlotConfig.kV = Constants.Shooter.kV;
 
         
         leftShooterMotor.getConfigurator().apply(krakenSlotConfig);

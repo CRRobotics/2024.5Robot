@@ -50,12 +50,13 @@ public interface Constants {
             new Translation2d(-wheelBase / 2, -trackWidth / 2));
         /** Swerve Max Speed in m/s.
          * <p>(copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java) */
-        double maxSpeed = 1.5;
-        double maxAcceleration = 1.25;
+        double maxSpeed = 2.5;
+        double maxAcceleration = 1.8;
         /** radians per second */
         double maxAngularSpeed = 2 * Math.PI;
         /** radians per second squared */
-        double maxAngularAcceleration = 2 * Math.PI;
+        double maxAngularAcceleration = 4 * Math.PI;
+
         /** possibly determines whether gyro is reversed */
         boolean gyroReversed = true;
 
@@ -89,7 +90,7 @@ public interface Constants {
     interface Indexer {
         int indexID = 12;
         /** units? */
-        double indexIntakeSpeed = -0.6;
+        double indexIntakeSpeed = -0.68;
         /** units? */
         double indexRejectSpeed = 0.3;
         /** units? */
@@ -112,7 +113,7 @@ public interface Constants {
         /** Belt between krakens and shooter flywheels */
         double beltRatio = 160.0 / 50.0;
         
-        double reverseTime = 300;
+        double reverseTime = 330;
         double spinUpTime = 0;
         double shootTime = 10000;
 
@@ -123,7 +124,8 @@ public interface Constants {
         double talonControllerAcceleration = 240;
         /** Krakens */
         double voltageControllerVelocity = 12;
-
+        // feed forward for kraken
+        double kV = .12;
         /** Speed used when <code>WindUp.java</code> just wants to shoot as hard as possible */
         double shooterDefaultMaxSpeed = 390;
 
@@ -160,11 +162,11 @@ public interface Constants {
         /** slotID for Neo SmartMotion */
         int slotID = 0;
         /** For the azimuth neos */
-        double smartMotionMaxVelocity = 120;
+        double smartMotionMaxVelocity = 225;
         /** For the azimuth neos */
         double smartMotionMinVelocity = 0;
         /** For the azimuth neos */
-        double smartMotionMaxAccel = 1;
+        double smartMotionMaxAccel = 5;
         /** For the azimuth neos */
         double smartMotionAllowedClosedLoopError = 0;
     }
