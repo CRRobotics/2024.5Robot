@@ -26,16 +26,16 @@ public class Collect extends Command implements Constants.Shooter{
         this.acq = acq;
         this.indexer = indexer;
         this.shooter = shooter;
-        case1 = false;
-        case2 = false;
-        case3 = false;
-        case4 = false;
-        finished = false;
     }
 
     @Override
     public void initialize() {
         shooter.aim(Constants.Shooter.interfaceAngle);
+        case1 = false;
+        case2 = false;
+        case3 = false;
+        case4 = false;
+        finished = false;
     }
 
     @Override
