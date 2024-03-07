@@ -105,7 +105,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
                 case2 = true;
             }
             else if (case2 && Math.abs(shooter.getAngle() - shootAngleSpeed.getAngle()) < .08) {
-                indexer.setSpeed(Constants.Indexer.indexShootSpeed*2);
+                indexer.setSpeed(Constants.Indexer.indexShootSpeed*4.5);
                 shootStartTime = System.currentTimeMillis();
                 case3 = true;
             }
