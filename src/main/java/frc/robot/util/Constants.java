@@ -138,7 +138,7 @@ public interface Constants {
 
         double restAngle = 4.3;
         /** angle at which intake feeds indexer nicely */
-        double interfaceAngle = 4.4;
+        double interfaceAngle = 4.42;
         /** angle at which indexer can push the note back into the intake nicely */
         double rejectInterfaceAngle = 4.43;
         /** tolerence for interface angle */
@@ -156,7 +156,7 @@ public interface Constants {
 
 
         // Systems controll parameters
-        double sparkP = 0.05;
+        double sparkP = 0.01;
         double sparkI = 0;
         double sparkD = 0;
         double sparkFF = 0;
@@ -164,11 +164,11 @@ public interface Constants {
         /** slotID for Neo SmartMotion */
         int slotID = 0;
         /** For the azimuth neos */
-        double smartMotionMaxVelocity = 225;
+        double smartMotionMaxVelocity = 200;
         /** For the azimuth neos */
         double smartMotionMinVelocity = 0;
         /** For the azimuth neos */
-        double smartMotionMaxAccel = 5;
+        double smartMotionMaxAccel = 3.8;
         /** For the azimuth neos */
         double smartMotionAllowedClosedLoopError = 0;
     }
