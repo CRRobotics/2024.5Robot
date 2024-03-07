@@ -62,6 +62,13 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
 
 
 
+        /*Quoted Directly from Adam Newhouse
+         * Tuning kV and then adding a small amount of kP gain is the best way to tune a flywheel
+         *A flywheel is basically an almost perfect linear system where kV will do most of the work   
+         *If you are using the kraken encoder as feedback you will be measuring the motor rpm not the flywheel which is fine
+         *If you change the gear ratio later, you can proportionally adjust kV and only need minor retuning. 
+         *The existing lookup table will most likely continue to work if you adjust it proportionally to the gear ratio change.
+         */
         
         // voltageController =  new VelocityVoltage(0, 0, false, kF,
         //     0, false, true, true);
