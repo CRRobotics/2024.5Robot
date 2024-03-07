@@ -48,6 +48,7 @@ public class Climb extends Command implements Constants.Winch
     @Override
     public void execute() {
         if (Math.abs((winch.getCurrentDifference()/2)) >= currentDifferenceThreshold) {
+            System.out.println("lbbuehhel");
             winch.setSpeed(0);
             finished = true;
             return;
