@@ -18,6 +18,7 @@ public class Collect extends Command implements Constants.Shooter{
     Boolean case3;
     Boolean case4;
     long outdexStartTime;
+    long semiShotTime;
     Boolean finished;
 
 
@@ -50,30 +51,6 @@ public class Collect extends Command implements Constants.Shooter{
     public void end(boolean interrupted) {
         acq.stop();
         indexer.stop(); 
-        if(!case1)
-            {
-                outdexStartTime = System.currentTimeMillis();
-                case1 = true;
-                indexer.reject();
-            }
-            else if (!case2 && System.currentTimeMillis() >= outdexStartTime + reverseTime) 
-            {
-                indexer.setSpeed(0);
-                indexer.setSpeed(Constants.Indexer.indexShootSpeed*2);
-                case2 = true;
-            }
-            else if (!case3)
-            {
-                outdexStartTime = System.currentTimeMillis();
-                case3 = true;
-                indexer.reject();
-            }
-            else if(!case4 && System.currentTimeMillis() >= outdexStartTime + reverseTime)
-            {
-                indexer.setSpeed(0);
-                finished = true;
-                case4 = true;
-            }
     }
 
     @Override
