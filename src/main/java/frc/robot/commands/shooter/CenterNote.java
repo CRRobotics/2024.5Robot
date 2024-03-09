@@ -9,7 +9,7 @@ public class CenterNote extends Command implements Constants.Shooter, Constants.
     private long conveyStartTime;
     private Shooter shooter;
     private Indexer indexer;
-    private enum State {NULL, RETRACT, THROW, GRAB};
+    private enum State {START, RETRACT, THROW, GRAB};
     State state;
     private boolean finished;
 
@@ -18,20 +18,20 @@ public class CenterNote extends Command implements Constants.Shooter, Constants.
         addRequirements(indexer);
         this.shooter = shooter;
         this.indexer = indexer;
-        state = State.NULL;
+        state = State.START;
         finished = false;
     }
 
     @Override
     public void initialize() {
         conveyStartTime = System.currentTimeMillis();
-        state = State.NULL;
+        state = State.START;
     }
 
     @Override
     public void execute() {
         switch (state) {
-            case NULL:
+            case START:
                 conveyStartTime = System.currentTimeMillis();
                 state = State.RETRACT;
                 System.out.println("Centering note: retracting");
@@ -52,6 +52,7 @@ public class CenterNote extends Command implements Constants.Shooter, Constants.
                     System.out.println("Centering note: grabbing");
                 }
                 break;
+            /** Pulls the note back in a little bit so the indexer holds note in place for amp shot */
             case GRAB:
                 if (indexer.seesRing()) {
                     indexer.intake();
