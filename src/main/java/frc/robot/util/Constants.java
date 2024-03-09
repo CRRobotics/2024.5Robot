@@ -115,7 +115,8 @@ public interface Constants {
         double flywheelPulleyTeethNum = 24;
         double beltRatio = flywheelPulleyTeethNum / krakenePulleyTeethNum;
         
-        double reverseTime = 200;
+        double outdexTime = 200;
+        double conveyTime = 200;
         double spinUpTime = 0;
         double shootTime = 1200;
 

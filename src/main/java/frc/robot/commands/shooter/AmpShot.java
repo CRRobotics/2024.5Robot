@@ -83,7 +83,7 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
                 case1 = true;
                 indexer.reject();
             }
-            else if (!case2 && System.currentTimeMillis() >= outdexStartTime + reverseTime) {
+            else if (!case2 && System.currentTimeMillis() >= outdexStartTime + outdexTime) {
                 indexer.setSpeed(0);
                 case2 = true;
             }

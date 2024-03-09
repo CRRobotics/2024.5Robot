@@ -107,7 +107,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
                 break;
             case outdexStart:
                 indexer.reject();
-                if(System.currentTimeMillis() >= outdexStartTime + reverseTime) 
+                if(System.currentTimeMillis() >= outdexStartTime + outdexTime) 
                 {
                     indexer.setSpeed(indexIntakeSpeed * 3);
                     shootingProgress = ShootingProgress.indexStart;
@@ -120,8 +120,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
                     if (indexer.seesRing()) {
                       shootingProgress = ShootingProgress.shootAngleAlign;  
                     }
-                    else
-                        finished = true;
+                    else finished = true;
                 }
                 break;
         }     

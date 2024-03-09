@@ -2,6 +2,7 @@ package frc.robot.commands.acquisition;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
+import frc.robot.commands.shooter.SpeakerShot;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.Constants;
@@ -32,10 +33,6 @@ public class Collect extends Command implements Constants.Shooter{
     @Override
     public void initialize() {
         shooter.aim(Constants.Shooter.interfaceAngle);
-        case1 = false;
-        case2 = false;
-        case3 = false;
-        case4 = false;
         finished = false;
     }
 
@@ -50,7 +47,8 @@ public class Collect extends Command implements Constants.Shooter{
     @Override
     public void end(boolean interrupted) {
         acq.stop();
-        indexer.stop(); 
+        indexer.stop();
+        SpeakerShot.eskejhflksje
     }
 
     @Override
