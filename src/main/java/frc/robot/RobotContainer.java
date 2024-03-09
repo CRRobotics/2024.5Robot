@@ -109,7 +109,7 @@ public class RobotContainer {
     //new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new DriveFast());
 
     // TODO: Move these to the operator controller (as part of re-designing the input system for competition though)
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, driveTrain, indexer, distanceXY).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain, acq, indexer, shooter));
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
     new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer, shooter));

@@ -21,24 +21,19 @@ import frc.robot.util.ValueFromDistance;
 public class SpeakerShot extends Command implements Constants.Field, Constants.Shooter, Constants.Indexer {
     //eventually need other subsystems
     private Shooter shooter;
-    private DriveTrain driveTrain;
     private Indexer indexer;
-    private DistanceXY distanceXY;
-    private long startTime;
     private AngleSpeed shootAngleSpeed;
     private long outdexStartTime;
     private long indexStartTime;
-    private long shootStartTime;
-    private boolean case1;
-    private boolean case2;
-    private boolean case3;
+    // private long shootStartTime;
+    // private boolean case1;
+    // private boolean case2;
+    // private boolean case3;
     private boolean finished;
     private ShootingProgress shootingProgress;
 
-    public SpeakerShot(Shooter shooter, DriveTrain driveTrain, Indexer indexer, DistanceXY distanceXY) {
+    public SpeakerShot(Shooter shooter, Indexer indexer) {
         this.shooter = shooter;
-        this.driveTrain = driveTrain;
-        this.distanceXY = distanceXY;
         // shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(distanceXY.getDistanceToSpeaker());
         this.indexer = indexer;
 
@@ -56,7 +51,6 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
         // remove this line later
         shootAngleSpeed = new AngleSpeed(SmartDashboard.getNumber("pivot setpoint", 4.3), SmartDashboard.getNumber("velocity setpoint", 0));
         
-        startTime = System.currentTimeMillis();
         shooter.aim(shootAngleSpeed.getAngle());
         shooter.setSpeed(shootAngleSpeed.getSpeed());
             
