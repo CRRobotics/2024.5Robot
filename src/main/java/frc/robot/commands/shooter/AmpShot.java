@@ -20,6 +20,12 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
     private Shooter shooter;
     private DriveTrain driveTrain;
     private Indexer indexer;
+    private boolean case1;
+    private boolean case2;
+    private boolean case3;
+    private boolean finished;
+    private long outdexStartTime;
+    private long shootStartTime;
 
     private long startTime;
 
@@ -56,22 +62,43 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
         // else
         // added new constants 2/29/24 please update in futue
         startTime = System.currentTimeMillis();
-        shooter.aim(Constants.Shooter.ampSetPoint);
-        shooter.setSpeed(Constants.Shooter.ampShotSpeed);
-        indexer.reject();
+        shooter.aim(6);
+        shooter.setSpeed(7);
+        // indexer.reject();
+
+        case1 = false;
+        case2 = false;
+        case3 = false;
+        finished = false;
     }
 
     @Override
     public void execute() {
-        if (System.currentTimeMillis() >= startTime + reverseTime) {
-            indexer.stop();
-        }
-
-        if (Math.abs(shooter.getSpeed() - Constants.Shooter.ampShotSpeed) < 5) { //5 is arbitraty plaese fiure out if its okay
-        //    shooter.setSpeed(shootAngleSpeed.getSpeed());
-        // above line likely unecessary
-            indexer.intake();
-        }
+        //maybe use an enum instead of cases
+        if (shooter.getAngle() > Constants.Shooter.limeLightWarningZone || Math.abs(shooter.getAngle() - Constants.Shooter.ampSetPoint) < .08) //.08 radians is quite close but idk
+        {
+            if(!case1)
+            {
+                outdexStartTime = System.currentTimeMillis();
+                case1 = true;
+                indexer.reject();
+            }
+            else if (!case2 && System.currentTimeMillis() >= outdexStartTime + reverseTime) {
+                indexer.setSpeed(0);
+                case2 = true;
+            }
+            else if (case2 && !case3 && Math.abs(shooter.getAngle() - Constants.Shooter.ampSetPoint) < .08) {
+                indexer.setSpeed(Constants.Indexer.indexShootSpeed*4.5);
+                shootStartTime = System.currentTimeMillis();
+                case3 = true;
+            }
+            else if(case3 && System.currentTimeMillis() > shootStartTime + 1000)
+            {
+                finished = true;
+            }
+            
+        
+    }
     }
 
     @Override
@@ -79,15 +106,15 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
         indexer.stop();
         // acquisition.stopAcquisitionMotor();
         shooter.aim(interfaceAngle); // i set this to interface angle because thats where it should go next.
-        andThen(new WindUp(ShooterState.maxSpeed, shooter));
+        shooter.setSpeed(0);
     }
 
     @Override
     public boolean isFinished() {
-        if (System.currentTimeMillis() > startTime + shootTime)
-            return true;
-        //TODO: cancel when button pressed
-        return false;
+        if (finished)
+        return true;
+    //TODO: cancel when button pressed
+    return false;
 
 
     }

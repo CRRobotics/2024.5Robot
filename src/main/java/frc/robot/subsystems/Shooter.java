@@ -114,6 +114,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         SmartDashboard.putNumber("pivot/p", sparkP);
         SmartDashboard.putNumber("pivot/i", sparkI);
         SmartDashboard.putNumber("pivot/d", sparkD);
+        SmartDashboard.putNumber("pivot/ff", sparkFF);
         SmartDashboard.putNumber("shooter KP", krakenP);
         SmartDashboard.putNumber("shooter KI", krakenI);
         SmartDashboard.putNumber("shooter KD", krakenD);
@@ -203,6 +204,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         sparkPid.setP(SmartDashboard.getNumber("pivot/p", 0));
         sparkPid.setI(SmartDashboard.getNumber("pivot/i", 0));
         sparkPid.setD(SmartDashboard.getNumber("pivot/d", 0));
+        sparkPid.setFF(SmartDashboard.getNumber("pivot/ff", 0));
 
         leftShooterMotor.getConfigurator().apply(krakenSlotConfig);
         SmartDashboard.putNumber("shooter/velocity", getSpeed());

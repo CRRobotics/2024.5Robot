@@ -115,7 +115,7 @@ public interface Constants {
         double flywheelPulleyTeethNum = 24;
         double beltRatio = flywheelPulleyTeethNum / krakenePulleyTeethNum;
         
-        double reverseTime = 335;
+        double reverseTime = 200;
         double spinUpTime = 0;
         double shootTime = 1200;
 
@@ -156,10 +156,10 @@ public interface Constants {
 
 
         // Systems controll parameters
-        double sparkP = 0.01;
+        double sparkP = 0.05;
         double sparkI = 0;
         double sparkD = 0;
-        double sparkFF = 0;
+        double sparkFF = 0.01;
 
         /** slotID for Neo SmartMotion */
         int slotID = 0;
@@ -168,7 +168,7 @@ public interface Constants {
         /** For the azimuth neos */
         double smartMotionMinVelocity = 0;
         /** For the azimuth neos */
-        double smartMotionMaxAccel = 3.8;
+        double smartMotionMaxAccel = 4.5;
         /** For the azimuth neos */
         double smartMotionAllowedClosedLoopError = 0;
     }
