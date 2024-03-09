@@ -11,55 +11,63 @@ public class CenterNote extends Command implements Constants.Shooter, Constants.
     private Indexer indexer;
     private enum State {NULL, RETRACT, THROW, GRAB};
     State state;
+    private boolean finished;
 
     public CenterNote(Shooter shooter, Indexer indexer) {
         addRequirements(shooter);
         addRequirements(indexer);
         this.shooter = shooter;
         this.indexer = indexer;
-        state = State.RETRACT;
+        state = State.NULL;
+        finished = false;
     }
 
     @Override
     public void initialize() {
-        state = State.RETRACT;
+        conveyStartTime = System.currentTimeMillis();
+        state = State.NULL;
     }
 
     @Override
     public void execute() {
-
+        switch (state) {
+            case NULL:
+                conveyStartTime = System.currentTimeMillis();
+                state = State.RETRACT;
+                System.out.println("Centering note: retracting");
+                break;
+            case RETRACT:
+                if(System.currentTimeMillis() < conveyStartTime + outdexTime) {
+                    indexer.reject();
+                } else {
+                    state = State.THROW;
+                    System.out.println("Centering note: throwing");
+                }
+                break;
+            case THROW:
+                if(System.currentTimeMillis() < conveyStartTime + outdexTime + conveyTime) {
+                    indexer.setSpeed(indexIntakeSpeed * 3);
+                } else {
+                    state = State.GRAB;
+                    System.out.println("Centering note: grabbing");
+                }
+                break;
+            case GRAB:
+                if (indexer.seesRing()) {
+                    indexer.intake();
+                } else {finished = true;}
+        }
     }
 
     
 
     @Override
     public void end(boolean interrupted) {
+        System.out.println("CenterNote ended");
     }
 
     @Override
     public boolean isFinished() {
-        return false;
-    }
-
-    public boolean conveyNote() {
-        switch (state) {
-            case NULL:
-                conveyStartTime = System.currentTimeMillis();
-                state = State.RETRACT;
-            case RETRACT:
-                if(System.currentTimeMillis() < conveyStartTime + outdexTime) {
-                    indexer.reject();
-                } else {
-                    state = State.THROW;
-                }
-                break;
-            case THROW:
-                if(System.currentTimeMillis() < conveyStartTime + outdexTime + conveyTime) {
-                    indexer.intake();
-                } else {
-                    state = State.GRAB;
-                }
-                break;
-        }
+        return finished;
     }
 }

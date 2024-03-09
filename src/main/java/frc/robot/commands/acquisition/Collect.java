@@ -2,6 +2,7 @@ package frc.robot.commands.acquisition;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
+import frc.robot.commands.shooter.CenterNote;
 import frc.robot.commands.shooter.SpeakerShot;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
@@ -74,7 +75,7 @@ public class Collect extends Command implements Constants.Shooter{
     public void end(boolean interrupted) {
         acq.stop();
         indexer.stop();
-        SpeakerShot.eskejhflksje
+        new CenterNote(shooter, indexer).schedule();
     }
 
     @Override
