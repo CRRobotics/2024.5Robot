@@ -37,6 +37,7 @@ public class DriveToRing extends Command{
     Shooter shooter;
     private boolean isFinished = false;
     private Command drive;
+    private Command collect;
     private int i = 0;
 
     /**
@@ -74,7 +75,7 @@ public class DriveToRing extends Command{
             //     (boolean interrupted) -> {
             //         isFinished = true;
             //     });
-            drive.schedule();
+            collect = new Collect(acq, indexer, shooter);
         }
 
         @Override
@@ -109,6 +110,7 @@ public class DriveToRing extends Command{
             // }
             SmartDashboard.putNumber("distance forward", pieceData[1]);
             SmartDashboard.putNumber("distance horizontal", pieceData[0]);
+            collect.schedule();
         }
 
         @Override
