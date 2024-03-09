@@ -421,10 +421,12 @@ public Command followPathCommand(PathPlannerPath path) {
     public Pathfinder getPathFinder(){
         return pathFinder;
     }
+    
     /**
      * Updates the list of obstacles for path planning.
      * 
      * This method is currently commented out and not used until network tables are ready
+     * @deprecated
      */
     public void updateObstacles(){
         // // NetworkTableWrapper.getDouble(i, "rx");
