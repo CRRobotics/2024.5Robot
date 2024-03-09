@@ -20,6 +20,7 @@ public class Indexer extends SubsystemBase implements Constants.Indexer {
 
   /**
   * Intakes the note
+  @return if the beam is broken
   */
   public boolean intake() {
     if (!seesRing()){

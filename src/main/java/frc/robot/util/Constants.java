@@ -159,7 +159,7 @@ public interface Constants {
         double sparkP = 0.05;
         double sparkI = 0;
         double sparkD = 0;
-        double sparkFF = 0.01;
+        double sparkFF = 0.00;
 
         /** slotID for Neo SmartMotion */
         int slotID = 0;
