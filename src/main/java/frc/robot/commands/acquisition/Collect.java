@@ -21,6 +21,7 @@ public class Collect extends Command implements Constants.Shooter{
     long outdexStartTime;
     long semiShotTime;
     Boolean finished;
+    Stage stage;
 
 
     public Collect(Intake acq, Indexer indexer, Shooter shooter)
@@ -34,13 +35,38 @@ public class Collect extends Command implements Constants.Shooter{
     public void initialize() {
         shooter.aim(Constants.Shooter.interfaceAngle);
         finished = false;
+        stage = Stage.stage0;
     }
 
     @Override
     public void execute()
     { 
-        if(!indexer.intake() && shooter.isInterfaced()) {
+        if(!indexer.intake() && shooter.isInterfaced() && stage == Stage.stage0) {
             acq.collect();
+        } else if(stage == Stage.stage0) {
+            stage = Stage.stage1;
+        }
+
+        switch(stage) {
+            case stage0:
+                break;
+            case stage1:
+                indexer.reject();
+                outdexStartTime = System.currentTimeMillis();
+                stage = Stage.stage2;
+                break;
+            case stage2:
+                if (System.currentTimeMillis() >= outdexStartTime + 200) {
+                    stage = Stage.stage3;
+                }
+                break;
+            case stage3:
+                if (indexer.intake()) {
+                    finished = true;
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -53,8 +79,13 @@ public class Collect extends Command implements Constants.Shooter{
 
     @Override
     public boolean isFinished() {
-        if(finished)
-            return true;
-        return false;
+        return finished;
     }
+}
+
+enum Stage {
+    stage0,
+    stage1,
+    stage2,
+    stage3
 }

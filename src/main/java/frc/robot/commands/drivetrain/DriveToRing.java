@@ -48,6 +48,7 @@ public class DriveToRing extends Command{
         this.driveTrain = driveTrain;
         this.acq = acq;
         this.indexer = indexer;
+        this.shooter = shooter;
         SmartDashboard.putNumber("piece/a", 0);
         SmartDashboard.putNumber("piece/b", 0);
     }
