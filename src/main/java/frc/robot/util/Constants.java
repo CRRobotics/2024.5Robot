@@ -117,7 +117,7 @@ public interface Constants {
         
         double reverseTime = 200;
         double spinUpTime = 0;
-        double shootTime = 10000;
+        double shootTime = 1200;
 
         double krakenP = 0.09;
         double krakenI = 0.0;

@@ -23,10 +23,8 @@ import frc.robot.util.Constants;
  */
 public class Winch extends SubsystemBase implements Constants.Winch 
 {
-    public SparkLimitSwitch topLeftSwitch;
-    public SparkLimitSwitch bottomLeftSwitch;
-    public SparkLimitSwitch topRightSwitch;
-    public SparkLimitSwitch bottomRightSwitch;
+    public static SparkLimitSwitch leftSwitch;
+    public static SparkLimitSwitch rightSwitch;
     CANSparkMax leftClimbMotor;
     CANSparkMax rightClimbMotor;
     SparkPIDController winchPid;
@@ -40,16 +38,12 @@ public class Winch extends SubsystemBase implements Constants.Winch
     public Winch()
     {
         leftClimbMotor = new CANSparkMax(leftID, MotorType.kBrushless);
-        topLeftSwitch = leftClimbMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.fromId(leftID));
-        topLeftSwitch.enableLimitSwitch(true);
-        bottomLeftSwitch = leftClimbMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.fromId(leftID));
-        bottomLeftSwitch.enableLimitSwitch(true);
+        leftSwitch = leftClimbMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.fromId(leftID));
+        leftSwitch.enableLimitSwitch(true);
 
         rightClimbMotor = new CANSparkMax(rightID, MotorType.kBrushless);
-        topRightSwitch = rightClimbMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.fromId(rightID));
-        topRightSwitch.enableLimitSwitch(true);
-        bottomRightSwitch = rightClimbMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.fromId(rightID));
-        bottomRightSwitch.enableLimitSwitch(true);
+        rightSwitch = rightClimbMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.fromId(rightID));
+        rightSwitch.enableLimitSwitch(true);
 
 
         SmartDashboard.putNumber("winch/p", winchP);
