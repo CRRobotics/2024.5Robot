@@ -1,12 +1,8 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 
@@ -21,44 +17,34 @@ public class LED extends SubsystemBase {
     int tickSpeed;
     int state;
     // state is a variable to determine whether red green and blue should be increasing or decreasing.
-    
+
     @Override
     public void periodic() {
-        // switch (RobotContainer.colorTable.getSelected()) {
-        //     case "red":
-        //     ColorWrapRGB(255, 0, 0);
-        //     break;
-        //     case "orange":
-        //     ColorWrapRGB(255, 165, 0);
-        //     break;
-        //     case "rainbow":
-        //     tick();
-        //     break;
-        //     default:
-        //     ColorWrapRGB(0, 0, 0);
-        //     break;
-            
-        // }
-        // led.setData(ledBuffer);
+        switch (RobotContainer.colorTable.getSelected()) {
+            case OFF:
+                setColor(new Color(0, 0, 0));
+                break;
+            case RAINBOW:
+                tick();
+                break;
+            case DRIVING:
+                setColor(new Color(5, 255, 25));
+                break;
+            case AUTO_DRIVING:
+                blink(new Color[]{new Color(5, 255, 25), new Color(255, 0, 0)});
+                break;
+            case AUTO_COLLECTING:
+                setColor(new Color(0, 255, 0));
+                break;
+            case COLLECTED:
+                setColor(new Color(255, 255, 0));
+                break;
+            case AUTO_SHOOTING:
+                setColor(new Color(0, 0, 255));
+                break;
+        }
+        led.setData(ledBuffer);
     }
-
-    // public static SendableChooser<String> colorTable = new SendableChooser<>();
-    // public static SendableChooser<Integer> tickSpeedChooser = new SendableChooser<>();
-
-    // static {
-    //   colorTable.addOption("red", "red");
-    //   colorTable.addOption("blue", "blue");
-    //   colorTable.addOption("rainbow", "rainbow");
-
-    //   colorTable.setDefaultOption("orange", "orange");
-    //   tickSpeedChooser.setDefaultOption("one", 2);
-    //   tickSpeedChooser.addOption("one", 1);
-    //   tickSpeedChooser.addOption("five", 5);
-    //   tickSpeedChooser.addOption("ten", 10);
-
-    //   SmartDashboard.putData(colorTable);
-    //   SmartDashboard.putData(tickSpeedChooser);
-    // }
 
     public LED(int length) {
         led = new AddressableLED(0);
@@ -73,11 +59,21 @@ public class LED extends SubsystemBase {
         state = 0;
         h = 0;
     }
-    public boolean ColorWrapRGB(int r, int g, int b) {
-        Color color = new Color(r,g,b);
-        setColor(color);
-        return false;
+
+    private long blinkTime = 0;
+    public void blink(Color[] colors) {
+        long elapsedTime = System.currentTimeMillis() - blinkTime;
+        if (elapsedTime > (500 * colors.length)) {
+            blinkTime = System.currentTimeMillis();
+        }
+        setColor(colors[(int)(elapsedTime / (500 * colors.length))]);
     }
+
+    // public boolean ColorWrapRGB(int r, int g, int b) {
+    //     Color color = new Color(r,g,b);
+    //     setColor(color);
+    //     return false;
+    // }
 
     public boolean ColorWrapHSV(int h, int s, int v) {
         Color color = Color.fromHSV(h,s,v);
@@ -99,10 +95,10 @@ public class LED extends SubsystemBase {
         h++;
     }
 
-    // public void tick() {
-    //     for(int i = 0; i < RobotContainer.tickSpeedChooser.getSelected(); i++)
-    //     {
-    //         betterRainbow();
-    //     }
-    // }
+    public void tick() {
+        for(int i = 0; i < RobotContainer.tickSpeedChooser.getSelected(); i++)
+        {
+            betterRainbow();
+        }
+    }
 }

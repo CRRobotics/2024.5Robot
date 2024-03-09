@@ -24,6 +24,7 @@ public class CenterNote extends Command implements Constants.Shooter, Constants.
 
     @Override
     public void initialize() {
+        // TODO: Spin shooter wheels backwards
         conveyStartTime = System.currentTimeMillis();
         state = State.START;
     }
