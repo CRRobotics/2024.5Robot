@@ -233,6 +233,9 @@ public interface Constants {
          * Note positions for auto
          */
         interface NotePositions {
+            //Throw these points as end points into path planner
+            //trust, it's dead accurate
+            //move the bot center ontop a ring
             Translation2d[] kNotesStartingMidline = {
                 new Translation2d(8.258, 7.462),
                 new Translation2d(8.258, 5.785),
