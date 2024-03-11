@@ -1,22 +1,11 @@
 package frc.robot.commands.shooter;
 
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Robot;
-import frc.robot.RobotContainer;
-import frc.robot.commands.drivetrain.TurnToSpeaker;
-import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.AngleSpeed;
 import frc.robot.util.Constants;
-import frc.robot.util.DistanceXY;
-import frc.robot.util.ShooterState;
-import frc.robot.util.ValueFromDistance;
 
 public class SpeakerShot extends Command implements Constants.Field, Constants.Shooter, Constants.Indexer {
     //eventually need other subsystems
@@ -30,6 +19,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     // private boolean case2;
     // private boolean case3;
     private boolean finished;
+    private enum ShootingProgress {ALIGN, OUTDEX, INDEX}
     private ShootingProgress shootingProgress;
 
     public SpeakerShot(Shooter shooter, Indexer indexer) {
@@ -55,7 +45,7 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
         shooter.setSpeed(shootAngleSpeed.getSpeed());
             
         
-        shootingProgress = ShootingProgress.shootAngleAlign;
+        shootingProgress = ShootingProgress.ALIGN;
     }
     
     // @Override
@@ -97,31 +87,30 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     @Override
     public void execute() {
         switch (shootingProgress) {
-            case shootAngleAlign:
+            case ALIGN:
                 shooter.aim(shootAngleSpeed.getAngle());
                 if (Math.abs(shooter.getAngle() - shootAngleSpeed.getAngle()) < .08) //.08 radians is quite close but idk
                 {
-                    shootingProgress = ShootingProgress.outdexStart;
+                    shootingProgress = ShootingProgress.OUTDEX;
                     outdexStartTime = System.currentTimeMillis();
                 }
                 break;
-            case outdexStart:
+            case OUTDEX:
                 indexer.reject();
-                if(System.currentTimeMillis() >= outdexStartTime + reverseTime) 
+                if(System.currentTimeMillis() >= outdexStartTime + outdexTime) 
                 {
                     indexer.setSpeed(indexIntakeSpeed * 3);
-                    shootingProgress = ShootingProgress.indexStart;
+                    shootingProgress = ShootingProgress.INDEX;
                     indexStartTime = System.currentTimeMillis();
                 }
                 break;
-            case indexStart:
+            case INDEX:
                 if (System.currentTimeMillis() > indexStartTime + shootTime) 
                 {
                     if (indexer.seesRing()) {
-                      shootingProgress = ShootingProgress.shootAngleAlign;  
+                      shootingProgress = ShootingProgress.ALIGN;  
                     }
-                    else
-                        finished = true;
+                    else finished = true;
                 }
                 break;
         }     

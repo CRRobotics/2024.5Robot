@@ -1,21 +1,14 @@
 package frc.robot.subsystems;
-import java.net.CacheRequest;
-
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.SparkLimitSwitch;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -23,9 +16,6 @@ import com.revrobotics.SparkLimitSwitch.Type;
 import com.revrobotics.SparkPIDController.AccelStrategy;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.motorcontrol.NidecBrushless;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
@@ -51,6 +41,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
     public double shooterVelocity;
 
     public Shooter() {
+        // #FLYWHEEL
         // Documentation for TalonFX: https://v6.docs.ctr-electronics.com/en/stable/docs/migration/migration-guide/index.html
         leftShooterMotor = new TalonFX(leftShooterMotorID);
         leftShooterMotor.setNeutralMode(NeutralModeValue.Coast);
@@ -59,9 +50,6 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
 
         rightShooterMotor = new TalonFX(rightShooterMotorID);
         rightShooterMotor.setNeutralMode(NeutralModeValue.Coast);
-
-
-
 
         /*Quoted Directly from Adam Newhouse
          * Tuning kV and then adding a small amount of kP gain is the best way to tune a flywheel
@@ -80,15 +68,16 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         krakenSlotConfig.kD = krakenD;
         krakenSlotConfig.kV = Constants.Shooter.kV;
         
+
         leftShooterMotor.getConfigurator().apply(krakenSlotConfig);
         
+        // AZIMUTH
         pivotMotor = new CANSparkMax(pivotMotorID, MotorType.kBrushless);
         pivotMotor.setIdleMode(IdleMode.kBrake);
 
         pivotEncoderType = SparkAbsoluteEncoder.Type.kDutyCycle;
         pivotEncoder = pivotMotor.getAbsoluteEncoder(pivotEncoderType);
 
-       
         pid = new PIDController(0, 0, 0);
         sparkPid = pivotMotor.getPIDController();
 
@@ -96,7 +85,6 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         sparkPid.setI(sparkI);
         sparkPid.setD(sparkD);
         sparkPid.setFF(sparkFF);
-
 
         
 
@@ -130,20 +118,21 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         // SmartDashboard.putNumber("shooter/velocity", leftShooterMotor.getVelocity().getValue());
     }
 
-    public double getSpeed(){
-        
+    public double getSpeed()
+    {
         SmartDashboard.putNumber("shooter/left current", leftShooterMotor.getTorqueCurrent().getValueAsDouble());
         SmartDashboard.putNumber("shooter/right current", rightShooterMotor.getTorqueCurrent().getValueAsDouble());
 
         return leftShooterMotor.getVelocity().getValue() * beltRatio;
-
     }
+
     public double getAngle()
     {
         return pivotEncoder.getPosition();
     }
 
-    public boolean isInterfaced() {
+    public boolean isInterfaced()
+    {
         return (Math.abs(pivotEncoder.getPosition() - Constants.Shooter.interfaceAngle) < Constants.Shooter.interfaceError); // error is .08 down from .1
     }
 
@@ -186,16 +175,12 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         //pivotMotor.getAbsoluteEncoder.getPosition();
     }
 
-    // public double angleFromVisions()
-    // {
-        
-    // }
-
     public void testAim(double setPoint)
     {
         System.out.println(pivotEncoder.getPosition());
         sparkPid.setReference(setPoint, CANSparkMax.ControlType.kSmartMotion);
     }
+
     @Override
     public void periodic() {
         krakenSlotConfig.kP = SmartDashboard.getNumber("shooter KP", 0);
