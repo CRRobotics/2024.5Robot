@@ -50,8 +50,8 @@ public interface Constants {
             new Translation2d(-wheelBase / 2, -trackWidth / 2));
         /** Swerve Max Speed in m/s.
          * <p>(copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java) */
-        double maxSpeed = 2.5;
-        double maxAcceleration = 1.8;
+        double maxSpeed = 0.5;
+        double maxAcceleration = 0.5;
         /** radians per second */
         double maxAngularSpeed = 2 * Math.PI;
         /** radians per second squared */
@@ -138,7 +138,7 @@ public interface Constants {
 
         double restAngle = 4.3;
         /** angle at which intake feeds indexer nicely */
-        double interfaceAngle = 4.42;
+        double interfaceAngle = 4.46;
         /** angle at which indexer can push the note back into the intake nicely */
         double rejectInterfaceAngle = 4.43;
         /** tolerence for interface angle */
@@ -156,7 +156,7 @@ public interface Constants {
 
 
         // Systems controll parameters
-        double sparkP = 0.05;
+        double sparkP = 0.0085;
         double sparkI = 0;
         double sparkD = 0;
         double sparkFF = 0.00;
@@ -164,11 +164,11 @@ public interface Constants {
         /** slotID for Neo SmartMotion */
         int slotID = 0;
         /** For the azimuth neos */
-        double smartMotionMaxVelocity = 200;
+        double smartMotionMaxVelocity = 120;
         /** For the azimuth neos */
         double smartMotionMinVelocity = 0;
         /** For the azimuth neos */
-        double smartMotionMaxAccel = 4.5;
+        double smartMotionMaxAccel = 90;
         /** For the azimuth neos */
         double smartMotionAllowedClosedLoopError = 0;
     }
@@ -214,7 +214,7 @@ public interface Constants {
         double balanceI = 0;
         double balanceD = 0;
         double balanceTolerance = 5;
-        double testMult = 0.25;
+        double testMult = 1;
         PathConstraints constraints = new PathConstraints(
             maxSpeed * testMult,
             maxAcceleration * testMult,

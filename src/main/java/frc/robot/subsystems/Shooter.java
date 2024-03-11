@@ -20,6 +20,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkLimitSwitch.Type;
+import com.revrobotics.SparkPIDController.AccelStrategy;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -78,7 +79,6 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         krakenSlotConfig.kI = krakenI;
         krakenSlotConfig.kD = krakenD;
         krakenSlotConfig.kV = Constants.Shooter.kV;
-
         
         leftShooterMotor.getConfigurator().apply(krakenSlotConfig);
         
@@ -96,6 +96,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         sparkPid.setI(sparkI);
         sparkPid.setD(sparkD);
         sparkPid.setFF(sparkFF);
+
 
         
 

@@ -72,7 +72,7 @@ public class JoystickDrive extends Command implements Constants.DriveTrain {
         double ySpeed = -MathUtil.applyDeadband(controller.getLeftX(), driveDeadBand);
         double rotation = -MathUtil.applyDeadband(controller.getRightX(), driveDeadBand);
         // boolean fieldRelative = SmartDashboard.getBoolean("field relative", false);
-        boolean fieldRelative = false;
+        boolean fieldRelative = true;
 
 
         SmartDashboard.putNumber("xspeed", -controller.getLeftY());

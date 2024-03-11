@@ -28,20 +28,20 @@ public class TwoRingAuto extends SequentialCommandGroup{
     {
         addCommands(
 
-            new SpeakerShot(shooter, drivetrain, indexer, distanceXY),
+            new SpeakerShot(shooter, indexer),
             new ParallelRaceGroup
             (
                 new Collect(acq, indexer, shooter),
                 new DriveToPoint(drivetrain, poseList.get(0))
             ),
             new DriveToPoint(drivetrain, poseList.get(1)),
-            new SpeakerShot(shooter, drivetrain, indexer, distanceXY),
+            new SpeakerShot(shooter, indexer),
             new ParallelRaceGroup
             (
                 new Collect(acq, indexer, shooter),
                 new DriveToPoint(drivetrain, poseList.get(2))
             ),
-            new SpeakerShot(shooter, drivetrain, indexer, distanceXY)
+            new SpeakerShot(shooter, indexer)
         );
     }
 }

@@ -11,7 +11,7 @@ public class DriveToAmp extends DriveToPoint implements Constants.Field {
 
     public DriveToAmp(DriveTrain driveTrain) {
         super(driveTrain,
-            new Pose2d(RobotContainer.getAlliance().equals(Alliance.Blue) ? ampBlue : ampRed, new Rotation2d(Math.PI / 2)));
+            new Pose2d(RobotContainer.getAlliance().equals(Alliance.Blue)? ampBlue : ampRed, new Rotation2d(Math.PI / 2)));
     }
     
 }

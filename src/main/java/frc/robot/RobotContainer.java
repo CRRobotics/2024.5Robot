@@ -27,6 +27,7 @@ import frc.robot.commands.climb.TestWinch;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
+import frc.robot.commands.drivetrain.DriveToAmp;
 import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.DriveToRing;
@@ -109,7 +110,8 @@ public class RobotContainer {
     //new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new DriveFast());
 
     // TODO: Move these to the operator controller (as part of re-designing the input system for competition though)
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
+    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new RunCommand(() -> new DriveToPoint(driveTrain, new Pose2d(RobotContainer.getAlliance().equals(Alliance.Blue)? Constants.Field.ampBlue : Constants.Field.ampRed, new Rotation2d(Math.PI / 2))).schedule()));
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain, acq, indexer, shooter));
     new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
     new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer, shooter));
@@ -172,12 +174,13 @@ public class RobotContainer {
 
   public static Alliance getAlliance() {
     Optional<Alliance> ally = DriverStation.getAlliance();
+    System.out.println(ally.toString() + "\n\n\n\n\n\n\n\n\n\n");
     if (ally.isPresent()) {
-        if (ally.get() == Alliance.Red) {
+        if (ally.get().equals(Alliance.Red)) {
             SmartDashboard.putString("alliance", "red");
             return Alliance.Red;
         }
-        if (ally.get() == Alliance.Blue) {  
+        if (ally.get().equals(Alliance.Blue)) {  
             SmartDashboard.putString("alliance", "blue");
             return Alliance.Blue;
         }
