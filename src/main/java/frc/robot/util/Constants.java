@@ -228,6 +228,31 @@ public interface Constants {
             double kI = 0;
             double kD = 0;
         }
+        
+        /*
+         * Note positions for auto
+         */
+        interface NotePositions {
+            Translation2d[] kNotesStartingMidline = {
+                new Translation2d(8.258, 7.462),
+                new Translation2d(8.258, 5.785),
+                new Translation2d(8.258, 4.109),
+                new Translation2d(8.258, 2.432),
+                new Translation2d(8.258, 0.756),
+            };
+
+            Translation2d[] kNotesStartingBlueWing = {
+                new Translation2d(2.884, 4.109),
+                new Translation2d(2.884, 5.557),
+                new Translation2d(2.884, 7.004),
+            };
+
+            Translation2d[] kNotesStartingRedWing = {
+                new Translation2d(13.63, 4.109),
+                new Translation2d(13.63, 5.557),
+                new Translation2d(13.63, 7.004),
+            };
+        }
     }
 
     interface Controller {
@@ -263,6 +288,7 @@ public interface Constants {
         Translation2d subwooferRed = subwooferBlue.minus(new Translation2d(fieldWidth, 0));
         Translation2d speakerRed = speakerBlue.minus(new Translation2d(fieldWidth, 0));
 
+    
     }
     
     /**
