@@ -28,6 +28,7 @@ import frc.robot.commands.climb.TestWinch;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
+import frc.robot.commands.drivetrain.DriveToAmp;
 import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.DriveToRing;
@@ -98,6 +99,9 @@ public class RobotContainer {
     // IO INITIALIZATION
     inputMode = new SendableChooser<>();
     testOrVisionsShooter = new SendableChooser<>();
+    ringPositionChooser = new SendableChooser<>();
+    autoCommandChooser = new SendableChooser<>();
+    startingPos = new SendableChooser<>();
     autoChooser = AutoBuilder.buildAutoChooser(); SmartDashboard.putData("Auto Chooser", autoChooser);
     ringPositionChooser.addOption("LeftRed", new Pose2d(NotePositions.kNotesStartingRedWing[2], new Rotation2d()));
     ringPositionChooser.addOption("MiddleRed",  new Pose2d(NotePositions.kNotesStartingRedWing[1], new Rotation2d()));
@@ -105,9 +109,14 @@ public class RobotContainer {
     ringPositionChooser.addOption("LeftBlue", new Pose2d(NotePositions.kNotesStartingBlueWing[2], new Rotation2d()));
     ringPositionChooser.addOption("MiddleBlue",  new Pose2d(NotePositions.kNotesStartingBlueWing[1], new Rotation2d()));
     ringPositionChooser.addOption("RightBlue",  new Pose2d(NotePositions.kNotesStartingBlueWing[0], new Rotation2d()));
+    ringPositionChooser.setDefaultOption("LeftRed", new Pose2d(NotePositions.kNotesStartingRedWing[2], new Rotation2d()));
     autoCommandChooser.addOption("OneRing", "OneRing");
 
-    // startingPos.addOption(null, null);
+    startingPos.addOption("1", new Pose2d(0.74, 6.98, new Rotation2d(0)));
+    startingPos.addOption("2", new Pose2d(1.17, 5.5, new Rotation2d(0)));
+    startingPos.addOption("3", new Pose2d(0.74, 4.17, new Rotation2d(0)));
+    startingPos.addOption("4", new Pose2d(0.96, 3.01, new Rotation2d(0)));
+    startingPos.setDefaultOption("1", new Pose2d(0.74, 6.98, new Rotation2d(0)));
     
 
     // ROBOT CONFIGURATION
@@ -138,6 +147,8 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kRightBumper.value).onTrue(new WindUp(ShooterState.maxSpeed, shooter));
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value).onTrue(new WindUp(ShooterState.notSpinning, shooter));
     new JoystickButton(operator, XboxController.Button.kLeftStick.value).onTrue(new RunCommand(() -> CommandScheduler.getInstance().cancelAll()));
+    new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(new AmpShot(shooter, driveTrain, indexer));
+    new JoystickButton(operator, XboxController.Button.kRightStick.value).whileTrue(new DriveToAmp(driveTrain));
   }
   
   /**
@@ -171,7 +182,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     Pose2d speakerPose = (getAlliance().equals(Alliance.Blue)? new Pose2d(Field.speakerBlue, new Rotation2d()) : new Pose2d(Field.speakerRed, new Rotation2d()));
     if (autoCommandChooser.getSelected().equals("OneRing")) {
+      setOdometry(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected() : new Pose2d(Constants.Field.fieldWidth - startingPos.getSelected().getX(), startingPos.getSelected().getY(), new Rotation2d(Math.PI)));
       return new OneRingAuto(acq, indexer, shooter, driveTrain, ringPositionChooser.getSelected(), speakerPose);
+
     } else {
       return null;
     }
@@ -213,6 +226,11 @@ public class RobotContainer {
    */
   public void resetOdometry() {
     driveTrain.resetOdometry(new Pose2d());
+    driveTrain.zeroHeading();
+  }
+
+  public void setOdometry(Pose2d pose) {
+    driveTrain.resetOdometry(pose);
     driveTrain.zeroHeading();
   }
 
