@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.acquisition.Collect;
 import frc.robot.commands.acquisition.Reject;
+import frc.robot.commands.autos.OneRingAuto;
 import frc.robot.commands.climb.Climb;
 import frc.robot.commands.climb.TestWinch;
 import frc.robot.commands.drivetrain.DDRDrive;
@@ -42,6 +43,8 @@ import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Winch;
 import frc.robot.util.Constants;
+import frc.robot.util.Constants.Field;
+import frc.robot.util.Constants.Auto.NotePositions;
 import frc.robot.util.DistanceXY;
 import frc.robot.util.DriveStates;
 import frc.robot.util.ShooterState;
@@ -76,6 +79,8 @@ public class RobotContainer {
   /** Between DDR pad and controller input */
   public static SendableChooser<String> inputMode;
   public static SendableChooser<String> testOrVisionsShooter;
+  public static SendableChooser<Pose2d> ringPositionChooser;
+  public static SendableChooser<String> autoCommandChooser;
 
   /**
    * Constructs a new RobotContainer. This constructor is responsible for setting up the robot's subsystems and commands.
@@ -91,8 +96,15 @@ public class RobotContainer {
     // IO INITIALIZATION
     inputMode = new SendableChooser<>();
     testOrVisionsShooter = new SendableChooser<>();
-    autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    autoChooser = AutoBuilder.buildAutoChooser(); SmartDashboard.putData("Auto Chooser", autoChooser);
+    ringPositionChooser.addOption("LeftRed", new Pose2d(NotePositions.kNotesStartingRedWing[2], new Rotation2d()));
+    ringPositionChooser.addOption("MiddleRed",  new Pose2d(NotePositions.kNotesStartingRedWing[1], new Rotation2d()));
+    ringPositionChooser.addOption("RightRed",  new Pose2d(NotePositions.kNotesStartingRedWing[0], new Rotation2d()));
+    ringPositionChooser.addOption("LeftBlue", new Pose2d(NotePositions.kNotesStartingBlueWing[2], new Rotation2d()));
+    ringPositionChooser.addOption("MiddleBlue",  new Pose2d(NotePositions.kNotesStartingBlueWing[1], new Rotation2d()));
+    ringPositionChooser.addOption("RightBlue",  new Pose2d(NotePositions.kNotesStartingBlueWing[0], new Rotation2d()));
+    autoCommandChooser.addOption("OneRing", "OneRing");
+    
 
     // ROBOT CONFIGURATION
     configureBindings();
@@ -153,7 +165,12 @@ public class RobotContainer {
    * @return the currently selected input mode
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    Pose2d speakerPose = (getAlliance().equals(Alliance.Blue)? new Pose2d(Field.speakerBlue, new Rotation2d()) : new Pose2d(Field.speakerRed, new Rotation2d()));
+    if (autoCommandChooser.getSelected().equals("OneRing")) {
+      return new OneRingAuto(acq, indexer, shooter, driveTrain, ringPositionChooser.getSelected(), speakerPose, distanceXY);
+    } else {
+      return null;
+    }
   }
 
   public Command getDriveCommand() {
