@@ -10,7 +10,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
+import frc.robot.RobotContainer.ActivityState;
+import frc.robot.RobotContainer.ControlState;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.util.Constants;
 
@@ -48,6 +52,9 @@ public class DriveToRelative extends Command {
 
     @Override
     public void initialize() {
+        RobotContainer.activityState = ActivityState.DRIVING;
+        if (!DriverStation.isAutonomous()) RobotContainer.controlState = ControlState.PATHING;
+
         System.out.println("running drive to relative");
         this.finished = false;
         //distance stores the hypotoneuse  of the triangle made with the point using pythagorean theorem.  
@@ -82,6 +89,8 @@ public class DriveToRelative extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        RobotContainer.activityState = ActivityState.IDLE;
+        if (!DriverStation.isAutonomous()) RobotContainer.controlState = ControlState.MANUAL;
         followCommand.cancel();
     }
 

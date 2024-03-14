@@ -61,6 +61,9 @@ public class LED extends SubsystemBase {
             case SHOOTING:
                 color = new Color(5, 72, 255);
                 break;
+            case CLIMBING:
+                color = new Color(255, 0, 204);
+                break;
             default:
                 color = getRainbowColor();
                 System.out.println("(LEDs) Unknown activity state");

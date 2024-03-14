@@ -59,7 +59,7 @@ public class RobotContainer {
   private final Indexer indexer = new Indexer();
   private final Shooter shooter = new Shooter();
   private final Winch winch = new Winch();
-  public static LED led = new LED(0, 2, 15); // TODO: Set LED length
+  public static LED led = new LED(50, 2, 15); // TODO: Set LED length
 
   // STATES
   /** Speed modes */
@@ -128,7 +128,7 @@ public class RobotContainer {
     addInputModes();
     addShootModes();
     setShooterState(ShooterState.notSpinning);
-    driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
+    driveTrain.setDefaultCommand(new JoystickDrive(driveTrain, driver));
   }
 
   /**
@@ -207,10 +207,10 @@ public class RobotContainer {
     Command driveCommand;
     switch (inputMode.getSelected()) {
       default:
-        driveCommand = new JoystickDrive(driveTrain);
+        driveCommand = new JoystickDrive(driveTrain, driver);
         break;
       case "controller":
-        driveCommand = new JoystickDrive(driveTrain);
+        driveCommand = new JoystickDrive(driveTrain, driver);
         break;
       case "ddr":
         driveCommand = new DDRDrive(driveTrain);
@@ -262,7 +262,7 @@ public class RobotContainer {
 
   /** IDLE, DRIVING, COLLECTING, CENTERING, SHOOTING */
   public enum ActivityState {
-    IDLE, DRIVING, COLLECTING, CENTERING, SHOOTING
+    IDLE, DRIVING, COLLECTING, CENTERING, SHOOTING, CLIMBING
   }
 
   /** Only use to drive LEDs, not safe for anything else */

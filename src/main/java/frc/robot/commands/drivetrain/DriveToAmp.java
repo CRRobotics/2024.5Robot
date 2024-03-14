@@ -4,9 +4,12 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
+import frc.robot.RobotContainer.ActivityState;
+import frc.robot.RobotContainer.ControlState;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.util.Constants;
 
@@ -24,6 +27,9 @@ public class DriveToAmp extends Command {
 
     @Override
     public void initialize() {
+        RobotContainer.activityState = ActivityState.DRIVING;
+        if (!DriverStation.isAutonomous()) RobotContainer.controlState = ControlState.PATHING;
+
         Pose2d target = new Pose2d(RobotContainer.getAlliance().equals(Alliance.Blue) ? Constants.Field.ampBlue : Constants.Field.ampRed, new Rotation2d(Math.PI / 2));
         System.out.println("drive to pointing");
         driveTrain.updateObstacles();
@@ -43,6 +49,8 @@ public class DriveToAmp extends Command {
 
     @Override
     public void end(boolean interrupted) {
+        RobotContainer.activityState = ActivityState.IDLE;
+        if (!DriverStation.isAutonomous()) RobotContainer.controlState = ControlState.MANUAL;
         pathfindingCommand.end(true);
     }
 

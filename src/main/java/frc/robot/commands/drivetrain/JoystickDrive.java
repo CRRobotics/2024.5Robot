@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
+import frc.robot.RobotContainer.ActivityState;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.util.Constants;
 
@@ -19,6 +20,8 @@ import frc.robot.util.Constants;
  */
 public class JoystickDrive extends Command implements Constants.DriveTrain {
     DriveTrain driveTrain;
+    XboxController controller;
+
     double currentRotation;
     double currentTranslationDir;
     double currentTranslationMag;
@@ -26,14 +29,13 @@ public class JoystickDrive extends Command implements Constants.DriveTrain {
     SlewRateLimiter rotationLimiter;
     double previousTime;
 
-    //initalizes controller
-    XboxController controller = new XboxController(0);
     private double speedAdjustedMaxSpeed;
 
     
-    public JoystickDrive(DriveTrain driveTrain) 
+    public JoystickDrive(DriveTrain driveTrain, XboxController controller) 
     {
         this.driveTrain = driveTrain;
+        this.controller = controller;
         addRequirements(driveTrain);
     }
 
@@ -51,6 +53,8 @@ public class JoystickDrive extends Command implements Constants.DriveTrain {
 
     @Override
     public void execute() {
+        RobotContainer.activityState = ActivityState.DRIVING;
+
         SmartDashboard.putString("Drive State", RobotContainer.driveStates.toString());
         switch(RobotContainer.driveStates)
         {
@@ -144,7 +148,7 @@ public class JoystickDrive extends Command implements Constants.DriveTrain {
 
     @Override
     public void end(boolean interrupted) {
-
+        RobotContainer.activityState = ActivityState.IDLE;
     }
 
     @Override
