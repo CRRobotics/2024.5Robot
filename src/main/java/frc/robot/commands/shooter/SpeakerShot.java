@@ -47,7 +47,9 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
         // shootAngleSpeed = new AngleSpeed(SmartDashboard.getNumber("pivot setpoint", 4.3), SmartDashboard.getNumber("velocity setpoint", 0));
         Translation2d speakerPos = RobotContainer.getAlliance().equals(Alliance.Blue) ? speakerBlue : speakerRed;
         shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(speakerPos.getDistance(driveTrain.getPose().getTranslation()));
-        
+        // shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(1.21);
+        SmartDashboard.putNumber("anglespeedaim", shootAngleSpeed.getAngle());
+        SmartDashboard.putNumber("anglespeedspeed", shootAngleSpeed.getSpeed());
         shooter.aim(shootAngleSpeed.getAngle());
         shooter.setSpeed(shootAngleSpeed.getSpeed());
             
