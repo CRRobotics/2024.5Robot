@@ -29,6 +29,7 @@ public class Climb extends Command implements Constants.Winch
         SmartDashboard.putNumber("winch/extend speed", extendSpeed);
         SmartDashboard.putNumber("winch/retract speed", retractSpeed);
         SmartDashboard.putNumber("winch/extendTime", extendTime);
+        SmartDashboard.putNumber("winch/currentDifferenceThreshold", currentDifferenceThreshold);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class Climb extends Command implements Constants.Winch
             finished = true;
             return;
         }
-        if (Math.abs((winch.getCurrentDifference()/2)) >= currentDifferenceThreshold) {
+        if (Math.abs(winch.getCurrentDifference()/2) >= SmartDashboard.getNumber("winch/currentDifferenceThreshold", currentDifferenceThreshold)) {
             System.out.println("lbbuehhel");
             winch.setSpeed(0);
             finished = true;
@@ -62,7 +63,7 @@ public class Climb extends Command implements Constants.Winch
             winch.setSpeed(SmartDashboard.getNumber("winch/extend speed", extendSpeed));
         } else {
             winch.setSpeed(SmartDashboard.getNumber("winch/retract speed", retractSpeed));
-        }
+    }
     }
 
     @Override

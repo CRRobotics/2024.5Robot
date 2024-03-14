@@ -183,7 +183,7 @@ public interface Constants {
         double extendTime = 300;
         // double retractTime = 600;
 
-        double currentDifferenceThreshold = 7; //TODO: Tune value
+        double currentDifferenceThreshold = 7000; //TODO: Tune value
 
         double winchP = 0;;
         double winchI = 0;
