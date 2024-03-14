@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -111,13 +112,19 @@ public class RobotContainer {
     ringPositionChooser.addOption("MiddleBlue",  new Pose2d(NotePositions.kNotesStartingBlueWing[1], new Rotation2d()));
     ringPositionChooser.addOption("RightBlue",  new Pose2d(NotePositions.kNotesStartingBlueWing[0], new Rotation2d()));
     ringPositionChooser.setDefaultOption("LeftRed", new Pose2d(NotePositions.kNotesStartingRedWing[2], new Rotation2d()));
+    SmartDashboard.putData(ringPositionChooser);
     autoCommandChooser.addOption("OneRing", "OneRing");
+    autoCommandChooser.addOption("Shoot", "Shoot");
+    autoCommandChooser.addOption("Nothing", "Nothing");
+    autoCommandChooser.setDefaultOption("Nothing", "Nothing");
+    SmartDashboard.putData(autoCommandChooser);
 
     startingPos.addOption("1", new Pose2d(0.74, 6.98, new Rotation2d(0)));
     startingPos.addOption("2", new Pose2d(1.17, 5.5, new Rotation2d(0)));
     startingPos.addOption("3", new Pose2d(0.74, 4.17, new Rotation2d(0)));
     startingPos.addOption("4", new Pose2d(0.96, 3.01, new Rotation2d(0)));
     startingPos.setDefaultOption("1", new Pose2d(0.74, 6.98, new Rotation2d(0)));
+    SmartDashboard.putData(startingPos);
     
 
     // ROBOT CONFIGURATION
@@ -138,10 +145,11 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain, acq, indexer, shooter));
     new JoystickButton(driver, XboxController.Button.kBack.value).whileTrue(new Climb(winch, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     new JoystickButton(driver, XboxController.Button.kLeftStick.value).onTrue(new RunCommand(() -> CommandScheduler.getInstance().cancelAll()));
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToAmp(driveTrain));
 
     // OPERATOR BINDINGS
-    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new DriveAdjustShoot(driveTrain, shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
-        new JoystickButton(driver, XboxController.Button.kBack.value).whileTrue(new BumbperShot(shooter, indexer, driveTrain).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
+    // new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new DriveAdjustShoot(driveTrain, shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
+    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new BumbperShot(shooter, indexer, driveTrain).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
     new JoystickButton(operator, XboxController.Button.kX.value).onFalse(new CenterNote(shooter, indexer));
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer, shooter));
@@ -149,8 +157,6 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kRightBumper.value).onTrue(new WindUp(ShooterState.maxSpeed, shooter));
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value).onTrue(new WindUp(ShooterState.notSpinning, shooter));
     new JoystickButton(operator, XboxController.Button.kLeftStick.value).onTrue(new RunCommand(() -> CommandScheduler.getInstance().cancelAll()));
-    new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(new AmpShot(shooter, driveTrain, indexer));
-    new JoystickButton(operator, XboxController.Button.kRightStick.value).whileTrue(new DriveToAmp(driveTrain));
   }
   
   /**
@@ -185,7 +191,14 @@ public class RobotContainer {
     Pose2d speakerPose = (getAlliance().equals(Alliance.Blue)? new Pose2d(Field.speakerBlue, new Rotation2d()) : new Pose2d(Field.speakerRed, new Rotation2d()));
     if (autoCommandChooser.getSelected().equals("OneRing")) {
       setOdometry(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected() : new Pose2d(Constants.Field.fieldWidth - startingPos.getSelected().getX(), startingPos.getSelected().getY(), new Rotation2d(Math.PI)));
-      return new OneRingAuto(acq, indexer, shooter, driveTrain, ringPositionChooser.getSelected(), speakerPose);
+      // return new OneRingAuto(acq, indexer, shooter, driveTrain, ringPositionChooser.getSelected(), speakerPose);
+      return new SequentialCommandGroup(new DriveAdjustShoot(driveTrain, shooter, indexer),
+            new ParallelRaceGroup
+            (
+                new Collect(acq, indexer, shooter),
+                new DriveToPoint(driveTrain, ringPositionChooser.getSelected())
+            ),
+            new DriveAdjustShoot(driveTrain, shooter, indexer));
 
     } else {
       return null;
