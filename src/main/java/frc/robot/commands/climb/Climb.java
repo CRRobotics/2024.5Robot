@@ -28,6 +28,7 @@ public class Climb extends Command implements Constants.Winch
         finished = false;
         SmartDashboard.putNumber("winch/extend speed", extendSpeed);
         SmartDashboard.putNumber("winch/retract speed", retractSpeed);
+        SmartDashboard.putNumber("winch/extendTime", extendTime);
     }
 
     @Override
@@ -39,7 +40,7 @@ public class Climb extends Command implements Constants.Winch
         } else {
             startTime = System.currentTimeMillis() - liveTime;
         }
-        extendStopTime = startTime + (long)extendTime;
+        extendStopTime = startTime + (long)SmartDashboard.getNumber("winch/extendTime", extendTime);
     }
 
     /*

@@ -13,7 +13,7 @@ public class CenterNote extends Command implements Constants.Shooter, Constants.
     State state;
     private boolean finished;
 
-    public CenterNote(Shooter shooter, Indexer indexer) {
+    public CenterNote(Shooter shooter, Indexer indexer) { // TODO: Make shooter spin backwards here
         addRequirements(shooter);
         addRequirements(indexer);
         this.shooter = shooter;
