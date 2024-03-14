@@ -6,7 +6,6 @@ package frc.robot;
 
 import java.util.Optional;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,7 +27,6 @@ import frc.robot.commands.climb.TestWinch;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
-import frc.robot.commands.drivetrain.DriveToAmp;
 import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.DriveToRing;
@@ -87,16 +85,13 @@ public class RobotContainer {
     // SUBSYTEM PIV INITIALIZATION
     // led = new LED(60);
     // STATE INITIALIZATION
-    NamedCommands.registerCommand("SpeakerShot", new SpeakerShot(shooter, indexer));
-    NamedCommands.registerCommand("Aquire", new Collect(acq, indexer, shooter));
-    NamedCommands.registerCommand("AmpShot", new AmpShot(shooter, driveTrain, indexer));
-    NamedCommands.registerCommand("DriveToRing", new DriveToRing(driveTrain, acq, indexer, shooter));
     driveStates = DriveStates.normal;
     distanceXY = new DistanceXY(driveTrain, getAlliance());
     // IO INITIALIZATION
     inputMode = new SendableChooser<>();
     testOrVisionsShooter = new SendableChooser<>();
-    autoChooser = AutoBuilder.buildAutoChooser(); SmartDashboard.putData("Auto Chooser", autoChooser);
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // ROBOT CONFIGURATION
     configureBindings();
@@ -113,18 +108,18 @@ public class RobotContainer {
     // DRIVER BINDINGS
     new JoystickButton(driver, XboxController.Button.kRightBumper.value).whileTrue(new DriveSlow());
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new DriveFast());
-
-    // TODO: Move these to the operator controller (as part of re-designing the input system for competition though)
-    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain, acq, indexer, shooter));
+    new JoystickButton(driver, XboxController.Button.kLeftStick.value).onTrue(new RunCommand(() -> CommandScheduler.getInstance().cancelAll()));
+
+    // OPERATOR BINDINGS
+    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer, driveTrain).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer, shooter));
     new JoystickButton(operator, XboxController.Button.kStart.value).onTrue(new AmpShot(shooter, driveTrain, indexer));
     new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(new Climb(winch, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
-    // BELOW BINDINGS MUTATE SHOOTER STATE ENUM IN THE WINDUP METHOD
     new JoystickButton(operator, XboxController.Button.kRightBumper.value).onTrue(new WindUp(ShooterState.maxSpeed, shooter));
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value).onTrue(new WindUp(ShooterState.notSpinning, shooter));
-    // OPERATOR BINDINGS
+    new JoystickButton(operator, XboxController.Button.kLeftStick.value).onTrue(new RunCommand(() -> CommandScheduler.getInstance().cancelAll()));
   }
   
   /**
@@ -177,13 +172,12 @@ public class RobotContainer {
 
   public static Alliance getAlliance() {
     Optional<Alliance> ally = DriverStation.getAlliance();
-    System.out.println(ally.toString() + "\n\n\n\n\n\n\n\n\n\n");
     if (ally.isPresent()) {
-        if (ally.get().equals(Alliance.Red)) {
+        if (ally.get() == Alliance.Red) {
             SmartDashboard.putString("alliance", "red");
             return Alliance.Red;
         }
-        if (ally.get().equals(Alliance.Blue)) {  
+        if (ally.get() == Alliance.Blue) {  
             SmartDashboard.putString("alliance", "blue");
             return Alliance.Blue;
         }
@@ -206,26 +200,4 @@ public class RobotContainer {
   public static void setShooterState(ShooterState shooterState) {
       RobotContainer.shooterState = shooterState;
   }
-
-  public enum LEDStates {
-    RAINBOW, OFF, DRIVING, AUTO_DRIVING, AUTO_COLLECTING, COLLECTED, AUTO_SHOOTING
-  }
-
-  public static SendableChooser<LEDStates> colorTable = new SendableChooser<>();
-  public static SendableChooser<Integer> tickSpeedChooser = new SendableChooser<>();
-  static {
-      colorTable.addOption("on", LEDStates.RAINBOW);
-      colorTable.addOption("off", LEDStates.OFF);
-
-      colorTable.setDefaultOption("rainbow", LEDStates.RAINBOW);
-      
-      tickSpeedChooser.setDefaultOption("one", 2);
-      tickSpeedChooser.addOption("one", 1);
-      tickSpeedChooser.addOption("five", 5);
-      tickSpeedChooser.addOption("ten", 10);
-
-      SmartDashboard.putData(colorTable);
-      SmartDashboard.putData(tickSpeedChooser);
-    }
-
 }

@@ -18,7 +18,7 @@ public class DriveAdjustShoot extends SequentialCommandGroup {
         addCommands(
             // new DriveToPoint(drivetrain, target),
             new TurnToSpeaker(drivetrain),
-            new SpeakerShot(shooter, indexer)
+            new SpeakerShot(shooter, indexer, drivetrain)
         );
     }
 }

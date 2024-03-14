@@ -283,13 +283,13 @@ public interface Constants {
         Translation2d tag15 = new Translation2d(4.641342, 4.49834);
         Translation2d tag16 = new Translation2d(4.641342, 3.713226);
 
-        Translation2d ampBlue = new Translation2d(1.93294, 4.867656);
-        Translation2d subwooferBlue = new Translation2d(0.512318, 5.553456);
-        Translation2d speakerBlue = tag7; //maybe find a way to clone this
+        Translation2d ampBlue = tag6.minus(new Translation2d(0, DriveTrain.trackWidth / 2));
+        Translation2d subwooferBlue = new Translation2d(1.24, 5.553456);
+        Translation2d speakerBlue = tag7.plus(new Translation2d(DriveTrain.trackWidth, 0));
 
-        Translation2d ampRed = ampBlue.minus(new Translation2d(fieldWidth, 0));
-        Translation2d subwooferRed = subwooferBlue.minus(new Translation2d(fieldWidth, 0));
-        Translation2d speakerRed = speakerBlue.minus(new Translation2d(fieldWidth, 0));
+        Translation2d ampRed = tag5.minus(new Translation2d(0, DriveTrain.trackWidth / 2));
+        Translation2d subwooferRed = new Translation2d(fieldWidth - subwooferBlue.getX(), subwooferBlue.getY());
+        Translation2d speakerRed = tag4.minus(new Translation2d(DriveTrain.trackWidth, 0));
 
     
     }

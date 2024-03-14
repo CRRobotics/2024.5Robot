@@ -1,16 +1,22 @@
 package frc.robot.commands.shooter;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.AngleSpeed;
 import frc.robot.util.Constants;
+import frc.robot.util.ValueFromDistance;
 
 public class SpeakerShot extends Command implements Constants.Field, Constants.Shooter, Constants.Indexer {
     //eventually need other subsystems
     private Shooter shooter;
     private Indexer indexer;
+    private DriveTrain driveTrain;
     private AngleSpeed shootAngleSpeed;
     private long outdexStartTime;
     private long indexStartTime;
@@ -22,10 +28,10 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
     private enum ShootingProgress {ALIGN, OUTDEX, INDEX}
     private ShootingProgress shootingProgress;
 
-    public SpeakerShot(Shooter shooter, Indexer indexer) {
+    public SpeakerShot(Shooter shooter, Indexer indexer, DriveTrain driveTrain) {
         this.shooter = shooter;
-        // shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(distanceXY.getDistanceToSpeaker());
         this.indexer = indexer;
+        this.driveTrain = driveTrain;
 
         //purposefully didn't add drivetrain as a requirement
         addRequirements(shooter);
@@ -39,7 +45,9 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
         // case3 = false;
         finished = false;
         // remove this line later
-        shootAngleSpeed = new AngleSpeed(SmartDashboard.getNumber("pivot setpoint", 4.3), SmartDashboard.getNumber("velocity setpoint", 0));
+        // shootAngleSpeed = new AngleSpeed(SmartDashboard.getNumber("pivot setpoint", 4.3), SmartDashboard.getNumber("velocity setpoint", 0));
+        Translation2d speakerPos = RobotContainer.getAlliance().equals(Alliance.Blue) ? speakerBlue : speakerRed;
+        shootAngleSpeed = ValueFromDistance.getAngleSpeedLinearized(speakerPos.getDistance(driveTrain.getPose().getTranslation()));
         
         shooter.aim(shootAngleSpeed.getAngle());
         shooter.setSpeed(shootAngleSpeed.getSpeed());
