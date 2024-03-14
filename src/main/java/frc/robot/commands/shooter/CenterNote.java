@@ -56,7 +56,7 @@ public class CenterNote extends Command implements Constants.Shooter, Constants.
             /** Pulls the note back in a little bit so the indexer holds note in place for amp shot */
             case GRAB:
                 if (indexer.seesRing()) {
-                    indexer.intake();
+                    indexer.reject();
                 } else {finished = true;}
         }
     }
@@ -65,6 +65,7 @@ public class CenterNote extends Command implements Constants.Shooter, Constants.
 
     @Override
     public void end(boolean interrupted) {
+        indexer.setSpeed(0);
         System.out.println("CenterNote ended");
     }
 

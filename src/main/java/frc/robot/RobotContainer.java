@@ -33,6 +33,7 @@ import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.DriveToRing;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.shooter.AmpShot;
+import frc.robot.commands.shooter.CenterNote;
 import frc.robot.commands.shooter.SpeakerShot;
 import frc.robot.commands.shooter.WindUp;
 import frc.robot.subsystems.Intake;
@@ -113,6 +114,7 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain, acq, indexer, shooter));
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
+    new JoystickButton(operator, XboxController.Button.kX.value).onFalse(new CenterNote(shooter, indexer));
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer, shooter));
     new JoystickButton(operator, XboxController.Button.kStart.value).onTrue(new AmpShot(shooter, driveTrain, indexer));
     new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(new Climb(winch, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));

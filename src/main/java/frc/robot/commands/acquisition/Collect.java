@@ -75,7 +75,6 @@ public class Collect extends Command implements Constants.Shooter{
     public void end(boolean interrupted) {
         acq.stop();
         indexer.stop();
-        new CenterNote(shooter, indexer).schedule(); // TODO: BUG: THIS DONT WORK HEPL PLS
     }
 
     @Override
