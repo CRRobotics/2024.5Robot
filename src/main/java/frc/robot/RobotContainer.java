@@ -36,6 +36,7 @@ import frc.robot.commands.shooter.AmpShot;
 import frc.robot.commands.shooter.BumbperShot;
 import frc.robot.commands.shooter.CenterNote;
 import frc.robot.commands.shooter.DriveAdjustShoot;
+import frc.robot.commands.shooter.SpeakerShot;
 import frc.robot.commands.shooter.WindUp;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Indexer;
