@@ -78,7 +78,15 @@ public class Winch extends SubsystemBase implements Constants.Winch
         rightClimbMotor.follow(leftClimbMotor, true);
     }
 
+    public void setLeftSpeed(double speed)
+    {
+        leftClimbMotor.set(speed);
+    }
 
+    public void setRightSpeed(double speed)
+    {
+        rightClimbMotor.set(speed);
+    }
     
     public void getPosition()
     {
