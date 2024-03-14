@@ -218,7 +218,7 @@ public class RobotContainer {
             return Alliance.Blue;
         }
     }
-    return null;
+    return Alliance.Blue;
   }
 
   /**
