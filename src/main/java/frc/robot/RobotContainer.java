@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.acquisition.Collect;
@@ -25,6 +27,7 @@ import frc.robot.commands.climb.TestWinch;
 import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
+import frc.robot.commands.drivetrain.DriveToAmp;
 import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRelative;
 import frc.robot.commands.drivetrain.DriveToRing;
@@ -169,12 +172,13 @@ public class RobotContainer {
 
   public static Alliance getAlliance() {
     Optional<Alliance> ally = DriverStation.getAlliance();
+    System.out.println(ally.toString() + "\n\n\n\n\n\n\n\n\n\n");
     if (ally.isPresent()) {
-        if (ally.get() == Alliance.Red) {
+        if (ally.get().equals(Alliance.Red)) {
             SmartDashboard.putString("alliance", "red");
             return Alliance.Red;
         }
-        if (ally.get() == Alliance.Blue) {  
+        if (ally.get().equals(Alliance.Blue)) {  
             SmartDashboard.putString("alliance", "blue");
             return Alliance.Blue;
         }
@@ -197,4 +201,26 @@ public class RobotContainer {
   public static void setShooterState(ShooterState shooterState) {
       RobotContainer.shooterState = shooterState;
   }
+
+  public enum LEDStates {
+    RAINBOW, OFF, DRIVING, AUTO_DRIVING, AUTO_COLLECTING, COLLECTED, AUTO_SHOOTING
+  }
+
+  public static SendableChooser<LEDStates> colorTable = new SendableChooser<>();
+  public static SendableChooser<Integer> tickSpeedChooser = new SendableChooser<>();
+  static {
+      colorTable.addOption("on", LEDStates.RAINBOW);
+      colorTable.addOption("off", LEDStates.OFF);
+
+      colorTable.setDefaultOption("rainbow", LEDStates.RAINBOW);
+      
+      tickSpeedChooser.setDefaultOption("one", 2);
+      tickSpeedChooser.addOption("one", 1);
+      tickSpeedChooser.addOption("five", 5);
+      tickSpeedChooser.addOption("ten", 10);
+
+      SmartDashboard.putData(colorTable);
+      SmartDashboard.putData(tickSpeedChooser);
+    }
+
 }

@@ -2,6 +2,8 @@ package frc.robot.commands.acquisition;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
+import frc.robot.commands.shooter.CenterNote;
+import frc.robot.commands.shooter.SpeakerShot;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.Constants;
@@ -18,7 +20,9 @@ public class Collect extends Command implements Constants.Shooter{
     Boolean case3;
     Boolean case4;
     long outdexStartTime;
+    long semiShotTime;
     Boolean finished;
+    Stage stage;
 
 
     public Collect(Intake acq, Indexer indexer, Shooter shooter)
@@ -26,60 +30,63 @@ public class Collect extends Command implements Constants.Shooter{
         this.acq = acq;
         this.indexer = indexer;
         this.shooter = shooter;
-        case1 = false;
-        case2 = false;
-        case3 = false;
-        case4 = false;
-        finished = false;
     }
 
     @Override
     public void initialize() {
         shooter.aim(Constants.Shooter.interfaceAngle);
+        finished = false;
+        stage = Stage.stage0;
     }
 
     @Override
     public void execute()
     { 
-        if(!indexer.intake() && shooter.isInterfaced()) {
+        if(!indexer.intake() && shooter.isInterfaced() && stage == Stage.stage0) {
             acq.collect();
+        } else if(stage == Stage.stage0) {
+            stage = Stage.stage1;
+        }
+
+        switch(stage) {
+            case stage0:
+                break;
+            case stage1:
+                indexer.reject();
+                outdexStartTime = System.currentTimeMillis();
+                stage = Stage.stage2;
+                break;
+            case stage2:
+                if (System.currentTimeMillis() >= outdexStartTime + 200) {
+                    stage = Stage.stage3;
+                }
+                break;
+            case stage3:
+                if (indexer.intake()) {
+                    finished = true;
+                }
+                break;
+            default:
+                break;
         }
     }
 
     @Override
     public void end(boolean interrupted) {
         acq.stop();
-        indexer.stop(); 
-        if(!case1)
-            {
-                outdexStartTime = System.currentTimeMillis();
-                case1 = true;
-                indexer.reject();
-            }
-            else if (!case2 && System.currentTimeMillis() >= outdexStartTime + reverseTime) 
-            {
-                indexer.setSpeed(0);
-                indexer.setSpeed(Constants.Indexer.indexShootSpeed*2);
-                case2 = true;
-            }
-            else if (!case3)
-            {
-                outdexStartTime = System.currentTimeMillis();
-                case3 = true;
-                indexer.reject();
-            }
-            else if(!case4 && System.currentTimeMillis() >= outdexStartTime + reverseTime)
-            {
-                indexer.setSpeed(0);
-                finished = true;
-                case4 = true;
-            }
+        indexer.stop();
+        new CenterNote(shooter, indexer).schedule(); // TODO: BUG: THIS DONT WORK HEPL PLS
     }
 
     @Override
     public boolean isFinished() {
-        if(finished)
-            return true;
-        return false;
+        return finished;
     }
+}
+
+enum Stage {
+    stage0,
+    stage1,
+    stage2,
+    stage3
 }

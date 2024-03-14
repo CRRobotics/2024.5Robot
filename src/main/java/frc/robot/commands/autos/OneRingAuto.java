@@ -24,14 +24,14 @@ public class OneRingAuto extends SequentialCommandGroup
     {
         addCommands(
 
-            new SpeakerShot(shooter, drivetrain, indexer, distanceXY),
+            new SpeakerShot(shooter, indexer),
             new ParallelRaceGroup
             (
                 new Collect(acq, indexer, shooter),
                 new DriveToPoint(drivetrain, ringPose)
             ),
             new DriveToPoint(drivetrain, shotPose),
-            new SpeakerShot(shooter, drivetrain, indexer, distanceXY)
+            new SpeakerShot(shooter, indexer)
         );
     }
     

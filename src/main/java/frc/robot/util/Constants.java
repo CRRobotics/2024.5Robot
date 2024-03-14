@@ -50,8 +50,8 @@ public interface Constants {
             new Translation2d(-wheelBase / 2, -trackWidth / 2));
         /** Swerve Max Speed in m/s.
          * <p>(copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java) */
-        double maxSpeed = 2.5;
-        double maxAcceleration = 1.8;
+        double maxSpeed = 0.5;
+        double maxAcceleration = 0.5;
         /** radians per second */
         double maxAngularSpeed = 2 * Math.PI;
         /** radians per second squared */
@@ -115,9 +115,10 @@ public interface Constants {
         double flywheelPulleyTeethNum = 24;
         double beltRatio = flywheelPulleyTeethNum / krakenePulleyTeethNum;
         
-        double reverseTime = 335;
+        double outdexTime = 200;
+        double conveyTime = 400;
         double spinUpTime = 0;
-        double shootTime = 10000;
+        double shootTime = 1200;
 
         double krakenP = 0.09;
         double krakenI = 0.0;
@@ -138,7 +139,7 @@ public interface Constants {
 
         double restAngle = 4.3;
         /** angle at which intake feeds indexer nicely */
-        double interfaceAngle = 4.4;
+        double interfaceAngle = 4.46;
         /** angle at which indexer can push the note back into the intake nicely */
         double rejectInterfaceAngle = 4.43;
         /** tolerence for interface angle */
@@ -156,19 +157,19 @@ public interface Constants {
 
 
         // Systems controll parameters
-        double sparkP = 0.05;
+        double sparkP = 0.0085;
         double sparkI = 0;
         double sparkD = 0;
-        double sparkFF = 0;
+        double sparkFF = 0.00;
 
         /** slotID for Neo SmartMotion */
         int slotID = 0;
         /** For the azimuth neos */
-        double smartMotionMaxVelocity = 225;
+        double smartMotionMaxVelocity = 120;
         /** For the azimuth neos */
         double smartMotionMinVelocity = 0;
         /** For the azimuth neos */
-        double smartMotionMaxAccel = 5;
+        double smartMotionMaxAccel = 90;
         /** For the azimuth neos */
         double smartMotionAllowedClosedLoopError = 0;
     }
@@ -214,7 +215,7 @@ public interface Constants {
         double balanceI = 0;
         double balanceD = 0;
         double balanceTolerance = 5;
-        double testMult = 0.25;
+        double testMult = 1;
         PathConstraints constraints = new PathConstraints(
             maxSpeed * testMult,
             maxAcceleration * testMult,
@@ -226,6 +227,34 @@ public interface Constants {
             double kP = 2.2;
             double kI = 0;
             double kD = 0;
+        }
+        
+        /*
+         * Note positions for auto
+         */
+        interface NotePositions {
+            //Throw these points as end points into path planner
+            //trust, it's dead accurate
+            //move the bot center ontop a ring
+            Translation2d[] kNotesStartingMidline = {
+                new Translation2d(8.258, 7.462),
+                new Translation2d(8.258, 5.785),
+                new Translation2d(8.258, 4.109),
+                new Translation2d(8.258, 2.432),
+                new Translation2d(8.258, 0.756),
+            };
+
+            Translation2d[] kNotesStartingBlueWing = {
+                new Translation2d(2.884, 4.109),
+                new Translation2d(2.884, 5.557),
+                new Translation2d(2.884, 7.004),
+            };
+
+            Translation2d[] kNotesStartingRedWing = {
+                new Translation2d(13.63, 4.109),
+                new Translation2d(13.63, 5.557),
+                new Translation2d(13.63, 7.004),
+            };
         }
     }
 
@@ -262,6 +291,7 @@ public interface Constants {
         Translation2d subwooferRed = subwooferBlue.minus(new Translation2d(fieldWidth, 0));
         Translation2d speakerRed = speakerBlue.minus(new Translation2d(fieldWidth, 0));
 
+    
     }
     
     /**

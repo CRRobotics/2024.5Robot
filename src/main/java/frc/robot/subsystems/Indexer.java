@@ -1,11 +1,11 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Indexer extends SubsystemBase implements Constants.Indexer {
   CANSparkMax indexerMotor;
@@ -15,11 +15,12 @@ public class Indexer extends SubsystemBase implements Constants.Indexer {
   public Indexer() {
       indexerMotor = new CANSparkMax(indexID, MotorType.kBrushless);
       ringSensor = new AnalogInput(0);
-      indexerMotor.setVoltage(12);
+      // indexerMotor.setVoltage(12);
   }
 
   /**
   * Intakes the note
+  @return if the beam is broken
   */
   public boolean intake() {
     if (!seesRing()){
