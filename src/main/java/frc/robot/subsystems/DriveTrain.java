@@ -166,11 +166,13 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
             if (ntags != 0 && x != cameraErrorCode) {
                 double distance = tag8.getDistance(new Translation2d(x, y));
                 SmartDashboard.putNumber("distance to tag", distance);
-                poseEstimator.addVisionMeasurement(
-                    new Pose2d(x, y, Rotation2d.fromRadians(theta)),
-                    Timer.getFPGATimestamp() + 0.01, // needs to be tested and calibrated
-                    VecBuilder.fill(1 * distance, 1 * distance, 1 * distance) // needs to be calibrated
-                );
+                if (distance < 5) {
+                    poseEstimator.addVisionMeasurement(
+                        new Pose2d(x, y, Rotation2d.fromRadians(theta)),
+                        Timer.getFPGATimestamp() + 0.01, // needs to be tested and calibrated
+                        VecBuilder.fill(1 * distance, 1 * distance, 1 * distance) // needs to be calibrated
+                    );
+                }
             }
         }
         // field

@@ -1,8 +1,7 @@
 {
   "Docking": {
     "Data": [
-      "DockNode  ID=0x00000001 Pos=1160,54 Size=750,820 Selected=0x48913727",
-      "DockNode  ID=0x00000002 Pos=243,81 Size=210,214 Selected=0x195D8B06"
+      "DockNode  ID=0x00000001 Pos=1160,54 Size=750,820 Selected=0x2D9B9756"
     ]
   },
   "MainWindow": {
@@ -68,9 +67,8 @@
     },
     "###FMS": {
       "Collapsed": "0",
-      "DockId": "0x00000002,0",
       "Pos": "243,81",
-      "Size": "210,214"
+      "Size": "202,214"
     },
     "###Joysticks": {
       "Collapsed": "0",
