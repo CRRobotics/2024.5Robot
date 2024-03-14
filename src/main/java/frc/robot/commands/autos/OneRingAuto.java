@@ -21,7 +21,7 @@ public class OneRingAuto extends SequentialCommandGroup
     DriveTrain drivetrain; 
 
     
-    public OneRingAuto(Intake acq, Indexer indexer, Shooter shooter, DriveTrain drivetrain, Pose2d ringPose, Pose2d shotPose, DistanceXY distanceXY)
+    public OneRingAuto(Intake acq, Indexer indexer, Shooter shooter, DriveTrain drivetrain, Pose2d ringPose, Pose2d shotPose)
     {
         addCommands(
 

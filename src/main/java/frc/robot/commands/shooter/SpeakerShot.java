@@ -134,11 +134,6 @@ public class SpeakerShot extends Command implements Constants.Field, Constants.S
 
     @Override
     public boolean isFinished() {
-        if (finished)
-            return true;
-        //TODO: cancel when button pressed
-        return false;
-
-
-}
+        return finished;
+    }
 }

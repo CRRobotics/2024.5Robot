@@ -34,6 +34,7 @@ import frc.robot.commands.drivetrain.DriveToRing;
 import frc.robot.commands.drivetrain.JoystickDrive;
 import frc.robot.commands.shooter.AmpShot;
 import frc.robot.commands.shooter.CenterNote;
+import frc.robot.commands.shooter.DriveAdjustShoot;
 import frc.robot.commands.shooter.SpeakerShot;
 import frc.robot.commands.shooter.WindUp;
 import frc.robot.subsystems.Intake;
@@ -81,6 +82,7 @@ public class RobotContainer {
   public static SendableChooser<String> testOrVisionsShooter;
   public static SendableChooser<Pose2d> ringPositionChooser;
   public static SendableChooser<String> autoCommandChooser;
+  public static SendableChooser<Pose2d> startingPos;
 
   /**
    * Constructs a new RobotContainer. This constructor is responsible for setting up the robot's subsystems and commands.
@@ -104,6 +106,8 @@ public class RobotContainer {
     ringPositionChooser.addOption("MiddleBlue",  new Pose2d(NotePositions.kNotesStartingBlueWing[1], new Rotation2d()));
     ringPositionChooser.addOption("RightBlue",  new Pose2d(NotePositions.kNotesStartingBlueWing[0], new Rotation2d()));
     autoCommandChooser.addOption("OneRing", "OneRing");
+
+    // startingPos.addOption(null, null);
     
 
     // ROBOT CONFIGURATION
@@ -125,7 +129,7 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kLeftStick.value).onTrue(new RunCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
     // OPERATOR BINDINGS
-    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer, driveTrain).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
+    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new DriveAdjustShoot(driveTrain, shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
     new JoystickButton(operator, XboxController.Button.kX.value).onFalse(new CenterNote(shooter, indexer));
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer, shooter));
@@ -167,7 +171,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     Pose2d speakerPose = (getAlliance().equals(Alliance.Blue)? new Pose2d(Field.speakerBlue, new Rotation2d()) : new Pose2d(Field.speakerRed, new Rotation2d()));
     if (autoCommandChooser.getSelected().equals("OneRing")) {
-      return new OneRingAuto(acq, indexer, shooter, driveTrain, ringPositionChooser.getSelected(), speakerPose, distanceXY);
+      return new OneRingAuto(acq, indexer, shooter, driveTrain, ringPositionChooser.getSelected(), speakerPose);
     } else {
       return null;
     }

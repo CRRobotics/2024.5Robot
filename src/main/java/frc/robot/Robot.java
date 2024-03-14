@@ -53,7 +53,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
-    robotContainer.resetOdometry();
+    // robotContainer.resetOdometry();
     if (autoCommand != null) {
       autoCommand.cancel();
     }
