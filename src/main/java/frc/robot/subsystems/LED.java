@@ -9,6 +9,7 @@ import frc.robot.RobotContainer;
 public class LED extends SubsystemBase {
     private AddressableLED led;
     private AddressableLEDBuffer ledBuffer;
+    private boolean blinkState;
 
     int r;
     int g;
@@ -16,38 +17,14 @@ public class LED extends SubsystemBase {
     int h;
     int tickSpeed;
     int state;
+    int partitions;
+    int edgeWidth;
     // state is a variable to determine whether red green and blue should be increasing or decreasing.
 
-    @Override
-    public void periodic() {
-        switch (RobotContainer.colorTable.getSelected()) {
-            case OFF:
-                setColor(new Color(0, 0, 0));
-                break;
-            case RAINBOW:
-                tick();
-                break;
-            case DRIVING:
-                setColor(new Color(5, 255, 25));
-                break;
-            case AUTO_DRIVING:
-                blink(new Color[]{new Color(5, 255, 25), new Color(255, 0, 0)});
-                break;
-            case AUTO_COLLECTING:
-                setColor(new Color(0, 255, 0));
-                break;
-            case COLLECTED:
-                setColor(new Color(255, 255, 0));
-                break;
-            case AUTO_SHOOTING:
-                setColor(new Color(0, 0, 255));
-                break;
-        }
-        led.setData(ledBuffer);
-    }
-
-    public LED(int length) {
-        led = new AddressableLED(0);
+    public LED(int length, int partitions, int edgeWidth) {
+        this.partitions = partitions;
+        this.edgeWidth = edgeWidth;
+        led = new AddressableLED(8);
         ledBuffer = new AddressableLEDBuffer(length);
         led.setLength(length);
         led.setData(ledBuffer);
@@ -58,47 +35,105 @@ public class LED extends SubsystemBase {
         b = 0;
         state = 0;
         h = 0;
+
+        blinkState = false;
     }
 
-    private long blinkTime = 0;
-    public void blink(Color[] colors) {
-        long elapsedTime = System.currentTimeMillis() - blinkTime;
-        if (elapsedTime > (500 * colors.length)) {
-            blinkTime = System.currentTimeMillis();
+    @Override
+    public void periodic() {
+        Color color;
+        Color autoColor = new Color(255, 0, 0);
+        Color offColor = new Color(0, 0, 0);
+        tickBlink();
+        switch (RobotContainer.activityState) {
+            case IDLE:
+                color = getRainbowColor();
+                break;
+            case DRIVING:
+                color = new Color(5, 255, 25);
+                break;
+            case COLLECTING:
+                color = new Color(255, 108, 45); // Approx the color of a note
+                break;
+            case CENTERING:
+                color = new Color(222, 240, 22);
+                break;
+            case SHOOTING:
+                color = new Color(5, 72, 255);
+                break;
+            default:
+                color = getRainbowColor();
+                System.out.println("(LEDs) Unknown activity state");
+                break;
         }
-        setColor(colors[(int)(elapsedTime / (500 * colors.length))]);
+
+        switch (RobotContainer.controlState) {
+            case AUTO:
+                blink(color, offColor);
+                setEdgesColor(autoColor);
+                break;
+            case PATHING:
+                setColor(color);
+                blinkEdges(autoColor, null);
+                break;
+            case MANUAL:
+                setColor(color);
+                break;
+            default:
+                System.out.println("(LEDs) Unknown control state");
+                break;
+        }
+        led.setData(ledBuffer);
     }
 
-    // public boolean ColorWrapRGB(int r, int g, int b) {
-    //     Color color = new Color(r,g,b);
-    //     setColor(color);
-    //     return false;
-    // }
-
-    public boolean ColorWrapHSV(int h, int s, int v) {
-        Color color = Color.fromHSV(h,s,v);
-        setColor(color);
-        return false;                            
-    }
-
-    public void setColor(Color color) {
-        for(int i=0;i<ledBuffer.getLength(); i++)
-            ledBuffer.setLED(i, color);
-    }
-
-    public void betterRainbow() {
-        if(h == 360)
+    private Color getRainbowColor() {
+        if(h >= 360)
         {
             h = 0;
         }
-        ColorWrapHSV(h, 255, 255);
-        h++;
+        h += RobotContainer.rainbowTickSpeedChooser.getSelected();
+        return Color.fromHSV(h, 255, 255);
+    }
+    
+    private int blinkTick;
+    private void tickBlink() {
+        if (blinkTick > RobotContainer.blinkTickSpeedChooser.getSelected()) {
+            blinkState = !blinkState;
+            blinkTick = 0;
+        } else {blinkTick++;}
     }
 
-    public void tick() {
-        for(int i = 0; i < RobotContainer.tickSpeedChooser.getSelected(); i++)
-        {
-            betterRainbow();
+    /** NULL-Safe */
+    private void blinkEdges(Color colorA, Color colorB) {
+        if (blinkState && colorA != null) {
+            setEdgesColor(colorA);
+        } else if (colorB != null) {
+            setEdgesColor(colorB);
         }
+    }
+
+    /** NULL-Safe */
+    private void blink(Color colorA, Color colorB) {
+        if (blinkState && colorA != null) {
+            setColor(colorA);
+        } else if (colorB != null) {
+            setColor(colorB);
+        }
+    }
+    
+    private void setEdgesColor(Color color) {
+        int partitionSize = ledBuffer.getLength() / partitions;
+        for(int i = 0; i < partitions; i++) {
+            int startID = partitionSize * i;
+            for(int id = startID; id < startID + edgeWidth; id++)
+            ledBuffer.setLED(id, color);
+            for(int id = startID + partitionSize - edgeWidth; id < startID + partitionSize; id++)
+            ledBuffer.setLED(id, color);
+        }
+    }
+    
+    private void setColor(Color color) {
+        for(int i=0;i<ledBuffer.getLength(); i++)
+        ledBuffer.setLED(i, color);
     }
 }

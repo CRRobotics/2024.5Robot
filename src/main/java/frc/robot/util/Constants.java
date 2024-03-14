@@ -172,7 +172,7 @@ public interface Constants {
 
         double extendSpeed = 0.2;
         double retractSpeed = 0.9;
-        double extendTime = 20s00;
+        double extendTime = 2000;
         // double retractTime = 600;
 
         double currentDifferenceThreshold = 7000; //TODO: Tune value
