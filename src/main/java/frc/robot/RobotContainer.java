@@ -202,4 +202,27 @@ public class RobotContainer {
   public static void setShooterState(ShooterState shooterState) {
       RobotContainer.shooterState = shooterState;
   }
-}
+
+  public enum LEDStates {
+    RAINBOW, OFF, DRIVING, AUTO_DRIVING, AUTO_COLLECTING, COLLECTED, AUTO_SHOOTING
+  }
+
+  public static SendableChooser<LEDStates> colorTable = new SendableChooser<>();
+  public static SendableChooser<Integer> tickSpeedChooser = new SendableChooser<>();
+  static {
+      colorTable.addOption("on", LEDStates.RAINBOW);
+      colorTable.addOption("off", LEDStates.OFF);
+
+      colorTable.setDefaultOption("rainbow", LEDStates.RAINBOW);
+      
+      tickSpeedChooser.setDefaultOption("one", 2);
+      tickSpeedChooser.addOption("one", 1);
+      tickSpeedChooser.addOption("five", 5);
+      tickSpeedChooser.addOption("ten", 10);
+
+      SmartDashboard.putData(colorTable);
+      SmartDashboard.putData(tickSpeedChooser);
+    }
+
+    
+  }
