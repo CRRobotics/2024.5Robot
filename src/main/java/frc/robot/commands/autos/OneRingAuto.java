@@ -1,6 +1,7 @@
 package frc.robot.commands.autos;
 import frc.robot.commands.acquisition.Collect;
 import frc.robot.commands.drivetrain.DriveToPoint;
+import frc.robot.commands.shooter.DriveAdjustShoot;
 import frc.robot.commands.shooter.SpeakerShot;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.subsystems.Intake;
@@ -24,14 +25,13 @@ public class OneRingAuto extends SequentialCommandGroup
     {
         addCommands(
 
-            new SpeakerShot(shooter, indexer),
+            new DriveAdjustShoot(drivetrain, shooter, indexer),
             new ParallelRaceGroup
             (
                 new Collect(acq, indexer, shooter),
                 new DriveToPoint(drivetrain, ringPose)
             ),
-            new DriveToPoint(drivetrain, shotPose),
-            new SpeakerShot(shooter, indexer)
+            new DriveAdjustShoot(drivetrain, shooter, indexer)
         );
     }
     
