@@ -170,9 +170,9 @@ public interface Constants {
         int leftID = 9;
         int rightID = 10;
 
-        double extendSpeed = 0.6;
+        double extendSpeed = 0.2;
         double retractSpeed = 0.9;
-        double extendTime = 300;
+        double extendTime = 20s00;
         // double retractTime = 600;
 
         double currentDifferenceThreshold = 7000; //TODO: Tune value
