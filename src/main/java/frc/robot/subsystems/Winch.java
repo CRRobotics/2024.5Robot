@@ -1,20 +1,12 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkLimitSwitch;
-import com.revrobotics.CANSparkBase;
-import com.revrobotics.SparkLimitSwitch.Type;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 
@@ -78,7 +70,15 @@ public class Winch extends SubsystemBase implements Constants.Winch
         rightClimbMotor.follow(leftClimbMotor, true);
     }
 
+    public void setLeftSpeed(double speed)
+    {
+        leftClimbMotor.set(speed);
+    }
 
+    public void setRightSpeed(double speed)
+    {
+        rightClimbMotor.set(speed);
+    }
     
     public void getPosition()
     {

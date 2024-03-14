@@ -1,18 +1,10 @@
 package frc.robot.util;
 
 import com.pathplanner.lib.path.PathConstraints;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 
-
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
-
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
@@ -178,9 +170,9 @@ public interface Constants {
         int leftID = 9;
         int rightID = 10;
 
-        double extendSpeed = 0.6;
+        double extendSpeed = 0.2;
         double retractSpeed = 0.9;
-        double extendTime = 300;
+        double extendTime = 20s00;
         // double retractTime = 600;
 
         double currentDifferenceThreshold = 7000; //TODO: Tune value

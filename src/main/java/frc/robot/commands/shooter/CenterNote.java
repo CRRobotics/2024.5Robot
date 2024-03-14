@@ -13,7 +13,7 @@ public class CenterNote extends Command implements Constants.Shooter, Constants.
     State state;
     private boolean finished;
 
-    public CenterNote(Shooter shooter, Indexer indexer) { // TODO: Make shooter spin backwards here
+    public CenterNote(Shooter shooter, Indexer indexer) {
         addRequirements(shooter);
         addRequirements(indexer);
         this.shooter = shooter;
@@ -24,13 +24,13 @@ public class CenterNote extends Command implements Constants.Shooter, Constants.
 
     @Override
     public void initialize() {
-        // TODO: Spin shooter wheels backwards
         conveyStartTime = System.currentTimeMillis();
         state = State.START;
     }
 
     @Override
     public void execute() {
+        shooter.setSpeed(- ampShotSpeed);
         switch (state) {
             case START:
                 conveyStartTime = System.currentTimeMillis();
@@ -65,6 +65,7 @@ public class CenterNote extends Command implements Constants.Shooter, Constants.
 
     @Override
     public void end(boolean interrupted) {
+        shooter.setSpeed(0);
         indexer.setSpeed(0);
         System.out.println("CenterNote ended");
     }
