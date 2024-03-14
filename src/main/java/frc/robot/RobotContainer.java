@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.Optional;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -86,6 +87,10 @@ public class RobotContainer {
     // SUBSYTEM PIV INITIALIZATION
     // led = new LED(60);
     // STATE INITIALIZATION
+    NamedCommands.registerCommand("SpeakerShot", new SpeakerShot(shooter, indexer));
+    NamedCommands.registerCommand("Aquire", new Collect(acq, indexer, shooter));
+    NamedCommands.registerCommand("AmpShot", new AmpShot(shooter, driveTrain, indexer));
+    NamedCommands.registerCommand("DriveToRing", new DriveToRing(driveTrain, acq, indexer, shooter));
     driveStates = DriveStates.normal;
     distanceXY = new DistanceXY(driveTrain, getAlliance());
     // IO INITIALIZATION
@@ -106,11 +111,11 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // DRIVER BINDINGS
-    //new JoystickButton(driver, XboxController.Button.kRightBumper.value).whileTrue(new DriveSlow());
-    //new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new DriveFast());
+    new JoystickButton(driver, XboxController.Button.kRightBumper.value).whileTrue(new DriveSlow());
+    new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new DriveFast());
 
     // TODO: Move these to the operator controller (as part of re-designing the input system for competition though)
-    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, driveTrain, indexer, distanceXY).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
+    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain, acq, indexer, shooter));
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
     new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer, shooter));
