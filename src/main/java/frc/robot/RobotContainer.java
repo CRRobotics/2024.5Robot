@@ -110,17 +110,15 @@ public class RobotContainer {
     //new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new DriveFast());
 
     // TODO: Move these to the operator controller (as part of re-designing the input system for competition though)
-    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new RunCommand(() -> new DriveToPoint(driveTrain, new Pose2d(RobotContainer.getAlliance().equals(Alliance.Blue)? Constants.Field.ampBlue : Constants.Field.ampRed, new Rotation2d(Math.PI / 2))).schedule()));
+    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, driveTrain, indexer, distanceXY).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain, acq, indexer, shooter));
-    new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
-    new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer, shooter));
-    new JoystickButton(driver, XboxController.Button.kStart.value).onTrue(new AmpShot(shooter, driveTrain, indexer));
-    new JoystickButton(driver, XboxController.Button.kBack.value).whileTrue(new Climb(winch, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
+    new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
+    new JoystickButton(operator, XboxController.Button.kY.value).whileTrue(new Reject(acq, indexer, shooter));
+    new JoystickButton(operator, XboxController.Button.kStart.value).onTrue(new AmpShot(shooter, driveTrain, indexer));
+    new JoystickButton(operator, XboxController.Button.kBack.value).whileTrue(new Climb(winch, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     // BELOW BINDINGS MUTATE SHOOTER STATE ENUM IN THE WINDUP METHOD
-    new JoystickButton(driver, XboxController.Button.kRightBumper.value).onTrue(new WindUp(ShooterState.maxSpeed, shooter));
-    new JoystickButton(driver, XboxController.Button.kLeftBumper.value).onTrue(new WindUp(ShooterState.notSpinning, shooter));
-    new JoystickButton(driver, XboxController.Button.kLeftStick.value).onTrue(new RunCommand(() -> CommandScheduler.getInstance().cancelAll()));
+    new JoystickButton(operator, XboxController.Button.kRightBumper.value).onTrue(new WindUp(ShooterState.maxSpeed, shooter));
+    new JoystickButton(operator, XboxController.Button.kLeftBumper.value).onTrue(new WindUp(ShooterState.notSpinning, shooter));
     // OPERATOR BINDINGS
   }
   
