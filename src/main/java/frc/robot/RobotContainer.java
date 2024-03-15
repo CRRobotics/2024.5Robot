@@ -36,6 +36,7 @@ import frc.robot.commands.shooter.AmpShot;
 import frc.robot.commands.shooter.BumbperShot;
 import frc.robot.commands.shooter.CenterNote;
 import frc.robot.commands.shooter.DriveAdjustShoot;
+import frc.robot.commands.shooter.SpeakerShot;
 import frc.robot.commands.shooter.WindUp;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Indexer;
@@ -145,7 +146,8 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToAmp(driveTrain));
 
     // OPERATOR BINDINGS
-    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new DriveAdjustShoot(driveTrain, shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
+    // new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new DriveAdjustShoot(driveTrain, shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
+    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer, driveTrain).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(new BumbperShot(shooter, indexer, driveTrain).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
     new JoystickButton(operator, XboxController.Button.kX.value).onFalse(new CenterNote(shooter, indexer));
@@ -195,8 +197,9 @@ public class RobotContainer {
             (
                 new Collect(acq, indexer, shooter),
                 new DriveToPoint(driveTrain, ringPositionChooser.getSelected())
-            ),
-            new DriveAdjustShoot(driveTrain, shooter, indexer));
+            )
+            // new SpeakerShot(shooter, indexer, driveTrain)
+            );
 
     } else {
       return null;

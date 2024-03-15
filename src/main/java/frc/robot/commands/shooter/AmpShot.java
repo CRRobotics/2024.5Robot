@@ -53,8 +53,8 @@ public class AmpShot extends Command implements Constants.Field, Constants.Shoot
         // else
         // added new constants 2/29/24 please update in futue
         startTime = System.currentTimeMillis();
-        shooter.aim(6.05);
-        shooter.setSpeed(7);
+        shooter.aim(6.1);
+        shooter.setSpeed(10);
         // indexer.reject();
 
         case1 = false;

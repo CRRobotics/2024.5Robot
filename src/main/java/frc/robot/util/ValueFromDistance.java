@@ -11,11 +11,14 @@ public class ValueFromDistance {
     public static TreeMap<Double, AngleSpeed> shootMap = new TreeMap<>();
     static {
         //put values here
-        shootMap.put(0 * 0.3048 + 1.23, new AngleSpeed(4.7, 160));
-        shootMap.put(1 * 0.3048 + 1.23, new AngleSpeed(4.85, 160));
-        shootMap.put(2 * 0.3048 + 1.23, new AngleSpeed(4.95, 160));
-        shootMap.put(3 * 0.3048 + 1.23, new AngleSpeed(5.02, 160));
-        shootMap.put(4 * 0.3048 + 1.23, new AngleSpeed(5.03, 160));
+        // shootMap.put(0 * 0.3048 + 1.23, new AngleSpeed(4.7, 160));
+        // shootMap.put(1 * 0.3048 + 1.23, new AngleSpeed(4.85, 160));
+        // shootMap.put(2 * 0.3048 + 1.23, new AngleSpeed(4.95, 160));
+        // shootMap.put(3 * 0.3048 + 1.23, new AngleSpeed(5.02, 160));
+        // shootMap.put(4 * 0.3048 + 1.23, new AngleSpeed(5.03, 160));
+        shootMap.put(1.29, new AngleSpeed(4.8, 160));
+        shootMap.put(1.75, new AngleSpeed(4.9, 160));
+        shootMap.put(2.13, new AngleSpeed(5, 160));
     }
 
     public static AngleSpeed getAngleSpeed(double distance) {

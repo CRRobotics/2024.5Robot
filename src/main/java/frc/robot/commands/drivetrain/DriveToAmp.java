@@ -24,7 +24,7 @@ public class DriveToAmp extends Command {
 
     @Override
     public void initialize() {
-        Pose2d target = new Pose2d(RobotContainer.getAlliance().equals(Alliance.Blue) ? Constants.Field.ampBlue : Constants.Field.ampRed, new Rotation2d(Math.PI / 2));
+        Pose2d target = new Pose2d(RobotContainer.getAlliance().equals(Alliance.Blue) ? Constants.Field.ampBlue : Constants.Field.ampRed, new Rotation2d(-Math.PI / 2));
         System.out.println("drive to pointing");
         driveTrain.updateObstacles();
         pathfindingCommand = AutoBuilder.pathfindToPose(
