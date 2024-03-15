@@ -13,39 +13,41 @@ import frc.robot.util.Constants;
 public class Climb extends Command implements Constants.Winch
 {
     Winch winch;
-    long startTime;
-    boolean initialRun;
-    boolean leftFinished;
-    boolean rightFinished;
-    long extendStopTime;
-    long liveTime;
+    private long startTime;
+    private boolean initialRun;
+    private boolean leftFinished;
+    private boolean rightFinished;
+    private long extendStopTime;
+    private long liveTime;
+    private boolean finished;
     // long retractStopTime;
+    private enum ClimbSpeed{Fast, Slow};
 
     public Climb(Winch winch, Shooter shooter) {
         this.winch = winch;
         addRequirements(winch);
         addRequirements(shooter);
-        initialRun = true;
-        leftFinished = false;
-        rightFinished = false;
-        SmartDashboard.putNumber("winch/extend speed", extendSpeed);
-        SmartDashboard.putNumber("winch/retract speed", retractSpeed);
-        SmartDashboard.putNumber("winch/extendTime", extendTime);
-        SmartDashboard.putNumber("winch/currentDifferenceThreshold", currentDifferenceThreshold);
+        // initialRun = true;
+        // leftFinished = false;
+        // rightFinished = false;
+        // SmartDashboard.putNumber("winch/extend speed", extendSpeed);
+        // SmartDashboard.putNumber("winch/retract speed", retractSpeed);
+        // SmartDashboard.putNumber("winch/extendTime", extendTime);
+        // SmartDashboard.putNumber("winch/currentDifferenceThreshold", currentDifferenceThreshold);
     }
 
     @Override
     public void initialize() {
         RobotContainer.activityState = ActivityState.CLIMBING;
-        
-        if (initialRun) {
-            startTime = System.currentTimeMillis();
-            initialRun = false;
-            liveTime = 0;
-        } else {
-            startTime = System.currentTimeMillis() - liveTime;
-        }
-        extendStopTime = startTime + (long)SmartDashboard.getNumber("winch/extendTime", extendTime);
+        finished = false;
+        // if (initialRun) {
+        startTime = System.currentTimeMillis();
+            // initialRun = false;
+            // liveTime = 0;
+        // } else {
+            // startTime = System.currentTimeMillis();
+        // }
+        extendStopTime = startTime + (long)extendTime;// (long)SmartDashboard.getNumber("winch/extendTime", extendTime);
     }
 
     /*
@@ -65,17 +67,17 @@ public class Climb extends Command implements Constants.Winch
         //     System.out.println("right climb limit switch pressed");
         //     return;
         // }
-        // // if (Math.abs(winch.getCurrentDifference()/2) >= SmartDashboard.getNumber("winch/currentDifferenceThreshold", currentDifferenceThreshold)) {
-        // //     System.out.println("lbbuehhel");
-        // //     winch.setSpeed(0);
-        // //     finished = true;
-        // //     return;
-        // // } else 
-        // if (System.currentTimeMillis() < extendStopTime) {
-            // winch.setSpeed(SmartDashboard.getNumber("winch/extend speed", extendSpeed));
-        // } else {
-            winch.setSpeed(SmartDashboard.getNumber("winch/retract speed", retractSpeed));
-        // }
+        // if (Math.abs(winch.getCurrentDifference()/2) >= SmartDashboard.getNumber("winch/currentDifferenceThreshold", currentDifferenceThreshold)) {
+        //     System.out.println("lbbuehhel");
+        //     winch.setSpeed(0);
+        //     finished = true;
+        //     return;
+        // } else 
+        if (System.currentTimeMillis() < extendStopTime) {
+            winch.setSpeed(extendSpeed);// SmartDashboard.getNumber("winch/extend speed", extendSpeed));
+        } else {
+            winch.setSpeed(retractSpeed);//SmartDashboard.getNumber("winch/retract speed", retractSpeed));
+        }
     }
 
     @Override
@@ -87,6 +89,6 @@ public class Climb extends Command implements Constants.Winch
 
     @Override
     public boolean isFinished() {
-        return leftFinished && rightFinished;
+        return finished;
     }
 }
