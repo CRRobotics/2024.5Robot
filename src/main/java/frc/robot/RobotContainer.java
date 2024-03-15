@@ -195,7 +195,7 @@ public class RobotContainer {
     controlState = ControlState.AUTO;
     Pose2d speakerPose = (getAlliance().equals(Alliance.Blue)? new Pose2d(Field.speakerBlue, new Rotation2d()) : new Pose2d(Field.speakerRed, new Rotation2d()));
     if (autoCommandChooser.getSelected().equals("OneRing")) {
-      setOdometry(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected() : new Pose2d(Constants.Field.fieldWidth - startingPos.getSelected().getX(), startingPos.getSelected().getY(), new Rotation2d(Math.PI)));
+      setOdometry(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected() : new Pose2d(Constants.Field.fieldWidth - startingPos.getSelected().getX(), startingPos.getSelected().getY(), new Rotation2d(Math.PI - startingPos.getSelected().getRotation().getRadians())));
       // return new OneRingAuto(acq, indexer, shooter, driveTrain, ringPositionChooser.getSelected(), speakerPose);
       return new SequentialCommandGroup(new SequentialCommandGroup(
             new SpeakerShot(shooter, indexer, driveTrain)),

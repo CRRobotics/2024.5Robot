@@ -43,7 +43,7 @@ public interface Constants {
         /** Swerve Max Speed in m/s.
          * <p>(copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java) */
         double maxSpeed = 5;
-        double maxAcceleration = 4;
+        double maxAcceleration = 6;
         /** radians per second */
         double maxAngularSpeed = 2 * Math.PI;
         /** radians per second squared */
