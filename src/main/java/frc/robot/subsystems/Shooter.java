@@ -114,6 +114,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         shooterVelocity = 0;
         // SmartDashboard.putNumber("shooter/velocity", shooterVelocity);
         // SmartDashboard.putNumber("shooter/velocity", leftShooterMotor.getVelocity().getValue());
+        leftShooterMotor.getConfigurator().apply(krakenSlotConfig);
     }
 
     public double getSpeed()
@@ -181,16 +182,16 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
 
     @Override
     public void periodic() {
-        krakenSlotConfig.kP = SmartDashboard.getNumber("shooter KP", 0);
-        krakenSlotConfig.kI = SmartDashboard.getNumber("shooter KI", 0);
-        krakenSlotConfig.kD = SmartDashboard.getNumber("shooter KD", 0);
+        // krakenSlotConfig.kP = SmartDashboard.getNumber("shooter KP", 0);
+        // krakenSlotConfig.kI = SmartDashboard.getNumber("shooter KI", 0);
+        // krakenSlotConfig.kD = SmartDashboard.getNumber("shooter KD", 0);
         
-        sparkPid.setP(SmartDashboard.getNumber("pivot/p", 0));
-        sparkPid.setI(SmartDashboard.getNumber("pivot/i", 0));
-        sparkPid.setD(SmartDashboard.getNumber("pivot/d", 0));
-        sparkPid.setFF(SmartDashboard.getNumber("pivot/ff", 0));
+        // sparkPid.setP(SmartDashboard.getNumber("pivot/p", 0));
+        // sparkPid.setI(SmartDashboard.getNumber("pivot/i", 0));
+        // sparkPid.setD(SmartDashboard.getNumber("pivot/d", 0));
+        // sparkPid.setFF(SmartDashboard.getNumber("pivot/ff", 0));
 
-        leftShooterMotor.getConfigurator().apply(krakenSlotConfig);
+        // leftShooterMotor.getConfigurator().apply(krakenSlotConfig);
         SmartDashboard.putNumber("shooter/velocity", getSpeed());
         SmartDashboard.putNumber("pivot value", pivotEncoder.getPosition());
     }
