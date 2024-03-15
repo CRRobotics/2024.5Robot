@@ -48,21 +48,21 @@ public class Climb extends Command implements Constants.Winch
      */
     @Override
     public void execute() {
-        if (Winch.leftSwitch.isPressed() || Winch.rightSwitch.isPressed()) {
-            winch.setSpeed(0);
-            finished = true;
-            return;
-        }
-        if (Math.abs((winch.getCurrentDifference()/2)) >= currentDifferenceThreshold) {
-            System.out.println("lbbuehhel");
-            winch.setSpeed(0);
-            finished = true;
-            return;
-        } else if (System.currentTimeMillis() < extendStopTime) {
-            winch.setSpeed(SmartDashboard.getNumber("winch/extend speed", extendSpeed));
-        } else {
-            winch.setSpeed(SmartDashboard.getNumber("winch/retract speed", retractSpeed));
-        }
+        //if (Winch.leftSwitch.isPressed() || Winch.rightSwitch.isPressed()) {
+        //     winch.setSpeed(0);
+        //     finished = true;
+        //     return;
+        // }
+        // if (Math.abs((winch.getCurrentDifference()/2)) >= currentDifferenceThreshold) {
+        //     System.out.println("lbbuehhel");
+        //     winch.setSpeed(0);
+        //     finished = true;
+        //     return;
+        // } else if (System.currentTimeMillis() < extendStopTime) {
+        //     winch.setSpeed(SmartDashboard.getNumber("winch/extend speed", extendSpeed));
+        // } else {
+        //     winch.setSpeed(SmartDashboard.getNumber("winch/retract speed", retractSpeed));
+        // }
     }
 
     @Override
