@@ -4,7 +4,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.util.Constants;
 
 public class Indexer extends SubsystemBase implements Constants.Indexer {
@@ -18,6 +20,15 @@ public class Indexer extends SubsystemBase implements Constants.Indexer {
       // indexerMotor.setVoltage(12);
   }
 
+  @Override
+  public void periodic() {
+    if (seesRing()) {
+      RobotContainer.setLEDs(new Color(0, 255, 0));
+    } else {
+      RobotContainer.setLEDs(new Color(0,0,0));
+    }
+  }
+
   /**
   * Intakes the note
   @return if the beam is broken
@@ -28,6 +39,8 @@ public class Indexer extends SubsystemBase implements Constants.Indexer {
       System.out.println("running intake motors, speed: "+ indexIntakeSpeed);
       return false;
     } else {
+        RobotContainer.setLEDs(new Color(255, 109, 46));
+        RobotContainer.activityState = RobotContainer.ActivityState.HAS_NOTE;
         indexerMotor.set(0);
         return true;
     }
