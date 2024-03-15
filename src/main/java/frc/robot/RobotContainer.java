@@ -121,11 +121,11 @@ public class RobotContainer {
     autoCommandChooser.setDefaultOption("Nothing", "Nothing");
     SmartDashboard.putData(autoCommandChooser);
 
-    startingPos.addOption("1", new Pose2d(0.68, 6.58, Rotation2d.fromDegrees(60)));
-    startingPos.addOption("2", new Pose2d(1.19, 5.57, Rotation2d.fromDegrees(0)));
-    startingPos.addOption("3", new Pose2d(0.68, 4.57, Rotation2d.fromDegrees(-60)));
-    startingPos.addOption("4", new Pose2d(0.39, 3.1, Rotation2d.fromDegrees(0)));
-    startingPos.setDefaultOption("1", new Pose2d(0.68, 6.58, Rotation2d.fromDegrees(60)));
+    startingPos.addOption("amp side", new Pose2d(0.68, 6.58, Rotation2d.fromDegrees(60)));
+    startingPos.addOption("subwoofer", new Pose2d(1.19, 5.57, Rotation2d.fromDegrees(0)));
+    startingPos.addOption("not amp side", new Pose2d(0.68, 4.57, Rotation2d.fromDegrees(-60)));
+    startingPos.addOption("source side", new Pose2d(0.39, 3.1, Rotation2d.fromDegrees(0)));
+    startingPos.setDefaultOption("amp side", new Pose2d(0.68, 6.58, Rotation2d.fromDegrees(60)));
     SmartDashboard.putData(startingPos);
     
 
