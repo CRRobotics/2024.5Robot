@@ -114,6 +114,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         shooterVelocity = 0;
         // SmartDashboard.putNumber("shooter/velocity", shooterVelocity);
         // SmartDashboard.putNumber("shooter/velocity", leftShooterMotor.getVelocity().getValue());
+        leftShooterMotor.getConfigurator().apply(krakenSlotConfig);
     }
 
     public double getSpeed()
