@@ -7,20 +7,26 @@ import frc.robot.util.Constants;
 public class Extend extends Command implements Constants.Winch
 {
     Winch winch;
+    private long startTime;
+    private boolean finished;
 
     public Extend(Winch winch) {
         this.winch = winch;
         addRequirements(winch);
+        finished = false;
     }
 
     @Override
     public void initialize() {
+        startTime = System.currentTimeMillis();
         winch.setSpeed(extendSpeed);
     }
 
     @Override
     public void execute() {
-        winch.setSpeed(extendSpeed);
+        if (System.currentTimeMillis() > startTime + extendTime) {
+            finished = true;
+        }
     }
 
     @Override
@@ -30,6 +36,6 @@ public class Extend extends Command implements Constants.Winch
 
     @Override
     public boolean isFinished() {
-        return false;
+        return finished;
     }
 }
