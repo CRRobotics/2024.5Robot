@@ -57,9 +57,9 @@ public interface Constants {
         /** radians per second */
         double magnitudeSlewRate = 2.4;
         /** radians per second (1 = 100%) */
-        double kDirectionSlewRate = 2.5;
+        double kDirectionSlewRate = 3;
         /** percent per second (1 = 100%) */
-        double rotationSlewRate = 2.2;
+        double rotationSlewRate = 2.0;
         /** radius in meters (of what I have no idea) */
         double radius = 0.4318;
 

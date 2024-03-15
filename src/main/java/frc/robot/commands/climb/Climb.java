@@ -53,29 +53,29 @@ public class Climb extends Command implements Constants.Winch
      */
     @Override
     public void execute() {
-        if (Winch.leftSwitch.isPressed()) {
-            winch.setLeftSpeed(0);
-            leftFinished = true;
-            System.out.println("left climb limit switch pressed");
-            return;
-        }
-        if (Winch.rightSwitch.isPressed()) {
-            winch.setRightSpeed(0);
-            rightFinished = true;
-            System.out.println("right climb limit switch pressed");
-            return;
-        }
-        // if (Math.abs(winch.getCurrentDifference()/2) >= SmartDashboard.getNumber("winch/currentDifferenceThreshold", currentDifferenceThreshold)) {
-        //     System.out.println("lbbuehhel");
-        //     winch.setSpeed(0);
-        //     finished = true;
+        // if (Winch.leftSwitch.isPressed()) {
+        //     winch.setLeftSpeed(0);
+        //     leftFinished = true;
+        //     System.out.println("left climb limit switch pressed");
         //     return;
-        // } else 
-        if (System.currentTimeMillis() < extendStopTime) {
-            winch.setSpeed(SmartDashboard.getNumber("winch/extend speed", extendSpeed));
-        } else {
+        // }
+        // if (Winch.rightSwitch.isPressed()) {
+        //     winch.setRightSpeed(0);
+        //     rightFinished = true;
+        //     System.out.println("right climb limit switch pressed");
+        //     return;
+        // }
+        // // if (Math.abs(winch.getCurrentDifference()/2) >= SmartDashboard.getNumber("winch/currentDifferenceThreshold", currentDifferenceThreshold)) {
+        // //     System.out.println("lbbuehhel");
+        // //     winch.setSpeed(0);
+        // //     finished = true;
+        // //     return;
+        // // } else 
+        // if (System.currentTimeMillis() < extendStopTime) {
+            // winch.setSpeed(SmartDashboard.getNumber("winch/extend speed", extendSpeed));
+        // } else {
             winch.setSpeed(SmartDashboard.getNumber("winch/retract speed", retractSpeed));
-        }
+        // }
     }
 
     @Override
