@@ -63,6 +63,8 @@ public class RobotContainer {
   private final Winch winch = new Winch();
   public static LED led = new LED(50, 2, 15); // TODO: Set LED length
 
+  public static boolean useVisions;
+
   // STATES
   /** Speed modes */
   public static DriveStates driveStates;
@@ -94,6 +96,7 @@ public class RobotContainer {
     // SUBSYTEM PIV INITIALIZATION
     // led = new LED(60);
     // STATE INITIALIZATION
+    useVisions = false;
     driveStates = DriveStates.normal;
     distanceXY = new DistanceXY(driveTrain, getAlliance());
     // IO INITIALIZATION
@@ -117,11 +120,11 @@ public class RobotContainer {
     autoCommandChooser.setDefaultOption("Nothing", "Nothing");
     SmartDashboard.putData(autoCommandChooser);
 
-    startingPos.addOption("1", new Pose2d(0.74, 6.98, new Rotation2d(0)));
-    startingPos.addOption("2", new Pose2d(1.17, 5.5, new Rotation2d(0)));
-    startingPos.addOption("3", new Pose2d(0.74, 4.17, new Rotation2d(0)));
-    startingPos.addOption("4", new Pose2d(0.96, 3.01, new Rotation2d(0)));
-    startingPos.setDefaultOption("1", new Pose2d(0.74, 6.98, new Rotation2d(0)));
+    startingPos.addOption("1", new Pose2d(0.68, 6.58, Rotation2d.fromDegrees(60)));
+    startingPos.addOption("2", new Pose2d(1.19, 5.57, Rotation2d.fromDegrees(0)));
+    startingPos.addOption("3", new Pose2d(0.68, 4.57, Rotation2d.fromDegrees(-60)));
+    startingPos.addOption("4", new Pose2d(0.39, 3.1, Rotation2d.fromDegrees(0)));
+    startingPos.setDefaultOption("1", new Pose2d(0.68, 6.58, Rotation2d.fromDegrees(60)));
     SmartDashboard.putData(startingPos);
     
 
@@ -144,6 +147,7 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kBack.value).whileTrue(new Climb(winch, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     new JoystickButton(driver, XboxController.Button.kLeftStick.value).onTrue(new RunCommand(() -> CommandScheduler.getInstance().cancelAll()));
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToAmp(driveTrain));
+    new JoystickButton(driver, XboxController.Button.kX.value).onTrue(new RunCommand(() -> useVisions = true)).onFalse(new RunCommand(() -> useVisions = false));
 
     // OPERATOR BINDINGS
     // new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new DriveAdjustShoot(driveTrain, shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));

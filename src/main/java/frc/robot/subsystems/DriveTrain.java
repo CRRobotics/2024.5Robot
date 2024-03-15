@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.util.Constants;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.NetworkTableWrapper;
@@ -157,7 +158,6 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
             swervePosition
         );
         // update with visions data from these cameras ids:
-        Translation2d tag8 = new Translation2d(0, 5);
         for (String id : cameraIds) {
             double x = NetworkTableWrapper.getDouble(id, "rx");
             double y = NetworkTableWrapper.getDouble(id, "ry");
@@ -167,9 +167,9 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
                 double distance = getPose().getTranslation().getDistance(new Translation2d(x, y));
                 SmartDashboard.putNumber("distance to tag", distance);
                 // System.out.println("unique identifyer" + System.currentTimeMillis() + ", " + getPose() + ", " + id + ", " + new Pose2d(x, y, new Rotation2d(theta)) + ", " + ntags + ", ");
-                if (distance < 5) {
+                if (distance < 5 && RobotContainer.useVisions) {
                     poseEstimator.addVisionMeasurement(
-                        new Pose2d(x, y, getPose().getRotation()),
+                        new Pose2d(x, y, new Rotation2d(theta)),
                         Timer.getFPGATimestamp() + 0.01, // needs to be tested and calibrated
                         VecBuilder.fill(1 * distance, 1 * distance, 1 * distance) // needs to be calibrated
                     );

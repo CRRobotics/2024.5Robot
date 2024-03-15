@@ -42,7 +42,7 @@ public interface Constants {
             new Translation2d(-wheelBase / 2, -trackWidth / 2));
         /** Swerve Max Speed in m/s.
          * <p>(copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java) */
-        double maxSpeed = 4;
+        double maxSpeed = 5;
         double maxAcceleration = 4;
         /** radians per second */
         double maxAngularSpeed = 2 * Math.PI;
@@ -57,7 +57,7 @@ public interface Constants {
         /** radians per second */
         double magnitudeSlewRate = 2.4;
         /** radians per second (1 = 100%) */
-        double kDirectionSlewRate = 1.8;
+        double kDirectionSlewRate = 2.0;
         /** percent per second (1 = 100%) */
         double rotationSlewRate = 2.0;
         /** radius in meters (of what I have no idea) */
