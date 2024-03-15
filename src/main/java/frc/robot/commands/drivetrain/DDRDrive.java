@@ -3,8 +3,12 @@ package frc.robot.commands.drivetrain;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
+import frc.robot.RobotContainer.ActivityState;
+import frc.robot.RobotContainer.ControlState;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.util.Constants;
 
@@ -33,8 +37,8 @@ public class DDRDrive extends Command implements Constants.DriveTrain {
         );
         SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(chassisSpeeds);
         driveTrain.setModuleStates(swerveModuleStates);
-
     }
+
     /**
      * Takes in the button and checks if it is pressed
      * @param id the identity of the button

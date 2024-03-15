@@ -1,6 +1,10 @@
 package frc.robot.commands.acquisition;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
+import frc.robot.RobotContainer.ActivityState;
+import frc.robot.RobotContainer.ControlState;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -32,6 +36,7 @@ public class Collect extends Command implements Constants.Shooter{
 
     @Override
     public void initialize() {
+        RobotContainer.activityState = ActivityState.COLLECTING;
         shooter.aim(Constants.Shooter.interfaceAngle);
         finished = false;
         stage = Stage.stage0;
@@ -71,6 +76,7 @@ public class Collect extends Command implements Constants.Shooter{
 
     @Override
     public void end(boolean interrupted) {
+        RobotContainer.activityState = ActivityState.IDLE;
         acq.stop();
         indexer.stop();
     }

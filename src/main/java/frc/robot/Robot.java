@@ -6,8 +6,11 @@ package frc.robot;
 
 import org.littletonrobotics.junction.LoggedRobot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.RobotContainer.ActivityState;
+import frc.robot.RobotContainer.ControlState;
 
 /**
  * Command scheduler runs one of these methods depending on the robot's state.
@@ -39,6 +42,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
+    RobotContainer.controlState = ControlState.AUTO;
     autoCommand = robotContainer.getAutonomousCommand();
     if (autoCommand != null) {
       autoCommand.schedule();
@@ -53,6 +57,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
+    RobotContainer.controlState = ControlState.MANUAL;
     // robotContainer.resetOdometry();
     if (autoCommand != null) {
       autoCommand.cancel();
@@ -71,6 +76,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void testInit() {
+    RobotContainer.controlState = ControlState.MANUAL;
     CommandScheduler.getInstance().cancelAll();
   }
 

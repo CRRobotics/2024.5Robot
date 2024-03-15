@@ -61,7 +61,7 @@ public class RobotContainer {
   private final Indexer indexer = new Indexer();
   private final Shooter shooter = new Shooter();
   private final Winch winch = new Winch();
-  public static LED led = new LED(0); // TODO: Implement LED subsystem
+  public static LED led = new LED(50, 2, 15); // TODO: Set LED length
 
   // STATES
   /** Speed modes */
@@ -130,7 +130,7 @@ public class RobotContainer {
     addInputModes();
     addShootModes();
     setShooterState(ShooterState.notSpinning);
-    driveTrain.setDefaultCommand(new JoystickDrive(driveTrain));
+    driveTrain.setDefaultCommand(new JoystickDrive(driveTrain, driver));
   }
 
   /**
@@ -187,6 +187,7 @@ public class RobotContainer {
    * @return the currently selected input mode
    */
   public Command getAutonomousCommand() {
+    controlState = ControlState.AUTO;
     Pose2d speakerPose = (getAlliance().equals(Alliance.Blue)? new Pose2d(Field.speakerBlue, new Rotation2d()) : new Pose2d(Field.speakerRed, new Rotation2d()));
     if (autoCommandChooser.getSelected().equals("OneRing")) {
       setOdometry(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected() : new Pose2d(Constants.Field.fieldWidth - startingPos.getSelected().getX(), startingPos.getSelected().getY(), new Rotation2d(Math.PI)));
@@ -207,13 +208,14 @@ public class RobotContainer {
   }
 
   public Command getDriveCommand() {
+    controlState = ControlState.MANUAL;
     Command driveCommand;
     switch (inputMode.getSelected()) {
       default:
-        driveCommand = new JoystickDrive(driveTrain);
+        driveCommand = new JoystickDrive(driveTrain, driver);
         break;
       case "controller":
-        driveCommand = new JoystickDrive(driveTrain);
+        driveCommand = new JoystickDrive(driveTrain, driver);
         break;
       case "ddr":
         driveCommand = new DDRDrive(driveTrain);
@@ -258,26 +260,34 @@ public class RobotContainer {
       RobotContainer.shooterState = shooterState;
   }
 
-  public enum LEDStates {
-    RAINBOW, OFF, DRIVING, AUTO_DRIVING, AUTO_COLLECTING, COLLECTED, AUTO_SHOOTING
+  /** AUTO, PATHING, MANUAL */
+  public enum ControlState {
+    AUTO, PATHING, MANUAL
   }
 
-  public static SendableChooser<LEDStates> colorTable = new SendableChooser<>();
-  public static SendableChooser<Integer> tickSpeedChooser = new SendableChooser<>();
+  /** IDLE, DRIVING, COLLECTING, CENTERING, SHOOTING */
+  public enum ActivityState {
+    IDLE, DRIVING, COLLECTING, CENTERING, SHOOTING, CLIMBING
+  }
+
+  /** Only use to drive LEDs, not safe for anything else */
+  public static ControlState controlState;
+  /** Only use to drive LEDs, not safe for anything else */
+  public static ActivityState activityState;
+
+  public static SendableChooser<Integer> blinkTickSpeedChooser = new SendableChooser<>();
+  public static SendableChooser<Integer> rainbowTickSpeedChooser = new SendableChooser<>();
   static {
-      colorTable.addOption("on", LEDStates.RAINBOW);
-      colorTable.addOption("off", LEDStates.OFF);
+    rainbowTickSpeedChooser.addOption("ten", 10);
+    rainbowTickSpeedChooser.addOption("five", 5);
+    rainbowTickSpeedChooser.addOption("one", 1);
+    rainbowTickSpeedChooser.setDefaultOption("one", 1);
+    SmartDashboard.putData(rainbowTickSpeedChooser);
 
-      colorTable.setDefaultOption("rainbow", LEDStates.RAINBOW);
-      
-      tickSpeedChooser.setDefaultOption("one", 2);
-      tickSpeedChooser.addOption("one", 1);
-      tickSpeedChooser.addOption("five", 5);
-      tickSpeedChooser.addOption("ten", 10);
-
-      SmartDashboard.putData(colorTable);
-      SmartDashboard.putData(tickSpeedChooser);
-    }
-
-    
+    blinkTickSpeedChooser.addOption("ten", 10);
+    blinkTickSpeedChooser.addOption("five", 5);
+    blinkTickSpeedChooser.addOption("one", 1);
+    blinkTickSpeedChooser.setDefaultOption("one", 1);
+    SmartDashboard.putData(blinkTickSpeedChooser);
   }
+}

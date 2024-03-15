@@ -11,7 +11,10 @@
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Input Mode": "String Chooser",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
-      "/SmartDashboard/SendableChooser[1]": "String Chooser"
+      "/SmartDashboard/SendableChooser[1]": "String Chooser",
+      "/SmartDashboard/SendableChooser[4]": "String Chooser",
+      "/SmartDashboard/SendableChooser[5]": "String Chooser",
+      "/SmartDashboard/SendableChooser[6]": "String Chooser"
     }
   },
   "NetworkTables Info": {

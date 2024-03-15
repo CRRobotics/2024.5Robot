@@ -8,10 +8,13 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
+import frc.robot.RobotContainer.ActivityState;
+import frc.robot.RobotContainer.ControlState;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.util.Constants;
 
@@ -39,6 +42,8 @@ public class TurnToAngle extends Command implements Constants.DriveTrain, Consta
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    RobotContainer.activityState = ActivityState.DRIVING;
+    if (!DriverStation.isAutonomous()) RobotContainer.controlState = ControlState.PATHING;
     clockwise = Math.signum(angle.getRadians()) > 0;
     //setpoint = clockwise ? Math.abs(angle) + driveTrain.getHeading() : driveTrain.getHeading() - Math.abs(angle);
     setpoint = angle.getRadians();
@@ -72,6 +77,8 @@ public class TurnToAngle extends Command implements Constants.DriveTrain, Consta
   @Override
   public void end(boolean interrupted) {
     // driveTrain.setSpeedsPercent(0, 0);
+    RobotContainer.activityState = ActivityState.IDLE;
+    if (!DriverStation.isAutonomous()) RobotContainer.controlState = ControlState.MANUAL;
   }
 
   // Returns true when the command should end.
