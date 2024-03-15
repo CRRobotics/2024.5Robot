@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -265,9 +266,9 @@ public class RobotContainer {
     AUTO, PATHING, MANUAL
   }
 
-  /** IDLE, DRIVING, COLLECTING, CENTERING, SHOOTING */
+  /** IDLE, DRIVING, COLLECTING, CENTERING, HAS_NOTE, SHOOTING, CLIMBING */
   public enum ActivityState {
-    IDLE, DRIVING, COLLECTING, CENTERING, SHOOTING, CLIMBING
+    IDLE, DRIVING, COLLECTING, CENTERING, HAS_NOTE, SHOOTING, CLIMBING
   }
 
   /** Only use to drive LEDs, not safe for anything else */
@@ -290,4 +291,6 @@ public class RobotContainer {
     blinkTickSpeedChooser.setDefaultOption("one", 1);
     SmartDashboard.putData(blinkTickSpeedChooser);
   }
+
+  public static void setLEDs(Color color) {LED.setColor(color);}
 }

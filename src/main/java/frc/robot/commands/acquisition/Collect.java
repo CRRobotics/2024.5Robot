@@ -76,7 +76,6 @@ public class Collect extends Command implements Constants.Shooter{
 
     @Override
     public void end(boolean interrupted) {
-        RobotContainer.activityState = ActivityState.IDLE;
         acq.stop();
         indexer.stop();
     }
