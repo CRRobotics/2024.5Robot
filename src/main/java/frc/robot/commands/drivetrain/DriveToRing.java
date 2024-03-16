@@ -82,12 +82,17 @@ public class DriveToRing extends Command{
                 (pieceData[0]) * 0.0254
             );
 
-            drive = new DriveToRelative(driveTrain, closestPiece);
-            // drive = drive.finallyDo(
-            //     (boolean interrupted) -> {
-            //         isFinished = true;
-            //     });
-            drive.schedule();
+            //if distance to piece is more than 0.5m away
+            // if (closestPiece.getDistance(new Translation2d(0, 0)) > 0.5) {
+                drive = new DriveToRelative(driveTrain, closestPiece);
+                // drive = drive.finallyDo(
+                //     (boolean interrupted) -> {
+                //         isFinished = true;
+                //     });
+                drive.schedule();
+            // } else {
+            //     isFinished = true;
+            // }
         }
         // if (pieceData[1] < 30) {
         //     new ParallelRaceGroup(
