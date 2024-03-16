@@ -41,6 +41,7 @@ public class Winch extends SubsystemBase implements Constants.Winch
         SmartDashboard.putNumber("winch/p", winchP);
         SmartDashboard.putNumber("winch/i", winchI);
         SmartDashboard.putNumber("winch/d", winchD);
+        SmartDashboard.putNumber("winch/extend time", extendTime);
 
         winchPid = rightClimbMotor.getPIDController();
         winchPid.setP(winchP);

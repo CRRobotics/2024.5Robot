@@ -1,5 +1,6 @@
 package frc.robot.commands.climb;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Winch;
 import frc.robot.util.Constants;
@@ -24,7 +25,7 @@ public class Extend extends Command implements Constants.Winch
 
     @Override
     public void execute() {
-        if (System.currentTimeMillis() > startTime + extendTime) {
+        if (System.currentTimeMillis() > startTime + SmartDashboard.getNumber("winch/extend time", extendTime)) {
             finished = true;
         }
     }
