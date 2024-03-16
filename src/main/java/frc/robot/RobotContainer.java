@@ -147,7 +147,7 @@ public class RobotContainer {
     // DRIVER BINDINGS
     new JoystickButton(driver, XboxController.Button.kRightBumper.value).whileTrue(new DriveSlow());
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new DriveFast());
-    new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain, acq, indexer, shooter));
+    // new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain, acq, indexer, shooter));
     new JoystickButton(driver, XboxController.Button.kBack.value).whileTrue(new Climb(winch, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     new JoystickButton(driver, XboxController.Button.kStart.value).onTrue(new Extend(winch));
     new JoystickButton(driver, XboxController.Button.kLeftStick.value).onTrue(new RunCommand(() -> CommandScheduler.getInstance().cancelAll()));
