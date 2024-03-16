@@ -17,9 +17,9 @@ import frc.robot.util.Constants;
  * Tells the drive train to use a path to drive to an absolute point on the field
  */
 public class DriveToAmp extends Command {
-    DriveTrain driveTrain;
-    boolean finished;
-    Command pathfindingCommand;
+    private DriveTrain driveTrain;
+    private boolean finished;
+    private Command pathfindingCommand;
 
     public DriveToAmp(DriveTrain driveTrain) {
         this.driveTrain = driveTrain;
