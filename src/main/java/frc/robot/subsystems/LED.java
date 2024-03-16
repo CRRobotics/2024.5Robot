@@ -11,14 +11,9 @@ public class LED extends SubsystemBase {
     private static AddressableLEDBuffer ledBuffer;
     private boolean blinkState;
 
-    int r;
-    int g;
-    int b;
-    int h;
-    int tickSpeed;
-    int state;
-    int partitions;
-    int edgeWidth;
+    private int h;
+    private int partitions;
+    private int edgeWidth;
     // state is a variable to determine whether red green and blue should be increasing or decreasing.
 
     public LED(int length, int partitions, int edgeWidth) {
@@ -30,10 +25,6 @@ public class LED extends SubsystemBase {
         led.setData(ledBuffer);
         
         led.start();
-        r = 0;
-        g = 0;
-        b = 0;
-        state = 0;
         h = 0;
 
         blinkState = false;
@@ -44,7 +35,7 @@ public class LED extends SubsystemBase {
         // Color color;
         // Color autoColor = new Color(255, 0, 0);
         // Color offColor = new Color(0, 0, 0);
-        // 
+        
         // tickBlink();
         // switch (RobotContainer.activityState) {
         //     case IDLE:
