@@ -29,6 +29,7 @@ import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
 import frc.robot.commands.drivetrain.DriveToAmp;
+import frc.robot.commands.drivetrain.DriveToInFrontOfAmp;
 import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRing;
 import frc.robot.commands.drivetrain.JoystickDrive;
@@ -147,8 +148,11 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain, acq, indexer, shooter));
     new JoystickButton(driver, XboxController.Button.kBack.value).whileTrue(new Climb(winch, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     new JoystickButton(driver, XboxController.Button.kLeftStick.value).onTrue(new RunCommand(() -> CommandScheduler.getInstance().cancelAll()));
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToAmp(driveTrain));
-    new JoystickButton(driver, XboxController.Button.kX.value).onTrue(new RunCommand(() -> useVisions = !useVisions));
+    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToAmp(driveTrain));
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SequentialCommandGroup(
+      new DriveToInFrontOfAmp(driveTrain), new DriveToAmp(driveTrain)
+    ));
+    new JoystickButton(driver, XboxController.Button.kX.value).onTrue(new RunCommand(() -> resetOdometry()).withTimeout(0.01));
 
     // OPERATOR BINDINGS
     // new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new DriveAdjustShoot(driveTrain, shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
@@ -196,9 +200,10 @@ public class RobotContainer {
     Pose2d speakerPose = (getAlliance().equals(Alliance.Blue)? new Pose2d(Field.speakerBlue, new Rotation2d()) : new Pose2d(Field.speakerRed, new Rotation2d()));
     if (autoCommandChooser.getSelected().equals("OneRing")) {
       setOdometry(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected() : new Pose2d(Constants.Field.fieldWidth - startingPos.getSelected().getX(), startingPos.getSelected().getY(), new Rotation2d(Math.PI - startingPos.getSelected().getRotation().getRadians())));
+      driveTrain.setGyroAngle(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected().getRotation().getRadians() : Math.PI - startingPos.getSelected().getRotation().getRadians());
       // return new OneRingAuto(acq, indexer, shooter, driveTrain, ringPositionChooser.getSelected(), speakerPose);
       return new SequentialCommandGroup(new SequentialCommandGroup(
-            new SpeakerShot(shooter, indexer, driveTrain)),
+            new BumbperShot(shooter, indexer, driveTrain)),
             new ParallelRaceGroup
             (
                 new Collect(acq, indexer, shooter),
@@ -207,7 +212,14 @@ public class RobotContainer {
             // new SpeakerShot(shooter, indexer, driveTrain)
             );
 
-    } else {
+    } else if (autoCommandChooser.getSelected().equals("Shoot")) {
+      setOdometry(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected() : new Pose2d(Constants.Field.fieldWidth - startingPos.getSelected().getX(), startingPos.getSelected().getY(), new Rotation2d(Math.PI - startingPos.getSelected().getRotation().getRadians())));
+      driveTrain.setGyroAngle(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected().getRotation().getRadians() : Math.PI - startingPos.getSelected().getRotation().getRadians());
+      new BumbperShot(shooter, indexer, driveTrain).schedule();
+    } else if (autoCommandChooser.getSelected().equals("Nothing")) {
+      setOdometry(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected() : new Pose2d(Constants.Field.fieldWidth - startingPos.getSelected().getX(), startingPos.getSelected().getY(), new Rotation2d(Math.PI - startingPos.getSelected().getRotation().getRadians())));
+      driveTrain.setGyroAngle(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected().getRotation().getRadians() : Math.PI - startingPos.getSelected().getRotation().getRadians());
+    } {
       return null;
     }
   }
@@ -250,11 +262,12 @@ public class RobotContainer {
   public void resetOdometry() {
     driveTrain.resetOdometry(new Pose2d());
     driveTrain.zeroHeading();
+    System.out.println("resetting ododmemetsty");
   }
 
   public void setOdometry(Pose2d pose) {
     driveTrain.resetOdometry(pose);
-    driveTrain.zeroHeading();
+    // driveTrain.zeroHeading();
   }
 
   public static ShooterState getShooterState() {
