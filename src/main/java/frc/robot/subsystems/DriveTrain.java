@@ -114,7 +114,7 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
                     new PIDConstants(10.0, 0.0, 0.0), // Rotation PID constants
                     4.5, // Max module speed, in m/s
                     0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-                    new ReplanningConfig(true, true, 0.1, 0.2) // Default path replanning config. See the API for the options here
+                    new ReplanningConfig(true, true, 0.5, 0.2) // Default path replanning config. See the API for the options here
             ),
             this::flipPath,
             this // Reference to this subsystem to set requirements
@@ -154,12 +154,14 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
             Rotation2d.fromDegrees(-gyro.getAngle()),
             swervePosition
         );
-        odometry.update(
-            Rotation2d.fromDegrees(-gyro.getAngle()),
-            swervePosition
-        );
+        // odometry.update(
+        //     Rotation2d.fromDegrees(-gyro.getAngle()),
+        //     swervePosition
+        // );
         // update with visions data from these cameras ids:
         for (String id : cameraIds) {
+            double xstd = 2;
+            double thetastd = 0.05;
             double x = NetworkTableWrapper.getDouble(id, "rx");
             double y = NetworkTableWrapper.getDouble(id, "ry");
             double ntags = NetworkTableWrapper.getDouble(id, "ntags");
@@ -168,14 +170,12 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
                 double distance = getPose().getTranslation().getDistance(new Translation2d(x, y));
                 SmartDashboard.putNumber("distance to tag", distance);
                 System.out.println("unique identifyer" + System.currentTimeMillis() + ", " + getPose() + ", " + id + ", " + new Pose2d(x, y, new Rotation2d(theta)) + ", " + ntags + ", ");
-                if (true) {
-                    poseEstimator.addVisionMeasurement(
-                        new Pose2d(x, y, new Rotation2d(theta)),
-                        // new Pose2d(x, y, new Rotation2d(theta)),
-                        Timer.getFPGATimestamp() + 0.01, // needs to be tested and calibrated
-                        VecBuilder.fill(1 * distance, 1 * distance, 1 * distance) // needs to be calibrated
-                    );
-                }
+                poseEstimator.addVisionMeasurement(
+                    new Pose2d(x, y, new Rotation2d(theta)),
+                    // new Pose2d(x, y, new Rotation2d(theta)),
+                    Timer.getFPGATimestamp() + 0.01, // needs to be tested and calibrated
+                    VecBuilder.fill(xstd / Math.pow(ntags, 2), xstd / Math.pow(ntags, 2), thetastd / Math.pow(ntags, 2)) // needs to be calibrated
+                );
             }
         }
         // field

@@ -152,14 +152,16 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kStart.value).onTrue(new Extend(winch));
     new JoystickButton(driver, XboxController.Button.kLeftStick.value).onTrue(new RunCommand(() -> CommandScheduler.getInstance().cancelAll()));
     // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToAmp(driveTrain));
-    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SequentialCommandGroup(
-      new DriveToInFrontOfAmp(driveTrain), new DriveToAmp(driveTrain)
-    ));
+    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SequentialCommandGroup(
+    //   new DriveToInFrontOfAmp(driveTrain), new DriveToAmp(driveTrain)
+    // ));
+    new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToInFrontOfAmp(driveTrain));
     new JoystickButton(driver, XboxController.Button.kX.value).onTrue(new RunCommand(() -> resetOdometry()).withTimeout(0.01));
+    new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new TurnToSpeaker(driveTrain));
 
     // OPERATOR BINDINGS
     // new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new DriveAdjustShoot(driveTrain, shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
-    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer, driveTrain).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
+    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer, driveTrain).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(new BumbperShot(shooter, indexer, driveTrain).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
     new JoystickButton(operator, XboxController.Button.kX.value).onFalse(new CenterNote(shooter, indexer));
