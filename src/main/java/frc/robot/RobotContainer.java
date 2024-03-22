@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.acquisition.Collect;
@@ -217,11 +218,14 @@ public class RobotContainer {
             new BumbperShot(shooter, indexer, driveTrain)),
             new ParallelRaceGroup
             (
-                new Collect(acq, indexer, shooter),
-                new DriveToPoint(driveTrain, new Pose2d(ringPositionChooser.getSelected().getTranslation(), new Rotation2d(Math.atan2(ringPositionChooser.getSelected().getY() - startingPos.getSelected().getY(), ringPositionChooser.getSelected().getX() - startingPos.getSelected().getX()))))
-            )
-            // new SpeakerShot(shooter, indexer, driveTrain)
-            );
+              new DriveToPoint(driveTrain, new Pose2d(ringPositionChooser.getSelected().getTranslation(), new Rotation2d(Math.atan2(ringPositionChooser.getSelected().getY() - startingPos.getSelected().getY(), ringPositionChooser.getSelected().getX() - startingPos.getSelected().getX())))),
+              new Collect(acq, indexer, shooter),
+              // new RunCommand(() -> acq.collect(), acq),
+              new WaitCommand(2)
+            ),
+            new TurnToSpeaker(driveTrain),
+            new SpeakerShot(shooter, indexer, driveTrain)
+            );  
 
     } else if (autoCommandChooser.getSelected().equals("Shoot")) {
       return new BumbperShot(shooter, indexer, driveTrain);

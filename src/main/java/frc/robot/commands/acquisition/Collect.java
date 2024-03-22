@@ -1,6 +1,7 @@
 package frc.robot.commands.acquisition;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.ActivityState;
@@ -45,9 +46,12 @@ public class Collect extends Command implements Constants.Shooter{
     @Override
     public void execute()
     { 
+        SmartDashboard.putBoolean("collect/intake", !indexer.intake());
+        SmartDashboard.putBoolean("collect/interfaced", shooter.isInterfaced());
+        SmartDashboard.putBoolean("collect/stage", stage == Stage.stage0);
         if(!indexer.intake() && shooter.isInterfaced() && stage == Stage.stage0) {
             acq.collect();
-        } else if(stage == Stage.stage0) {
+        } else if(stage == Stage.stage0 && shooter.isInterfaced()) {
             stage = Stage.stage1;
         }
 
