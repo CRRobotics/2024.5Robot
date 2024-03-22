@@ -42,8 +42,8 @@ public interface Constants {
             new Translation2d(-wheelBase / 2, -trackWidth / 2));
         /** Swerve Max Speed in m/s.
          * <p>(copied from https://github.com/REVrobotics/MAXSwerve-Java-Template/blob/main/src/main/java/frc/robot/Constants.java) */
-        double maxSpeed = 0.5;
-        double maxAcceleration = 0.5;
+        double maxSpeed = 6;
+        double maxAcceleration = 8;
         /** radians per second */
         double maxAngularSpeed = 2 * Math.PI;
         /** radians per second squared */
@@ -171,8 +171,8 @@ public interface Constants {
         int rightID = 10;
 
         double extendSpeed = 0.09;
-        double retractSpeed = 0.9;
-        double extendTime = 1100;
+        double retractSpeed = 1.15;
+        double extendTime = 1150;
         // double retractTime = 600;
 
         double currentDifferenceThreshold = 7000; //TODO: Tune value
@@ -276,12 +276,12 @@ public interface Constants {
         Translation2d tag16 = new Translation2d(4.641342, 3.713226);
 
         Translation2d ampBlue = tag6.minus(new Translation2d(0, DriveTrain.trackWidth / 2));
-        Translation2d subwooferBlue = new Translation2d(1.24, 5.553456);
-        Translation2d speakerBlue = tag7.plus(new Translation2d(DriveTrain.trackWidth, 0));
+        Translation2d subwooferBlue = tag7.plus(new Translation2d(DriveTrain.trackWidth, 0)); //not right
+        Translation2d speakerBlue = tag7;
 
         Translation2d ampRed = tag5.minus(new Translation2d(0, DriveTrain.trackWidth / 2));
         Translation2d subwooferRed = new Translation2d(fieldWidth - subwooferBlue.getX(), subwooferBlue.getY());
-        Translation2d speakerRed = tag4.minus(new Translation2d(DriveTrain.trackWidth, 0));
+        Translation2d speakerRed = tag4;
 
     
     }

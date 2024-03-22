@@ -96,6 +96,20 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
         VecBuilder.fill(visionTrans, visionTrans, visionTheta) // visions standard deviation for x, y, theta
     );
 
+    public void setInitPose(Pose2d startingPos) {
+        zeroHeading();
+        poseEstimator.resetPosition(
+                startingPos.getRotation(),
+                new SwerveModulePosition[] {
+                    frontLeft.getPosition(),
+                    frontRight.getPosition(),
+                    backLeft.getPosition(),
+                    backRight.getPosition()
+                },
+                startingPos);
+        setGyroAngle(startingPos.getRotation().getRadians());
+    }
+
 
     /**
      * Creates a new <code>DriveTrain</code> subsystem
@@ -221,7 +235,7 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
      * @param pose The pose to which to set the odometry.
      */
     public void resetOdometry(Pose2d pose) {
-        setGyroAngle(RobotContainer.getAlliance().equals(Alliance.Blue) ? 0 : 0);
+        // setGyroAngle(RobotContainer.getAlliance().equals(Alliance.Blue) ? 0 : 0);
         poseEstimator.resetPosition(
                 gyro.getRotation2d(),
                 new SwerveModulePosition[] {
@@ -285,6 +299,12 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
      * Zeroes the heading of the robot. 
      */
     public void zeroHeading() {
+        // gyro.setAngleAdjustment(0);
+        gyro.reset();
+    }
+
+    public void setHeading(double offsetAngle) {
+        gyro.setAngleAdjustment(offsetAngle);
         gyro.reset();
     }
     /**
