@@ -278,12 +278,18 @@ public interface Constants {
         Translation2d ampBlue = tag6.minus(new Translation2d(0, DriveTrain.trackWidth / 2));
         Translation2d subwooferBlue = new Translation2d(1.24, 5.553456);
         Translation2d speakerBlue = tag7.plus(new Translation2d(DriveTrain.trackWidth, 0));
-
+        Translation2d ampChainBlue = tag15;
+        Translation2d centerChainBlue = tag14;
+        Translation2d sourceChainBlue = tag16;
+        
         Translation2d ampRed = tag5.minus(new Translation2d(0, DriveTrain.trackWidth / 2));
         Translation2d subwooferRed = new Translation2d(fieldWidth - subwooferBlue.getX(), subwooferBlue.getY());
         Translation2d speakerRed = tag4.minus(new Translation2d(DriveTrain.trackWidth, 0));
+        Translation2d ampChainRed = tag12;
+        Translation2d centerChainRed = tag13;
+        Translation2d sourceChainRed = tag11;
 
-    
+        double offset = 0.55;
     }
     
     /**

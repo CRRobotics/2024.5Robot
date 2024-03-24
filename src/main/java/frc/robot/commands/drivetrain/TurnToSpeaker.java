@@ -2,6 +2,8 @@ package frc.robot.commands.drivetrain;
 
 import java.lang.reflect.Field;
 
+import org.opencv.core.RotatedRect;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -32,6 +34,7 @@ public class TurnToSpeaker extends Command implements Constants.Field {
 
     @Override
     public void initialize() {
+        // Rotation2d rot2d = new Rotation2d(x, y);
         RobotContainer.activityState = ActivityState.DRIVING;
         if (!DriverStation.isAutonomous()) RobotContainer.controlState = ControlState.PATHING;
         done = false;

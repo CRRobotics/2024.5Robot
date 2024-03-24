@@ -15,7 +15,9 @@ import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.util.Constants;
 
 /**
@@ -143,6 +145,8 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         //setpoint is the Rotation Per Second (RPS) of the shooter wheels
         //MotorRPS * MotorPulleyTeethNum = ShooterWheelRPS * ShooterWheelPulleyTeethNum
         //MotorRPM = ShooterWheelRPM * (ShooterWheelPulleyTeethNum/MotorPulleyTeethNum)
+        if (setpoint >= 0) RobotContainer.setLEDs(Color.kGreen);
+
         double motorRPS = setpoint * beltRatio;
 
         voltageController.Slot = 0;
@@ -182,6 +186,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
 
     @Override
     public void periodic() {
+        // System.out.println(topSwitch.isPressed() + " " + bottomSwitch.isPressed());
         // krakenSlotConfig.kP = SmartDashboard.getNumber("shooter KP", 0);
         // krakenSlotConfig.kI = SmartDashboard.getNumber("shooter KI", 0);
         // krakenSlotConfig.kD = SmartDashboard.getNumber("shooter KD", 0);
