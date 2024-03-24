@@ -17,7 +17,7 @@ public class ValueFromDistance {
         // shootMap.put(3 * 0.3048 + 1.23, new AngleSpeed(5.02, 160));
         // shootMap.put(4 * 0.3048 + 1.23, new AngleSpeed(5.03, 160));
         shootMap.put(0.0, new AngleSpeed(4.79 + 0.05, 160)); //real
-        shootMap.put(1.29, new AngleSpeed(4.8  + 0.05, 160));
+        shootMap.put(1.29, new AngleSpeed(4.77  + 0.05, 160));
         shootMap.put(1.75, new AngleSpeed(4.9  + 0.05, 160));
         shootMap.put(2.13, new AngleSpeed(5  + 0.05, 160));
     }

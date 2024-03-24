@@ -45,7 +45,7 @@ public class BumbperShot extends Command implements Constants.Field, Constants.S
         // remove this line later
         // shootAngleSpeed = new AngleSpeed(SmartDashboard.getNumber("pivot setpoint", 4.3), SmartDashboard.getNumber("velocity setpoint", 0));
         Translation2d speakerPos = RobotContainer.getAlliance().equals(Alliance.Blue) ? speakerBlue : speakerRed;
-        shootAngleSpeed = new AngleSpeed(4.85, 160); //changed from 4.7
+        shootAngleSpeed = new AngleSpeed(4.82, 160); //changed from 4.7
         
         shooter.aim(shootAngleSpeed.getAngle());
         shooter.setSpeed(shootAngleSpeed.getSpeed());

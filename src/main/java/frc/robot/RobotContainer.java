@@ -7,12 +7,14 @@ package frc.robot;
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -118,18 +120,26 @@ public class RobotContainer {
     ringPositionChooser.addOption("LeftBlue", new Pose2d(NotePositions.kNotesStartingBlueWing[2], new Rotation2d(0)));
     ringPositionChooser.addOption("MiddleBlue",  new Pose2d(NotePositions.kNotesStartingBlueWing[1], new Rotation2d(0)));
     ringPositionChooser.addOption("RightBlue",  new Pose2d(NotePositions.kNotesStartingBlueWing[0], new Rotation2d(0)));
+    ringPositionChooser.addOption("Mid1", new Pose2d(8.28, 7.42, new Rotation2d(Math.PI / 4)));
+    ringPositionChooser.addOption("Mid2", new Pose2d(8.28, 5.77, new Rotation2d(Math.PI / 4)));
+    ringPositionChooser.addOption("Mid3", new Pose2d(8.28, 4.11, new Rotation2d(Math.PI / 4)));
+    ringPositionChooser.addOption("Mid4", new Pose2d(8.28, 2.42, new Rotation2d(Math.PI / 4)));
+    ringPositionChooser.addOption("Mid5", new Pose2d(8.28, 0.76, new Rotation2d(Math.PI / 4)));
     ringPositionChooser.setDefaultOption("LeftRed", new Pose2d(NotePositions.kNotesStartingRedWing[2], new Rotation2d(Math.PI)));
     SmartDashboard.putData(ringPositionChooser);
     autoCommandChooser.addOption("OneRing", "OneRing");
     autoCommandChooser.addOption("Shoot", "Shoot");
     autoCommandChooser.addOption("Nothing", "Nothing");
+    autoCommandChooser.addOption("Mobility", "Mobility");
+    autoCommandChooser.addOption("Mess With 2 Notes", "Mess With 2 Notes");
+    autoCommandChooser.addOption("Mess With Note", "Mess With Note");
     autoCommandChooser.setDefaultOption("Nothing", "Nothing");
     SmartDashboard.putData(autoCommandChooser);
 
     startingPos.addOption("amp side", new Pose2d(0.68, 6.58, Rotation2d.fromDegrees(60)));
     startingPos.addOption("subwoofer", new Pose2d(1.19, 5.57, Rotation2d.fromDegrees(0)));
     startingPos.addOption("not amp side", new Pose2d(0.68, 4.57, Rotation2d.fromDegrees(-60)));
-    startingPos.addOption("source side", new Pose2d(0.39, 3.1, Rotation2d.fromDegrees(0)));
+    startingPos.addOption("source side", new Pose2d(0.39, 1.98, Rotation2d.fromDegrees(0)));
     startingPos.setDefaultOption("amp side", new Pose2d(0.68, 6.58, Rotation2d.fromDegrees(60)));
     SmartDashboard.putData(startingPos);
     
@@ -214,23 +224,40 @@ public class RobotContainer {
         : new Pose2d(new Translation2d(Constants.Field.fieldWidth - startingPos.getSelected().getX(), startingPos.getSelected().getY()), new Rotation2d(Math.PI + startingPos.getSelected().getRotation().getRadians())));
 
     if (autoCommandChooser.getSelected().equals("OneRing")) {
-      return new SequentialCommandGroup(new SequentialCommandGroup(
-            new BumbperShot(shooter, indexer, driveTrain)),
+      double finalAngle = Math.atan2(ringPositionChooser.getSelected().getY() - startingPos.getSelected().getY(), ringPositionChooser.getSelected().getX() - startingPos.getSelected().getX());
+      return new SequentialCommandGroup(
+            new BumbperShot(shooter, indexer, driveTrain),
             new ParallelRaceGroup
             (
-              new DriveToPoint(driveTrain, new Pose2d(ringPositionChooser.getSelected().getTranslation(), new Rotation2d(Math.atan2(ringPositionChooser.getSelected().getY() - startingPos.getSelected().getY(), ringPositionChooser.getSelected().getX() - startingPos.getSelected().getX())))),
+              new DriveToPoint(driveTrain, new Pose2d(ringPositionChooser.getSelected().getTranslation(), new Rotation2d(getAlliance().equals(Alliance.Blue) ? finalAngle : Math.PI - finalAngle))),
               new Collect(acq, indexer, shooter),
-              // new RunCommand(() -> acq.collect(), acq),
               new WaitCommand(2)
             ),
             new TurnToSpeaker(driveTrain),
             new SpeakerShot(shooter, indexer, driveTrain)
-            );  
+            );
 
     } else if (autoCommandChooser.getSelected().equals("Shoot")) {
       return new BumbperShot(shooter, indexer, driveTrain);
     } else if (autoCommandChooser.getSelected().equals("Nothing")) {
       return null;
+    } else if (autoCommandChooser.getSelected().equals("Mobility")) {
+      return new SequentialCommandGroup(
+        new BumbperShot(shooter, indexer, driveTrain),
+        new DriveToPoint(driveTrain, new Pose2d(new Translation2d(getAlliance().equals(Alliance.Blue) ? 2.4 : Constants.Field.fieldWidth - 2.4, 1.22), new Rotation2d(getAlliance().equals(Alliance.Blue) ? 0 : Math.PI)))
+      );
+    } else if (autoCommandChooser.getSelected().equals("Mess With 2 Notes")) {
+      return new SequentialCommandGroup(
+        new BumbperShot(shooter, indexer, driveTrain),
+        new WaitCommand(6),
+        new PathPlannerAuto("auto1")
+      );
+    } else if (autoCommandChooser.getSelected().equals("Mess With Note")) {
+      return new SequentialCommandGroup(
+        new BumbperShot(shooter, indexer, driveTrain),
+        new WaitCommand(6),
+        new DriveToPoint(driveTrain, new Pose2d(ringPositionChooser.getSelected().getTranslation(), new Rotation2d(Math.PI / 4)))
+      );
     } else {
       return null;
     }
