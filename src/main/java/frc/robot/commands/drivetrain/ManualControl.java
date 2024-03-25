@@ -5,19 +5,29 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.shooter.ShootAtAngleSpeed;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
+import frc.robot.util.AngleSpeed;
 import frc.robot.util.Constants;
 
 public class ManualControl extends Command implements Constants.DriveTrain {
     private DriveTrain driveTrain;
     private Shooter shooter;
+    private Indexer indexer;
     private XboxController controller = new XboxController(0);
 
-    public ManualControl(DriveTrain driveTrain, Shooter shooter) {
+    public ManualControl(DriveTrain driveTrain, Shooter shooter, Indexer indexer) {
         this.driveTrain = driveTrain;
         this.shooter = shooter;
-        addRequirements(driveTrain, shooter);
+        this.indexer = indexer;
+        addRequirements(driveTrain, shooter, indexer);
+    }
+
+    @Override
+    public void initialize() {
     }
 
     @Override
@@ -32,11 +42,6 @@ public class ManualControl extends Command implements Constants.DriveTrain {
         driveTrain.setModuleStates(swerveModuleStates);
 
         shooter.setSpeedPivot(controller.getLeftY() * 0.1);
-        
-        if (controller.getAButtonPressed()) {
-            shooter.setSpeed(160);
-        } else {
-            shooter.setSpeed(0);
-        }
+        new JoystickButton(controller, XboxController.Button.kA.value).whileTrue(new ShootAtAngleSpeed(shooter, indexer, driveTrain, new AngleSpeed(shooter.getAngle(), 160)));
     }
 }

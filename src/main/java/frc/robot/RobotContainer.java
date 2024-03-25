@@ -240,7 +240,7 @@ public class RobotContainer {
         driveCommand = new DDRDrive(driveTrain);
         break;
       case "demo":
-        driveCommand = new ManualControl(driveTrain, shooter);
+        driveCommand = new ManualControl(driveTrain, shooter, indexer);
         break;
     }
     return driveCommand;
