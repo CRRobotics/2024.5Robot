@@ -84,6 +84,7 @@ public class TurnToAngle extends Command implements Constants.DriveTrain, Consta
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    SmartDashboard.putBoolean("turnpid/isDone", controller.atSetpoint());
     return controller.atSetpoint();
   }
 

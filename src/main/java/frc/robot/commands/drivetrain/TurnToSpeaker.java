@@ -43,13 +43,18 @@ public class TurnToSpeaker extends Command implements Constants.Field {
         Field2d field = new Field2d();
         // field.setRobotPose(driveTrain.getPose().getX(), driveTrain.getPose().getY(), new Rotation2d(angle));
         SmartDashboard.putData(field);
-        command = new TurnToAngle(driveTrain, new Rotation2d(angle));
+        command = new TurnToAngle(driveTrain, new Rotation2d(Math.PI + angle));
         SmartDashboard.putNumber("target rotation angle/angle", angle * 180 / Math.PI);
         SmartDashboard.putNumber("target rotation angle/y", speakerPos.getY() - driveTrain.getPose().getY());
         SmartDashboard.putNumber("target rotation angle/x", speakerPos.getX() - driveTrain.getPose().getY());
         SmartDashboard.putNumber("target rotation angle/angle rads", angle);
-        command = command.finallyDo((boolean interrupted) -> new RunCommand(() -> done = true));
+        command = command.finallyDo((boolean interrupted) -> done = true);
         command.schedule();
+        // command.cancel();
+    }
+
+    @Override
+    public void execute() {
     }
 
     @Override

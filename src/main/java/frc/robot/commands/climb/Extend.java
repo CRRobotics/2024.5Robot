@@ -7,7 +7,7 @@ import frc.robot.util.Constants;
 
 public class Extend extends Command implements Constants.Winch
 {
-    Winch winch;
+    private Winch winch;
     private long startTime;
     private boolean finished;
 

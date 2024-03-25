@@ -4,6 +4,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.ActivityState;
@@ -31,6 +32,7 @@ public class DriveToPoint extends Command {
         if (!DriverStation.isAutonomous()) RobotContainer.controlState = ControlState.PATHING;
         
         System.out.println("drive to pointing");
+        SmartDashboard.putNumber("final path angle", target.getRotation().getDegrees());
         // driveTrain.updateObstacles();
         Command pathfindingCommand = AutoBuilder.pathfindToPose(
             target,

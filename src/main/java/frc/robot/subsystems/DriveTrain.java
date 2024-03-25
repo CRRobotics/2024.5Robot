@@ -4,35 +4,28 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.commands.FollowPathHolonomic;
-import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
-import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 import frc.robot.util.Constants;
 import frc.robot.util.LocalADStarAK;
 import frc.robot.util.NetworkTableWrapper;
@@ -65,21 +58,7 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
     // KINEMATICS
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
     private Pathfinder pathFinder;
-
     private Field2d field = new Field2d();
-    // private Field2d odoField = new Field2d();
-    
-    // Odometry to keep track of the robot's movement history
-    SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-        Constants.DriveTrain.driveKinematics,
-        Rotation2d.fromDegrees(gyro.getAngle()),
-        new SwerveModulePosition[] {
-                frontLeft.getPosition(),
-                frontRight.getPosition(),
-                backLeft.getPosition(),
-                backRight.getPosition()
-        }
-    );
     
     // Kalman filter for mixing odometry and vision data into final pose estimate
     SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(
@@ -101,7 +80,6 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
      * Creates a new <code>DriveTrain</code> subsystem
      */
     public DriveTrain() {
-        // resetOdometry(new Pose2d(1.6, 4.4, Rotation2d.fromRadians(2.8)));
         zeroHeading();
         ReplanningConfig replanningConfig = new ReplanningConfig(true, true, 0.1, 0.2);
         AutoBuilder.configureHolonomic(
@@ -154,10 +132,7 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
             Rotation2d.fromDegrees(-gyro.getAngle()),
             swervePosition
         );
-        // odometry.update(
-        //     Rotation2d.fromDegrees(-gyro.getAngle()),
-        //     swervePosition
-        // );
+
         // update with visions data from these cameras ids:
         for (String id : cameraIds) {
             double xstd = 2;
@@ -167,9 +142,6 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
             double ntags = NetworkTableWrapper.getDouble(id, "ntags");
             double theta = NetworkTableWrapper.getDouble(id, "theta");
             if (ntags != 0 && x != cameraErrorCode) {
-                double distance = getPose().getTranslation().getDistance(new Translation2d(x, y));
-                SmartDashboard.putNumber("distance to tag", distance);
-                System.out.println("unique identifyer" + System.currentTimeMillis() + ", " + getPose() + ", " + id + ", " + new Pose2d(x, y, new Rotation2d(theta)) + ", " + ntags + ", ");
                 poseEstimator.addVisionMeasurement(
                     new Pose2d(x, y, new Rotation2d(theta)),
                     // new Pose2d(x, y, new Rotation2d(theta)),
@@ -178,15 +150,26 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
                 );
             }
         }
-        // field
-        // odoField.setRobotPose(odometry.getPoseMeters());
-        // SmartDashboard.putData(odoField);
         field.setRobotPose(getPose());
         SmartDashboard.putData(field);
     }
 
-    public Field2d getField() {
-        return field;
+    /**
+     * sets the odometry pose & gyro rotation
+     * @param startingPos the pose to set it to
+     */
+    public void setInitPose(Pose2d startingPos) {
+        zeroHeading();
+        poseEstimator.resetPosition(
+                startingPos.getRotation(),
+                new SwerveModulePosition[] {
+                    frontLeft.getPosition(),
+                    frontRight.getPosition(),
+                    backLeft.getPosition(),
+                    backRight.getPosition()
+                },
+                startingPos);
+        setGyroAngle(startingPos.getRotation().getRadians());
     }
 
     /**
@@ -198,30 +181,11 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
         return poseEstimator.getEstimatedPosition();
     }
 
-    /**
-     * Resets the odometry to the specified pose.
-     *
-     * @param pose The pose to which to set the odometry.
-     */
-    public void resetOdometry(Pose2d pose, Rotation2d rotation) {
-        poseEstimator.resetPosition(
-                rotation,
-                new SwerveModulePosition[] {
-                    frontLeft.getPosition(),
-                    frontRight.getPosition(),
-                    backLeft.getPosition(),
-                    backRight.getPosition()
-                },
-                pose);
-    }
-
      /**
-     * Resets the odometry to the specified pose.
-     *
+     * Resets the ODOMETRY to the specified pose. This has nothing to do with the gyro, only used to pass into the kalman filter
      * @param pose The pose to which to set the odometry.
      */
     public void resetOdometry(Pose2d pose) {
-        setGyroAngle(RobotContainer.getAlliance().equals(Alliance.Blue) ? 0 : 0);
         poseEstimator.resetPosition(
                 gyro.getRotation2d(),
                 new SwerveModulePosition[] {
@@ -231,16 +195,6 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
                     backRight.getPosition()
                 },
                 pose);
-    }
-
-    /**
-     * Sets the wheels into an X formation to prevent movement.
-     */
-    public void setX() {
-        frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-        frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-        backLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-        backRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
     }
 
     /**
@@ -282,19 +236,20 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
     }
 
     /** 
-     * Zeroes the heading of the robot. 
+     * Zeroes the heading of the GYRO, keeps angle offset
      */
     public void zeroHeading() {
         gyro.reset();
     }
+
     /**
-     * Sets the gyro angle adjustment to the specified angle in radians.
-     * 
-     * @param angle The angle in radians.
-    */
+     * sets the GYRO heading, nothing to do with odometry
+     * @param angle angle in radians
+     */
     public void setGyroAngle(double angle) {
         gyro.setAngleAdjustment(angle * 180 / Math.PI);
     }
+
     /**
      * Returns the current gyro angle in radians.
      * 
@@ -305,13 +260,14 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
     }
 
     /**
-     * Returns the heading of the robot.
+     * Returns the heading of the ODOMETRY
      *
      * @return the robot's heading in radians
      */
     public double getHeading() {
         return poseEstimator.getEstimatedPosition().getRotation().getRadians();
     }
+
     /**
      * Returns swer module states
      * 
@@ -326,6 +282,7 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
         };
         return states;
     }
+
     /**
      * 
      * @return current pitch value reported by the gyroscope
@@ -333,6 +290,7 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
     public double getPitch() {
         return gyro.getPitch();
     }
+
     /**
      * 
      * @return current roll value reported by the gyroscope
@@ -349,43 +307,6 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
     public double getTurnRate() {
         return gyro.getRate() * (Constants.DriveTrain.gyroReversed ? -1.0 : 1.0);
     }
-
-/**
- * Creates a command to follow a path using a combination of rotation and translation controls.
- * 
- * @param path The path to follow.
- * @return A command to follow the specified path.
- */
-public Command followPathCommand(PathPlannerPath path) {
-    // Rotation PID controller
-    PIDController thetaController = new PIDController(
-        SmartDashboard.getNumber("drivetrain/thetaP", 0.5),
-        SmartDashboard.getNumber("drivetrain/thetaI", 0),
-        SmartDashboard.getNumber("drivetrain/thetaD", 0)
-    );
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-    thetaController.setTolerance(0.025);
-
-    // Display PID tolerances on SmartDashboard
-    SmartDashboard.putNumber("theta position tolerance", thetaController.getPositionTolerance());
-    SmartDashboard.putNumber("theta velocity tolerance", thetaController.getVelocityTolerance());
-
-    // Create and return FollowPathHolonomic command
-    return new FollowPathHolonomic(
-            path, 
-            this::getPose, // Pose supplier
-            this::getChassisSpeeds, // SwerveDriveKinematics
-            this::driveRobotRelative,
-            new HolonomicPathFollowerConfig(
-                new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
-                new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
-                Constants.DriveTrain.maxSpeed, // Max module speed, in m/s
-                Constants.DriveTrain.radius, // Drive base radius in meters. Distance from robot center to furthest module.,
-                new ReplanningConfig(true, false, 0.5, 0.2)), // Default path replanning config. See the API for the options here
-            this::flipPath,
-            this // Reference to this subsystem to set requirements
-    );
-}
 
     /**
      * Converts the state of each swerve module to chassis speeds.
@@ -439,10 +360,5 @@ public Command followPathCommand(PathPlannerPath path) {
         // obstacles.add(new Pair(new Translation2d(1, -1), new Translation2d(2, 1)));
         // pathFinder.setDynamicObstacles(obstacles, this.getPose().getTranslation());
         //Commented out until network tables are ready
-    }
-
-    private Command FollowPathWithEvents(FollowPathHolonomic followPathHolonomic) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'FollowPathWithEvents'");
     }
 }

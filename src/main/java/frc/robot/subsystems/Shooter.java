@@ -77,6 +77,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
 
         pivotEncoderType = SparkAbsoluteEncoder.Type.kDutyCycle;
         pivotEncoder = pivotMotor.getAbsoluteEncoder(pivotEncoderType);
+        // pivotEncoder.setZeroOffset();
 
         pid = new PIDController(0, 0, 0);
         sparkPid = pivotMotor.getPIDController();

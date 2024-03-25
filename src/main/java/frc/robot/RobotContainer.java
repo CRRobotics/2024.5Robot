@@ -6,10 +6,11 @@ package frc.robot;
 
 import java.util.Optional;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
@@ -21,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.acquisition.Collect;
 import frc.robot.commands.acquisition.Reject;
@@ -40,7 +41,6 @@ import frc.robot.commands.drivetrain.TurnToSpeaker;
 import frc.robot.commands.shooter.AmpShot;
 import frc.robot.commands.shooter.BumbperShot;
 import frc.robot.commands.shooter.CenterNote;
-import frc.robot.commands.shooter.DriveAdjustShoot;
 import frc.robot.commands.shooter.SpeakerShot;
 import frc.robot.commands.shooter.WindUp;
 import frc.robot.subsystems.DriveTrain;
@@ -51,8 +51,6 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Winch;
 import frc.robot.util.Constants;
 import frc.robot.util.Constants.Auto.NotePositions;
-import frc.robot.util.Constants.Field;
-import frc.robot.util.DistanceXY;
 import frc.robot.util.DriveStates;
 import frc.robot.util.ShooterState;
 
@@ -68,29 +66,22 @@ public class RobotContainer {
   private final Winch winch = new Winch();
   public static LED led = new LED(50, 2, 15); // TODO: Set LED length
 
-  public static boolean useVisions;
-
   // STATES
   /** Speed modes */
   public static DriveStates driveStates;
   /** Manages the speed of the shooter */
   public static ShooterState shooterState;
-  /** I think this is supposed to just always have the distance to the speaker, not sure
-   *  why its not implemented though, might be @deprecated TODO: Delete or implement */
-  private static DistanceXY distanceXY;
 
   // FINAL IO
   private final XboxController driver = new XboxController(Constants.Controller.driverControllerPort);
   private final XboxController operator = new XboxController(Constants.Controller.operatorControllerPort);
-  private final SendableChooser<Command> autoChooser;
 
   // STATIC IO
   /** Between DDR pad and controller input */
-  public static SendableChooser<String> inputMode;
-  public static SendableChooser<String> testOrVisionsShooter;
-  public static SendableChooser<Pose2d> ringPositionChooser;
-  public static SendableChooser<String> autoCommandChooser;
-  public static SendableChooser<Pose2d> startingPos;
+  public static SendableChooser<String> inputMode = new SendableChooser<>();
+  public static SendableChooser<Pose2d> ringPositionChooser = new SendableChooser<>();
+  public static SendableChooser<String> autoCommandChooser = new SendableChooser<>();
+  public static SendableChooser<Pose2d> startingPos = new SendableChooser<>();
 
   /**
    * Constructs a new RobotContainer. This constructor is responsible for setting up the robot's subsystems and commands.
@@ -98,46 +89,49 @@ public class RobotContainer {
    * It also sets the default command for the drive train to be JoystickDrive.
    */
   public RobotContainer() {
-    // SUBSYTEM PIV INITIALIZATION
-    // STATE INITIALIZATION
-    useVisions = false;
     driveStates = DriveStates.normal;
-    distanceXY = new DistanceXY(driveTrain, getAlliance());
-    // IO INITIALIZATION
-    inputMode = new SendableChooser<>();
-    testOrVisionsShooter = new SendableChooser<>();
-    ringPositionChooser = new SendableChooser<>();
-    autoCommandChooser = new SendableChooser<>();
-    startingPos = new SendableChooser<>();
-    autoChooser = AutoBuilder.buildAutoChooser(); SmartDashboard.putData("Auto Chooser", autoChooser);
+    
+    // ROBOT CONFIGURATION
+    configureSendableChoosers();
+    configureBindings();
+    setShooterState(ShooterState.notSpinning);
+    driveTrain.setDefaultCommand(new JoystickDrive(driveTrain, driver));
+  }
+
+  private void configureSendableChoosers() {
+    inputMode.setDefaultOption("controller", "controller");
+    inputMode.addOption("ddr", "ddr");
+    SmartDashboard.putData("Input Mode", inputMode);
+
     ringPositionChooser.addOption("LeftRed", new Pose2d(NotePositions.kNotesStartingRedWing[2], new Rotation2d(Math.PI)));
     ringPositionChooser.addOption("MiddleRed",  new Pose2d(NotePositions.kNotesStartingRedWing[1], new Rotation2d(Math.PI)));
     ringPositionChooser.addOption("RightRed",  new Pose2d(NotePositions.kNotesStartingRedWing[0], new Rotation2d(Math.PI)));
     ringPositionChooser.addOption("LeftBlue", new Pose2d(NotePositions.kNotesStartingBlueWing[2], new Rotation2d(0)));
     ringPositionChooser.addOption("MiddleBlue",  new Pose2d(NotePositions.kNotesStartingBlueWing[1], new Rotation2d(0)));
     ringPositionChooser.addOption("RightBlue",  new Pose2d(NotePositions.kNotesStartingBlueWing[0], new Rotation2d(0)));
+    ringPositionChooser.addOption("Mid1", new Pose2d(8.28, 7.42, new Rotation2d(Math.PI / 4)));
+    ringPositionChooser.addOption("Mid2", new Pose2d(8.28, 5.77, new Rotation2d(Math.PI / 4)));
+    ringPositionChooser.addOption("Mid3", new Pose2d(8.28, 4.11, new Rotation2d(Math.PI / 4)));
+    ringPositionChooser.addOption("Mid4", new Pose2d(8.28, 2.42, new Rotation2d(Math.PI / 4)));
+    ringPositionChooser.addOption("Mid5", new Pose2d(8.28, 0.76, new Rotation2d(Math.PI / 4)));
     ringPositionChooser.setDefaultOption("LeftRed", new Pose2d(NotePositions.kNotesStartingRedWing[2], new Rotation2d(Math.PI)));
     SmartDashboard.putData(ringPositionChooser);
+
     autoCommandChooser.addOption("OneRing", "OneRing");
     autoCommandChooser.addOption("Shoot", "Shoot");
     autoCommandChooser.addOption("Nothing", "Nothing");
+    autoCommandChooser.addOption("Mobility", "Mobility");
+    autoCommandChooser.addOption("Mess With 2 Notes", "Mess With 2 Notes");
+    autoCommandChooser.addOption("Mess With Note", "Mess With Note");
     autoCommandChooser.setDefaultOption("Nothing", "Nothing");
     SmartDashboard.putData(autoCommandChooser);
 
     startingPos.addOption("amp side", new Pose2d(0.68, 6.58, Rotation2d.fromDegrees(60)));
     startingPos.addOption("subwoofer", new Pose2d(1.19, 5.57, Rotation2d.fromDegrees(0)));
     startingPos.addOption("not amp side", new Pose2d(0.68, 4.57, Rotation2d.fromDegrees(-60)));
-    startingPos.addOption("source side", new Pose2d(0.39, 3.1, Rotation2d.fromDegrees(0)));
+    startingPos.addOption("source side", new Pose2d(0.39, 1.98, Rotation2d.fromDegrees(0)));
     startingPos.setDefaultOption("amp side", new Pose2d(0.68, 6.58, Rotation2d.fromDegrees(60)));
     SmartDashboard.putData(startingPos);
-    
-
-    // ROBOT CONFIGURATION
-    configureBindings();
-    addInputModes();
-    addShootModes();
-    setShooterState(ShooterState.notSpinning);
-    driveTrain.setDefaultCommand(new JoystickDrive(driveTrain, driver));
   }
 
   /**
@@ -147,26 +141,23 @@ public class RobotContainer {
     // DRIVER BINDINGS
     new JoystickButton(driver, XboxController.Button.kRightBumper.value).whileTrue(new DriveSlow());
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new DriveFast());
-    // new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain, acq, indexer, shooter));
+    new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(new DriveToRing(driveTrain, acq, indexer, shooter));
     new JoystickButton(driver, XboxController.Button.kBack.value).whileTrue(new Climb(winch, shooter).withInterruptBehavior(Command.InterruptionBehavior.kCancelIncoming));
     new JoystickButton(driver, XboxController.Button.kStart.value).onTrue(new Extend(winch));
     new JoystickButton(driver, XboxController.Button.kLeftStick.value).onTrue(new RunCommand(() -> CommandScheduler.getInstance().cancelAll()));
-    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToAmp(driveTrain));
     new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(
       new SequentialCommandGroup(
-      new DriveToInFrontOfAmp(driveTrain),
-      new DriveToAmp(driveTrain)
-    )
+        new DriveToInFrontOfAmp(driveTrain),
+        new DriveToAmp(driveTrain)
+      )
     );
-    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new DriveToInFrontOfAmp(driveTrain));
     new JoystickButton(driver, XboxController.Button.kX.value).onTrue(new RunCommand(() -> resetOdometry()).withTimeout(0.01));
     // new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new TurnToSpeaker(driveTrain));
 
     new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new DriveToChain(driveTrain));
 
     // OPERATOR BINDINGS
-    // new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new DriveAdjustShoot(driveTrain, shooter, indexer).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
-    // new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer, driveTrain).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
+    new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer, driveTrain).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(operator, XboxController.Button.kB.value).whileTrue(new BumbperShot(shooter, indexer, driveTrain).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));
     new JoystickButton(operator, XboxController.Button.kX.value).whileTrue(new Collect(acq, indexer, shooter));
     new JoystickButton(operator, XboxController.Button.kX.value).onFalse(new CenterNote(shooter, indexer));
@@ -176,64 +167,63 @@ public class RobotContainer {
     new JoystickButton(operator, XboxController.Button.kLeftBumper.value).onTrue(new WindUp(ShooterState.notSpinning, shooter));
     new JoystickButton(operator, XboxController.Button.kLeftStick.value).onTrue(new RunCommand(() -> CommandScheduler.getInstance().cancelAll()));
   }
-  
-  /**
-   * Adds the input modes to the SmartDashboard.
-   */
-  private static void addInputModes() {
-    inputMode.setDefaultOption("controller", "controller");
-    inputMode.addOption("ddr", "ddr");
-    SmartDashboard.putData("Input Mode", inputMode);
-    
-
-    SmartDashboard.putNumber("pivot setpoint", 4.3);
-        
-    SmartDashboard.putNumber("velocity setpoint", 160);
-  }
 
   /**
-   * Adds the shoot modes to the SmartDashboard.
-   */
-  private static void addShootModes()
-  {
-    // TODO: Switch the default option from "test" to "visions" once visions is stable
-    testOrVisionsShooter.setDefaultOption("test", "test");
-    testOrVisionsShooter.addOption("visions", "visions");
-  }
-
-  /**
-   * Returns the currently selected input mode.
-   * @return the currently selected input mode
+   * Returns the currently selected autonomous command.
+   * @return the currently selected autonomous command
    */
   public Command getAutonomousCommand() {
     controlState = ControlState.AUTO;
-    Pose2d speakerPose = (getAlliance().equals(Alliance.Blue)? new Pose2d(Field.speakerBlue, new Rotation2d()) : new Pose2d(Field.speakerRed, new Rotation2d()));
+      driveTrain.setInitPose(
+        getAlliance().equals(Alliance.Blue)
+        ? new Pose2d(startingPos.getSelected().getTranslation(), new Rotation2d(-startingPos.getSelected().getRotation().getRadians()))
+        : new Pose2d(new Translation2d(Constants.Field.fieldWidth - startingPos.getSelected().getX(), startingPos.getSelected().getY()), new Rotation2d(Math.PI + startingPos.getSelected().getRotation().getRadians()))
+      );
+
     if (autoCommandChooser.getSelected().equals("OneRing")) {
-      setOdometry(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected() : new Pose2d(Constants.Field.fieldWidth - startingPos.getSelected().getX(), startingPos.getSelected().getY(), new Rotation2d(Math.PI - startingPos.getSelected().getRotation().getRadians())));
-      driveTrain.setGyroAngle(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected().getRotation().getRadians() : Math.PI - startingPos.getSelected().getRotation().getRadians());
-      // return new OneRingAuto(acq, indexer, shooter, driveTrain, ringPositionChooser.getSelected(), speakerPose);
-      return new SequentialCommandGroup(new SequentialCommandGroup(
-            new BumbperShot(shooter, indexer, driveTrain)),
+      double finalAngle = Math.atan2(ringPositionChooser.getSelected().getY() - startingPos.getSelected().getY(), ringPositionChooser.getSelected().getX() - startingPos.getSelected().getX());
+      return new SequentialCommandGroup(
+            new BumbperShot(shooter, indexer, driveTrain),
             new ParallelRaceGroup
             (
-                new Collect(acq, indexer, shooter),
-                new DriveToPoint(driveTrain, ringPositionChooser.getSelected())
-            )
-            // new SpeakerShot(shooter, indexer, driveTrain)
+              new DriveToPoint(driveTrain, new Pose2d(ringPositionChooser.getSelected().getTranslation(), new Rotation2d(getAlliance().equals(Alliance.Blue) ? finalAngle : Math.PI - finalAngle))),
+              new Collect(acq, indexer, shooter),
+              new WaitCommand(2)
+            ),
+            new TurnToSpeaker(driveTrain),
+            new SpeakerShot(shooter, indexer, driveTrain)
             );
 
     } else if (autoCommandChooser.getSelected().equals("Shoot")) {
-      setOdometry(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected() : new Pose2d(Constants.Field.fieldWidth - startingPos.getSelected().getX(), startingPos.getSelected().getY(), new Rotation2d(Math.PI - startingPos.getSelected().getRotation().getRadians())));
-      driveTrain.setGyroAngle(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected().getRotation().getRadians() : Math.PI - startingPos.getSelected().getRotation().getRadians());
-      new BumbperShot(shooter, indexer, driveTrain).schedule();
+      return new BumbperShot(shooter, indexer, driveTrain);
     } else if (autoCommandChooser.getSelected().equals("Nothing")) {
-      setOdometry(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected() : new Pose2d(Constants.Field.fieldWidth - startingPos.getSelected().getX(), startingPos.getSelected().getY(), new Rotation2d(Math.PI - startingPos.getSelected().getRotation().getRadians())));
-      driveTrain.setGyroAngle(getAlliance().equals(Alliance.Blue) ? startingPos.getSelected().getRotation().getRadians() : Math.PI - startingPos.getSelected().getRotation().getRadians());
-    } {
+      return null;
+    } else if (autoCommandChooser.getSelected().equals("Mobility")) {
+      return new SequentialCommandGroup(
+        new BumbperShot(shooter, indexer, driveTrain),
+        new DriveToPoint(driveTrain, new Pose2d(new Translation2d(getAlliance().equals(Alliance.Blue) ? 2.4 : Constants.Field.fieldWidth - 2.4, 1.22), new Rotation2d(getAlliance().equals(Alliance.Blue) ? 0 : Math.PI)))
+      );
+    } else if (autoCommandChooser.getSelected().equals("Mess With 2 Notes")) {
+      return new SequentialCommandGroup(
+        new BumbperShot(shooter, indexer, driveTrain),
+        new WaitCommand(6),
+        new PathPlannerAuto("auto1")
+      );
+    } else if (autoCommandChooser.getSelected().equals("Mess With Note")) {
+      return new SequentialCommandGroup(
+        new BumbperShot(shooter, indexer, driveTrain),
+        new WaitCommand(6),
+        new DriveToPoint(driveTrain, new Pose2d(ringPositionChooser.getSelected().getTranslation(), new Rotation2d(Math.PI / 4)))
+      );
+    } else {
       return null;
     }
   }
 
+  /**
+   * returns the currently selected drive command
+   * @return
+   */
   public Command getDriveCommand() {
     controlState = ControlState.MANUAL;
     Command driveCommand;
@@ -251,6 +241,10 @@ public class RobotContainer {
     return driveCommand;
   }
 
+  /**
+   * gets the current alliance, defaults to blue if it is called before field side is set
+   * @return the current alliance
+   */
   public static Alliance getAlliance() {
     Optional<Alliance> ally = DriverStation.getAlliance();
     if (ally.isPresent()) {
@@ -267,23 +261,26 @@ public class RobotContainer {
   }
 
   /**
-   * Resets the odometry of the robot.
+   * Sets the field relative direction to forward if it doesn't do it in auto
    */
   public void resetOdometry() {
     driveTrain.resetOdometry(new Pose2d());
     driveTrain.zeroHeading();
-    System.out.println("resetting ododmemetsty");
+    driveTrain.setGyroAngle(0);
   }
 
-  public void setOdometry(Pose2d pose) {
-    driveTrain.resetOdometry(pose);
-    // driveTrain.zeroHeading();
-  }
-
+  /**
+   * gets the shooter state
+   * @return the shooter state
+   */
   public static ShooterState getShooterState() {
       return shooterState;
   }
   
+  /**
+   * sets the shooter state
+   * @param shooterState the shooter state
+   */
   public static void setShooterState(ShooterState shooterState) {
       RobotContainer.shooterState = shooterState;
   }
