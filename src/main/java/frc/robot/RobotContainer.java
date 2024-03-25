@@ -36,6 +36,7 @@ import frc.robot.commands.drivetrain.DriveToInFrontOfAmp;
 import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRing;
 import frc.robot.commands.drivetrain.JoystickDrive;
+import frc.robot.commands.drivetrain.ManualControl;
 import frc.robot.commands.drivetrain.TurnToSpeaker;
 import frc.robot.commands.shooter.AmpShot;
 import frc.robot.commands.shooter.BumbperShot;
@@ -100,6 +101,7 @@ public class RobotContainer {
   private void configureSendableChoosers() {
     inputMode.setDefaultOption("controller", "controller");
     inputMode.addOption("ddr", "ddr");
+    inputMode.addOption("demo", "demo");
     SmartDashboard.putData("Input Mode", inputMode);
 
     ringPositionChooser.addOption("LeftRed", new Pose2d(NotePositions.kNotesStartingRedWing[2], new Rotation2d(Math.PI)));
@@ -233,6 +235,9 @@ public class RobotContainer {
         break;
       case "ddr":
         driveCommand = new DDRDrive(driveTrain);
+        break;
+      case "demo":
+        driveCommand = new ManualControl(driveTrain, shooter);
         break;
     }
     return driveCommand;

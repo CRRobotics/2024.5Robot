@@ -151,11 +151,13 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         rightShooterMotor.setControl(new Follower(leftShooterMotorID, true));
     }
 
-    public void setSpeedPivot(double setpoint) {
+    public void setSpeedPivot(double speed) {
         System.out.println(pivotEncoder.getPosition());
-        voltageController.Slot = 0;
-        // leftShooterMotor.setControl(voltageController.withVelocity(setpoint));
-        pivotMotor.set(setpoint);
+        if ((pivotEncoder.getPosition() > 4.3 || speed > 0) && (pivotEncoder.getPosition() < 6.2 || speed < 0)) {
+            pivotMotor.set(speed);
+        } else {
+            pivotMotor.set(0);
+        }
     }
 
     /**
