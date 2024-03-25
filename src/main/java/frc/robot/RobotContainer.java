@@ -32,6 +32,7 @@ import frc.robot.commands.drivetrain.DDRDrive;
 import frc.robot.commands.drivetrain.DriveFast;
 import frc.robot.commands.drivetrain.DriveSlow;
 import frc.robot.commands.drivetrain.DriveToAmp;
+import frc.robot.commands.drivetrain.DriveToChain;
 import frc.robot.commands.drivetrain.DriveToInFrontOfAmp;
 import frc.robot.commands.drivetrain.DriveToPoint;
 import frc.robot.commands.drivetrain.DriveToRing;
@@ -153,7 +154,9 @@ public class RobotContainer {
       )
     );
     new JoystickButton(driver, XboxController.Button.kX.value).onTrue(new RunCommand(() -> resetOdometry()).withTimeout(0.01));
-    new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new TurnToSpeaker(driveTrain));
+    // new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new TurnToSpeaker(driveTrain));
+
+    new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(new DriveToChain(driveTrain));
 
     // OPERATOR BINDINGS
     new JoystickButton(operator, XboxController.Button.kA.value).whileTrue(new SpeakerShot(shooter, indexer, driveTrain).withInterruptBehavior(Command.InterruptionBehavior.kCancelSelf));

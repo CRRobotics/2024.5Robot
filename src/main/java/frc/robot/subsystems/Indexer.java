@@ -12,20 +12,25 @@ import frc.robot.util.Constants;
 public class Indexer extends SubsystemBase implements Constants.Indexer {
   CANSparkMax indexerMotor;
   AnalogInput ringSensor;
+  boolean sawRing;
     
 
   public Indexer() {
-      indexerMotor = new CANSparkMax(indexID, MotorType.kBrushless);
-      ringSensor = new AnalogInput(0);
-      // indexerMotor.setVoltage(12);
+    sawRing = false;
+    indexerMotor = new CANSparkMax(indexID, MotorType.kBrushless);
+    ringSensor = new AnalogInput(0);
+    // indexerMotor.setVoltage(12);
   }
 
   @Override
   public void periodic() {
-    if (seesRing()) {
-      RobotContainer.setLEDs(new Color(0, 255, 0));
-    } else {
-      RobotContainer.setLEDs(new Color(0,0,0));
+    System.out.println(seesRing());
+    if (seesRing() && !sawRing) {
+      RobotContainer.setLEDs(Color.kYellow);
+      sawRing = true;
+    } else if (!seesRing() && sawRing) {
+      RobotContainer.setLEDs(Color.kRed);
+      sawRing = false;
     }
   }
 
@@ -39,7 +44,7 @@ public class Indexer extends SubsystemBase implements Constants.Indexer {
       System.out.println("running intake motors, speed: "+ indexIntakeSpeed);
       return false;
     } else {
-        RobotContainer.setLEDs(new Color(255, 109, 46));
+        // RobotContainer.setLEDs(new Color(255, 109, 46));
         RobotContainer.activityState = RobotContainer.ActivityState.HAS_NOTE;
         indexerMotor.set(0);
         return true;
@@ -74,6 +79,7 @@ public class Indexer extends SubsystemBase implements Constants.Indexer {
    * @return if the robot can see a note
    */
   public boolean seesRing(){
+    System.out.println(ringSensor.getValue());
     return (ringSensor.getValue() > 100);
   }
 }

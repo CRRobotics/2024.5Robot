@@ -81,7 +81,7 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
      */
     public DriveTrain() {
         zeroHeading();
-
+        ReplanningConfig replanningConfig = new ReplanningConfig(true, true, 0.1, 0.2);
         AutoBuilder.configureHolonomic(
             this::getPose, // Pose supplier
             this::resetOdometry, // SwerveDriveKinematics
