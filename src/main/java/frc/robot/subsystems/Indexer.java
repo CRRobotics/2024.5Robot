@@ -1,19 +1,19 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 
 public class Indexer extends SubsystemBase implements Constants.Indexer {
-  CANSparkMax indexerMotor;
+  SparkMax indexerMotor;
   AnalogInput ringSensor;
     
 
   public Indexer() {
-      indexerMotor = new CANSparkMax(indexID, MotorType.kBrushless);
+      indexerMotor = new SparkMax(indexID, MotorType.kBrushless);
       ringSensor = new AnalogInput(0);
       // indexerMotor.setVoltage(12);
   }

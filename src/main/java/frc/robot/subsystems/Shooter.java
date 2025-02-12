@@ -5,15 +5,17 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.SparkLimitSwitch;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkLimitSwitch.Type;
-import com.revrobotics.SparkPIDController.AccelStrategy;
+import com.revrobotics.spark.SparkLimitSwitch;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,19 +28,21 @@ import frc.robot.util.Constants;
 public class Shooter extends SubsystemBase implements Constants.Shooter {
     private static TalonFX leftShooterMotor;
     private static TalonFX rightShooterMotor;
+    private final SparkLimitSwitch bottomSwitch;
+    private final SparkLimitSwitch topSwitch;
     VelocityVoltage voltageController;
     Slot0Configs slotConfig;
     Slot0Configs talonSlotConfigs;
     Slot0Configs krakenSlotConfig;
-    CANSparkMax pivotMotor;
+    SparkMax pivotMotor;
     AbsoluteEncoder pivotEncoder;
     PIDController pid;
-    SparkPIDController sparkPid;
-    SparkLimitSwitch bottomSwitch;
-    SparkLimitSwitch topSwitch;
-    SparkAbsoluteEncoder.Type pivotEncoderType;
+    SparkClosedLoopController sparkPid;
+    private SparkMaxConfig pivotConfig;
     MotionMagicVelocityVoltage talonController;
     public double shooterVelocity;
+
+    }
 
     public Shooter() {
         // #FLYWHEEL
@@ -51,6 +55,10 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         rightShooterMotor = new TalonFX(rightShooterMotorID);
         rightShooterMotor.setNeutralMode(NeutralModeValue.Coast);
 
+        bottomSwitch = pivotMotor.getReverseLimitSwitch();
+        topSwitch = pivotMotor.getReverseLimitSwitch();
+        pivotEncoder = pivotMotor.getAbsoluteEncoder();
+        pivotConfig = new SparkMaxConfig();
         /*Quoted Directly from Adam Newhouse
          * Tuning kV and then adding a small amount of kP gain is the best way to tune a flywheel
          *A flywheel is basically an almost perfect linear system where kV will do most of the work   
@@ -72,7 +80,7 @@ public class Shooter extends SubsystemBase implements Constants.Shooter {
         leftShooterMotor.getConfigurator().apply(krakenSlotConfig);
         
         // AZIMUTH
-        pivotMotor = new CANSparkMax(pivotMotorID, MotorType.kBrushless);
+        pivotMotor = new SparkMax(pivotMotorID, MotorType.kBrushless);
         pivotMotor.setIdleMode(IdleMode.kBrake);
 
         pivotEncoderType = SparkAbsoluteEncoder.Type.kDutyCycle;

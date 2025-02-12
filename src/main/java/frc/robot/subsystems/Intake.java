@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Constants;
 
@@ -9,10 +9,10 @@ import frc.robot.util.Constants;
  * Acquisition subsystem
  */
 public class Intake extends SubsystemBase implements Constants.Intake {
-  CANSparkMax intakeMotor;
+  SparkMax intakeMotor;
 
   public Intake() {
-    intakeMotor = new CANSparkMax(intakeID, MotorType.kBrushless);
+    intakeMotor = new SparkMax(intakeID, MotorType.kBrushless);
   }
 
   /**

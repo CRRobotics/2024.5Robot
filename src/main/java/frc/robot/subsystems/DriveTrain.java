@@ -3,16 +3,19 @@
 // the WPILib BSD license file in the root directory of this project.
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.commands.FollowPathHolonomic;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
+import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.Pathfinder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.util.ReplanningConfig;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.*;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -24,6 +27,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
@@ -60,8 +64,11 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
         Constants.DriveTrain.backRightAngularOffset
     );
 
+    RobotConfig config;
+    DCMotor swerveMotor;
+
     // KINEMATICS
-    private final AHRS gyro = new AHRS(SPI.Port.kMXP);
+    private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
     private Pathfinder pathFinder;
 
     private Field2d field = new Field2d();
@@ -99,23 +106,32 @@ public class DriveTrain extends SubsystemBase implements Constants.DriveTrain, C
      * Creates a new <code>DriveTrain</code> subsystem
      */
     public DriveTrain() {
+        swerveMotor = new DCMotor(12, 2.6, 105, 1.8, (2*Math.PI) * 5676, 1);
         // resetOdometry(new Pose2d(1.6, 4.4, Rotation2d.fromRadians(2.8)));
         zeroHeading();
 
-        AutoBuilder.configureHolonomic(
+        config = new RobotConfig(25, 0, new ModuleConfig(.036, 4, 1, swerveMotor, 4.71, 30, 1), 0.637);
+        AutoBuilder.configure(
             this::getPose, // Pose supplier
             this::resetOdometry, // SwerveDriveKinematics
-            this::getChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            this::driveRobotRelative,
-            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+            this::getChassisSpeeds,
+            (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                     new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(10.0, 0.0, 0.0), // Rotation PID constants
-                    4.5, // Max module speed, in m/s
-                    0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-                    new ReplanningConfig(true, true, 0.1, 0.2) // Default path replanning config. See the API for the options here
-            ),
-            this::flipPath,
-            this // Reference to this subsystem to set requirements
+                    new PIDConstants(10.0, 0.0, 0.0)), // Rotation PID constants
+                    // Drive base radius in meters. Distance from robot center to furthest module.
+            
+            config,
+            () -> {
+
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+            }
+            return false;
+            }, // Reference to this subsystem to set requirements
+            this
         );
 
         // Logging callback for current robot pose
@@ -366,19 +382,28 @@ public Command followPathCommand(PathPlannerPath path) {
     SmartDashboard.putNumber("theta velocity tolerance", thetaController.getVelocityTolerance());
 
     // Create and return FollowPathHolonomic command
-    return new FollowPathHolonomic(
-            path, 
-            this::getPose, // Pose supplier
-            this::getChassisSpeeds, // SwerveDriveKinematics
-            this::driveRobotRelative,
-            new HolonomicPathFollowerConfig(
-                new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
-                new PIDConstants(SmartDashboard.getNumber("drivetrain/xP", 0.5), SmartDashboard.getNumber("drivetrain/xI", 0), SmartDashboard.getNumber("drivetrain/xD", 0)), // Translation PID constants
-                Constants.DriveTrain.maxSpeed, // Max module speed, in m/s
-                Constants.DriveTrain.radius, // Drive base radius in meters. Distance from robot center to furthest module.,
-                new ReplanningConfig(true, false, 0.5, 0.2)), // Default path replanning config. See the API for the options here
-            this::flipPath,
-            this // Reference to this subsystem to set requirements
+    return new FollowPathCommand(
+        path,
+        this::getPose, // Robot pose supplier
+        this:: getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds, AND feedforwards
+        new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+        ),
+        config, // The robot configuration
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this // Reference to this subsystem to set requirements
     );
 }
 
@@ -436,7 +461,7 @@ public Command followPathCommand(PathPlannerPath path) {
         //Commented out until network tables are ready
     }
 
-    private Command FollowPathWithEvents(FollowPathHolonomic followPathHolonomic) {
+    private Command FollowPathWithEvents(FollowPathCommand followPathCommand) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'FollowPathWithEvents'");
     }
